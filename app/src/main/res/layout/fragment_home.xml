@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.hzc.coolCatMusic.R"/>
+        <import type="com.hzc.coolCatMusic.ui.main.HomeFragmentViewModel"/>
+        <variable
+            name="viewModel"
+            type="HomeFragmentViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:paddingTop="@dimen/status_bar_height"
+            android:background="@color/mainBg"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                onClickCommand="@{viewModel.logoClick}"
+                url="@{viewModel.mainLogo}"
+                binding:placeholderRes="@{viewModel.mainPlaceholderRes}"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"/>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/mainTab"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/mainRightMenu"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"/>
+
+        </LinearLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/mainViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</layout>

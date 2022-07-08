@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
+        <import type="com.hzc.coolCatMusic.ui.main.HomeFragment2ViewModel"/>
+        <variable
+            name="viewModel"
+            type="HomeFragment2ViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleView"
+            app:itemBinding="@{viewModel.mvBind}"
+            items="@{viewModel.mvList}"
+            adapter="@{viewModel.mvAdapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</layout>

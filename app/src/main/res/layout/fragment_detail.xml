@@ -3,13 +3,13 @@
 
     <data>
 
-        <import type="com.goldze.mvvmhabit.ui.network.detail.DetailViewModel" />
+        <import type="com.hzc.coolCatMusic.ui.network.detail.DetailViewModel" />
 
         <variable
                 name="viewModel"
-                type="com.goldze.mvvmhabit.ui.network.detail.DetailViewModel"
+                type="com.hzc.coolCatMusic.ui.network.detail.DetailViewModel"
                 />
-        <import type="com.goldze.mvvmhabit.R" />
+        <import type="com.hzc.coolCatMusic.R" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

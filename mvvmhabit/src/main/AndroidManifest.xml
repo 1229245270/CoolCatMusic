@@ -6,7 +6,7 @@
     <application>
         <activity
             android:name=".base.ContainerActivity"
-            android:configChanges="orientation|keyboardHidden"></activity>
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name=".crash.DefaultErrorActivity"
             android:process=":error_activity" />
