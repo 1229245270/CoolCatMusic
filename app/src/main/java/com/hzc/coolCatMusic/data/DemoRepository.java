@@ -7,6 +7,12 @@ import com.hzc.coolCatMusic.entity.DemoEntity;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.http.BaseResponse;
 
@@ -37,6 +43,15 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
         }
         return INSTANCE;
     }
+
+    public <T> void requestApi(Function<Integer, ObservableSource<T>> function, Observer<T> observer){
+        Observable<T> observable = Observable.just(1)
+                .subscribeOn(Schedulers.io())
+                .flatMap(function)
+                .observeOn(AndroidSchedulers.mainThread());
+        observable.subscribe(observer);
+    }
+
 
     @VisibleForTesting
     public static void destroyInstance() {

@@ -10,6 +10,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -32,10 +35,12 @@ import java.util.TimerTask;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
 
 public class MusicService extends Service {
     public MediaPlayer mediaPlayer;
     private AudioManager audioManager;
+    private ConnectivityManager connectivityManager;
     private Timer timer;
 
     private ScreenListener screenListener;
@@ -48,6 +53,7 @@ public class MusicService extends Service {
         KLog.d("onCreate");
         mediaPlayer = new MediaPlayer();
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);//设定CUP锁定
         //播放结束监听事件
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -57,6 +63,7 @@ public class MusicService extends Service {
 
         initScreenListener();
         initSensorListener();
+        initNetworkListener();
 
         startForeground(1,NotificationUtils.musicNotification(getApplicationContext(),null,null,null));
 
@@ -144,6 +151,32 @@ public class MusicService extends Service {
         sensorManager.registerListener(sensorEventListener,sensor,SensorManager.SENSOR_DELAY_GAME);
     }
 
+    private int connectType;
+    /**
+     * 初始化网络监听
+     * */
+    private void initNetworkListener(){
+        connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        connectType = connectivityManager.getActiveNetworkInfo().getType();
+        connectivityManager.addDefaultNetworkActiveListener(new ConnectivityManager.OnNetworkActiveListener() {
+            @Override
+            public void onNetworkActive() {
+                NetworkInfo network = connectivityManager.getActiveNetworkInfo();
+                int type = network.getType();
+                KLog.d("网络状态：" + type);
+                if(connectType != type){
+                    connectType = type;
+                    if(type == ConnectivityManager.TYPE_WIFI){
+                        ToastUtils.showShort("当前为WIFI");
+                    }else if(type == ConnectivityManager.TYPE_MOBILE){
+                        ToastUtils.showShort("当前为数据");
+                    }else{
+                        ToastUtils.showShort("未知网络");
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

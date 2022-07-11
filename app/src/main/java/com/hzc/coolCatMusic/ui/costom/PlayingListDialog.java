@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -130,6 +132,8 @@ public class PlayingListDialog extends Dialog {
         lp.y = height;
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        //去除dialog周围padding
+        getWindow().setBackgroundDrawableResource(R.color.transparent);
         onWindowAttributesChanged(lp);
     }
 }

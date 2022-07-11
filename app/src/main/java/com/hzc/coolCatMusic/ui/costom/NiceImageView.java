@@ -111,8 +111,8 @@ public class NiceImageView extends AppCompatImageView {
             xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
         } else {
             xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
-            srcPath = new Path();
         }
+        srcPath = new Path();
 
         calculateRadii();
         clearInnerBorderWidth();

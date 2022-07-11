@@ -20,4 +20,5 @@
     <color name="recycleViewSelect">#999999</color>
 
     <color name="ic_launcher_background">#FFEE5F</color>
+    <color name="transparent">#ffffffff</color>
 </resources>
