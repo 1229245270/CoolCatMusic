@@ -10,16 +10,21 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
+import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
+import com.hzc.coolCatMusic.app.SPUtilsConfig;
 import com.hzc.coolCatMusic.base.viewmodel.ToolbarViewModel;
 import com.hzc.coolCatMusic.data.DemoRepository;
 import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
+import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.service.MusicConnection;
 import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.SongAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 import com.hzc.coolCatMusic.ui.main.HomeFragmentViewModel;
+
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -27,6 +32,7 @@ import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.SPUtils;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
@@ -74,12 +80,32 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                 intent.putExtra(MusicService.SONG_IMAGE,((LocalSongEntity) entity).getImage());
                 intent.putExtra(MusicService.LYRICS,"");
                 intent.putExtra(MusicService.YEAR_ISSUE,"");
+
                 MusicConnection.musicInterface.play(intent,((LocalSongEntity) entity).getPath(),0);
+
             }else{
                 isRequestRead.setValue(false);
             }
         }
     };
+
+    private void savePlayingSongs(){
+        for(int i = 0;i < localSongList.size();i++){
+            if(localSongList.get(i) instanceof LocalSongEntity){
+                PlayingMusicEntity entity = new PlayingMusicEntity();
+                LocalSongEntity localSongEntity = (LocalSongEntity) localSongList.get(i);
+                entity.setSrc(localSongEntity.getPath());
+                entity.setAllName(localSongEntity.getDisplay_name());
+                entity.setSinger(localSongEntity.getArtist());
+                entity.setSingerImage(null);
+                entity.setSongName(localSongEntity.getAlbums());
+                entity.setSongImage(null);
+                entity.setLyrics("");
+                entity.setYearIssue("");
+                AppApplication.daoSession.insert(entity);
+            }
+        }
+    }
 
     public SongAdapter<Object> localSongAdapter = new SongAdapter<>();
 

@@ -307,7 +307,7 @@ public class MusicService extends Service {
             mediaPlayer.reset();//重置
         }
         //睡眠定时
-        if(timingEntity.isTiming()){
+        if(timingEntity != null && timingEntity.isTiming()){
             long nowTime = System.currentTimeMillis();
             if(nowTime - timingEntity.getNowTime() >= timingEntity.getTiming()){
                 return;
@@ -514,7 +514,6 @@ public class MusicService extends Service {
             entity.setSingerImage(singerImage);
             entity.setSongName(songName);
             entity.setSongImage(songImage);
-            entity.setDuration(duration);
             entity.setLyrics(lyrics);
             entity.setYearIssue(yearIssue);
             AppApplication.daoSession.insert(entity);
@@ -525,6 +524,7 @@ public class MusicService extends Service {
         }
         //无需保存到数据库
         entity.setCurrent(current);
+        entity.setDuration(duration);
         entity.setIsPlay(isPlaying());
         RxBus.getDefault().post(entity);
 

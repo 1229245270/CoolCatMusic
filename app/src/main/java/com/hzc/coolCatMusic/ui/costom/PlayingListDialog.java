@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hzc.coolCatMusic.R;
@@ -26,6 +27,7 @@ import com.hzc.coolCatMusic.ui.adapter.BaseRecycleViewHolder;
 
 import java.util.List;
 
+import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
 
 public class PlayingListDialog extends Dialog {
@@ -63,26 +65,28 @@ public class PlayingListDialog extends Dialog {
                 .getPlayingMusicEntityDao()
                 .queryBuilder()
                 .list();
-
-        BaseRecycleAdapter<PlayingMusicEntity> adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.dialog_playing_list){
+        KLog.d("playingMusicEntityList:" + playingMusicEntityList.size());
+        BaseRecycleAdapter<PlayingMusicEntity> adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.item_playing_song){
 
             @Override
             public void convert(BaseRecycleViewHolder holder, PlayingMusicEntity item, int position) {
-
+                holder.setText(R.id.songName,item.getSongName());
+                holder.setText(R.id.singer,item.getSinger());
             }
 
         };
         adapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Object object, int position) {
-
+                KLog.d("onItemClick");
             }
 
             @Override
             public void onItemLongClick(Object object, int position) {
-
+                KLog.d("onItemLongClick");
             }
         });
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecycleViewTouchHelper<PlayingMusicEntity>(playingMusicEntityList,adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
