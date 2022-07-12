@@ -54,7 +54,7 @@ public class HomeFragment1ViewModel extends HomeViewModel {
 
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
-        public void onItemClick(Object entity) {
+        public void onItemClick(int position,Object entity) {
             if(entity instanceof HomeFragment1ItemEntity){
                 startFragment(LocalMusicFragment.getInstance(),null);
             }
@@ -66,7 +66,9 @@ public class HomeFragment1ViewModel extends HomeViewModel {
     public OnItemBind<HomeFragment1ItemEntity> itemEntityOnItemBind = new OnItemBind<HomeFragment1ItemEntity>() {
         @Override
         public void onItemBind(@NonNull ItemBinding itemBinding, int position, HomeFragment1ItemEntity item) {
-            itemBinding.set(BR.item,R.layout.item_fragment_home1).bindExtra(BR.onItemClickListener,onItemClickListener);
+            itemBinding.set(BR.item,R.layout.item_fragment_home1)
+                    .bindExtra(BR.position,position)
+                    .bindExtra(BR.onItemClickListener,onItemClickListener);
         }
     };
 

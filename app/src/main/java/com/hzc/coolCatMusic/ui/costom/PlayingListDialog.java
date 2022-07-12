@@ -65,7 +65,6 @@ public class PlayingListDialog extends Dialog {
                 .getPlayingMusicEntityDao()
                 .queryBuilder()
                 .list();
-        KLog.d("playingMusicEntityList:" + playingMusicEntityList.size());
         BaseRecycleAdapter<PlayingMusicEntity> adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.item_playing_song){
 
             @Override

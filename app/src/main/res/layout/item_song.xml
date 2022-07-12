@@ -8,12 +8,15 @@
             name="item"
             type="com.hzc.coolCatMusic.entity.LocalSongEntity" />
         <variable
+            name="position"
+            type="Integer" />
+        <variable
             name="onItemClickListener"
             type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
     </data>
 
     <LinearLayout
-        android:onClick="@{() -> onItemClickListener.onItemClick(item)}"
+        android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
         android:background="@drawable/recycleview_item_selector"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"

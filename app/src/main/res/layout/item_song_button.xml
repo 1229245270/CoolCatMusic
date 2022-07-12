@@ -8,6 +8,9 @@
         <variable
             name="onItemClickListener"
             type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
+        <variable
+            name="position"
+            type="Integer" />
     </data>
     
     <LinearLayout
@@ -18,7 +21,7 @@
 
         <Button
             android:text="授予本地音乐读取权限"
-            android:onClick="@{() -> onItemClickListener.onItemClick(item)}"
+            android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"/>
     </LinearLayout>

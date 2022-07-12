@@ -15,8 +15,6 @@ import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.event.ChangeFragmentEvent;
 import com.hzc.coolCatMusic.event.IsOpenDrawerLayoutEvent;
-import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicFragment;
-import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;

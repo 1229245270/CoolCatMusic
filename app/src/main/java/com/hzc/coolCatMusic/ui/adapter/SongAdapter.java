@@ -1,8 +1,11 @@
 package com.hzc.coolCatMusic.ui.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -13,13 +16,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
+import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 
 import java.util.List;
 
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
-public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
+public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
     @NonNull
     @Override
     public ViewDataBinding onCreateBinding(@NonNull LayoutInflater inflater, int layoutId, @NonNull ViewGroup viewGroup) {
@@ -44,13 +49,16 @@ public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
                 image = entity.getImage();
             }else{
                 image = R.drawable.ceshi;
-                //imageView.setImageResource(R.drawable.ceshi);
             }
             Glide.with(binding.getRoot().getContext())
                     .load(image)
                     .into(imageView);
+            if(entity.is){
+
+            }
         }
     }
+
 }
 
 

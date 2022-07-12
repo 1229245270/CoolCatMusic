@@ -29,7 +29,7 @@ public class HomeFragment2ViewModel extends BaseViewModel<DemoRepository> {
 
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
-        public void onItemClick(Object entity) {
+        public void onItemClick(int position,Object entity) {
             KLog.d("1111111","onItemClick");
         }
     };

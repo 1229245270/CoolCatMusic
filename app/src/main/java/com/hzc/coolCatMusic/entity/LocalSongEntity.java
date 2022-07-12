@@ -12,6 +12,7 @@ public class LocalSongEntity {
     private String artist; // 艺术家
     private Bitmap image; //图片
     private long size;
+    private boolean isCheck;
 
     public int getId() {
         return id;
@@ -85,18 +86,12 @@ public class LocalSongEntity {
         this.image = image;
     }
 
-    @Override
-    public String toString() {
-        return "LocalSongEntity{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", display_name='" + display_name + '\'' +
-                ", path='" + path + '\'' +
-                ", duration=" + duration +
-                ", albums='" + albums + '\'' +
-                ", artist='" + artist + '\'' +
-                ", image=" + image +
-                ", size=" + size +
-                '}';
+    public boolean isCheck() {
+        return isCheck;
     }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
 }
