@@ -24,7 +24,10 @@ import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.SongAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -63,8 +66,8 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
                 .subscribe(new Consumer<PlayingMusicEntity>() {
                     @Override
-                    public void accept(PlayingMusicEntity playingMusicEntity) throws Exception {
-
+                    public void accept(PlayingMusicEntity playingMusicEntity){
+                        changePlaying.postValue(playingMusicEntity);
                     }
                 });
         RxSubscriptions.add(musicSubscription);
@@ -74,10 +77,12 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(mSubscription);
+        RxSubscriptions.remove(musicSubscription);
     }
 
-    SingleLiveEvent<Boolean> isRequestRead = new SingleLiveEvent<>();
+    public SingleLiveEvent<Boolean> isRequestRead = new SingleLiveEvent<>();
 
+    public SingleLiveEvent<PlayingMusicEntity> changePlaying = new SingleLiveEvent<>();
 
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
@@ -119,12 +124,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         }
     }
 
-    public SongAdapter<Object> localSongAdapter = new SongAdapter<Object>() {
-        @Override
-        public void setBinding(View view) {
-
-        }
-    };
+    public SongAdapter<Object> localSongAdapter = new SongAdapter<Object>();
 
     public ObservableList<Object> localSongList = new ObservableArrayList<Object>();
 

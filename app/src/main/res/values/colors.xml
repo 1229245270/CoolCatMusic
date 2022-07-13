@@ -17,8 +17,16 @@
     <drawable name="selectColor">#999999</drawable>
     <drawable name="unselectColor">#000000</drawable>
 
-    <color name="recycleViewSelect">#999999</color>
-
     <color name="ic_launcher_background">#FFEE5F</color>
     <color name="transparent">#ffffffff</color>
+
+    <color name="recycleViewRipple">#aaaaaa</color>
+    <color name="recycleViewSelect">#eeeeee</color>
+    <color name="recycleViewUnSelect">#ffffff</color>
+
+    <color name="item_songName_check">#ffffa000</color>
+    <color name="item_singer_check">#ffffa000</color>
+
+    <color name="item_songName_uncheck">#000000</color>
+    <color name="item_singer_uncheck">#999999</color>
 </resources>

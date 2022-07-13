@@ -12,7 +12,7 @@ public class LocalSongEntity {
     private String artist; // 艺术家
     private Bitmap image; //图片
     private long size;
-    private boolean isCheck;
+    private boolean isCheck = false;
 
     public int getId() {
         return id;

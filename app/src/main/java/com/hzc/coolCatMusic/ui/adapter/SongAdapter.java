@@ -5,9 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +28,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
-public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
+public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
     @NonNull
     @Override
     public ViewDataBinding onCreateBinding(@NonNull LayoutInflater inflater, int layoutId, @NonNull ViewGroup viewGroup) {
@@ -53,9 +57,19 @@ public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
             Glide.with(binding.getRoot().getContext())
                     .load(image)
                     .into(imageView);
-            if(entity.is){
-
+            TextView songName = binding.getRoot().findViewById(R.id.songName);
+            TextView singer = binding.getRoot().findViewById(R.id.singer);
+            LinearLayout songItem = binding.getRoot().findViewById(R.id.songItem);
+            if(entity.isCheck()){
+                songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_select,null));
+                songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_check));
+                singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_check));
+            }else{
+                songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_unselect,null));
+                songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_uncheck));
+                singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_uncheck));
             }
+
         }
     }
 

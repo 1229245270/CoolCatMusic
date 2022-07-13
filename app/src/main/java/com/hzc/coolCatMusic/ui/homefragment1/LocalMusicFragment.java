@@ -15,6 +15,8 @@ import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.databinding.FragmentLocalmusicBinding;
+import com.hzc.coolCatMusic.entity.LocalSongEntity;
+import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel;
 import com.hzc.coolCatMusic.utils.DialogUtils;
 import com.hzc.coolCatMusic.utils.LocalUtils;
@@ -74,6 +76,21 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                     if (aBoolean) {
                         list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
                         list.add("共" + list.size() + "首");
+                        LocalSongEntity localSongEntity = null;
+                        for(int i = 0;i < viewModel.localSongList.size();i++){
+                            if(viewModel.localSongList.get(i) instanceof LocalSongEntity && ((LocalSongEntity) viewModel.localSongList.get(i)).isCheck()){
+                                localSongEntity = (LocalSongEntity) viewModel.localSongList.get(i);
+                                break;
+                            }
+                        }
+                        if(localSongEntity != null){
+                            for(int i = 0;i < list.size();i++){
+                                if(list.get(i) instanceof LocalSongEntity && ((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
+                                    list.set(i,localSongEntity);
+                                    break;
+                                }
+                            }
+                        }
                         viewModel.localSongList.clear();
                         viewModel.localSongList.addAll(list);
                     } else if(!isRestart){
@@ -88,12 +105,39 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                 });
     }
 
+    private PlayingMusicEntity nowPlay;
+    private LocalSongEntity oldLocalSong;
+    private int oldPosition = -1;
     @Override
     public void initViewObservable() {
         super.initViewObservable();
         viewModel.isRequestRead.observe(this,aBoolean -> {
             KLog.d("aBoolean",aBoolean);
             initLocalSong(aBoolean);
+        });
+
+        viewModel.changePlaying.observe(this,playingMusicEntity -> {
+            if(nowPlay != null && nowPlay == playingMusicEntity){
+                return;
+            }
+            nowPlay = playingMusicEntity;
+            if(oldPosition != -1 && oldLocalSong != null){
+                oldLocalSong.setCheck(false);
+                viewModel.localSongList.set(oldPosition,oldLocalSong);
+            }
+            for(int i = 0;i < viewModel.localSongList.size();i++){
+                Object entity = viewModel.localSongList.get(i);
+                if(entity instanceof LocalSongEntity){
+                    LocalSongEntity localSongEntity = (LocalSongEntity) entity;
+                    if(playingMusicEntity.getSrc().equals(localSongEntity.getPath())){
+                        localSongEntity.setCheck(true);
+                        viewModel.localSongList.set(i,localSongEntity);
+                        oldLocalSong = localSongEntity;
+                        oldPosition = i;
+                        return;
+                    }
+                }
+            }
         });
     }
 }

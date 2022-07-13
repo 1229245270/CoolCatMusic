@@ -17,7 +17,8 @@
 
     <LinearLayout
         android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
-        android:background="@drawable/recycleview_item_selector"
+        android:background="@drawable/recycleview_item_select"
+        android:id="@+id/songItem"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
@@ -42,7 +43,7 @@
             <TextView
                 android:gravity="center_vertical"
                 android:id="@+id/songName"
-                android:textColor="@color/black"
+                android:textColor="@color/item_songName_uncheck"
                 android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
@@ -53,7 +54,7 @@
             <TextView
                 android:gravity="center_vertical"
                 android:id="@+id/singer"
-                android:textColor="#999999"
+                android:textColor="@color/item_singer_uncheck"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"

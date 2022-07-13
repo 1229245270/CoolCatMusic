@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
-        android:background="@drawable/recycleview_item_selector"
+        android:background="@drawable/recycleview_item_select"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"

@@ -44,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.hzc.coolCatMusic.service.MusicService.MusicInterface;
@@ -186,8 +187,8 @@ public class SeekArc extends View {
 		float density = context.getResources().getDisplayMetrics().density;
 
 		// Defaults, may need to link this into theme settings
-		int arcColor = res.getColor(R.color.progress_gray);
-		int progressColor = res.getColor(R.color.default_blue_light);
+		int arcColor = ContextCompat.getColor(getContext(),R.color.progress_gray);
+		int progressColor = ContextCompat.getColor(getContext(),R.color.default_blue_light);
 		int thumbHalfheight = 0;
 		int thumbHalfWidth = 0;
 		mThumb = ResourcesCompat.getDrawable(res,R.drawable.seek_arc_control_selector,null);
