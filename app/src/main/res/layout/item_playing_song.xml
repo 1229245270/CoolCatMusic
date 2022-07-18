@@ -16,6 +16,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/songItem"
         android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
         android:background="@drawable/recycleview_item_select"
         android:paddingLeft="16dp"
@@ -64,7 +65,11 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
-
+            <ImageView
+                android:id="@+id/songButton"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

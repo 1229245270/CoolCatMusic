@@ -1,6 +1,8 @@
 package com.hzc.coolCatMusic.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,6 +50,18 @@ public class BaseRecycleViewHolder extends RecyclerView.ViewHolder {
     public BaseRecycleViewHolder setText(int viewId,String text){
         TextView textView = getView(viewId);
         textView.setText(text);
+        return this;
+    }
+
+    public BaseRecycleViewHolder setBackground(int viewId, Drawable drawable){
+        View view = getView(viewId);
+        view.setBackground(drawable);
+        return this;
+    }
+
+    public BaseRecycleViewHolder setTextColor(int viewId, int color){
+        TextView textView = getView(viewId);
+        textView.setTextColor(color);
         return this;
     }
 

@@ -1,11 +1,15 @@
 package com.hzc.coolCatMusic.ui.costom;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +26,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;
+import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
+import com.hzc.coolCatMusic.service.MusicConnection;
+import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.BaseRecycleAdapter;
 import com.hzc.coolCatMusic.ui.adapter.BaseRecycleViewHolder;
+import com.hzc.coolCatMusic.utils.MusicUtils;
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
 
@@ -36,6 +50,10 @@ public class PlayingListDialog extends Dialog {
     private ImageView imageView;
     private RecyclerView recyclerView;
     private List<PlayingMusicEntity> playingMusicEntityList;
+
+    private Disposable musicSubscription;
+    private RecycleViewTouchHelper recycleViewTouchHelper;
+    private BaseRecycleAdapter<PlayingMusicEntity> adapter;
 
     public PlayingListDialog(@NonNull Context context) {
         super(context);
@@ -58,6 +76,42 @@ public class PlayingListDialog extends Dialog {
         });
 
         initPlayingList();
+        registerRxBus();
+    }
+
+    private PlayingMusicEntity nowPlay;
+    private int oldPosition = -1;
+
+    private void registerRxBus(){
+        musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<PlayingMusicEntity>() {
+                    @Override
+                    public void accept(PlayingMusicEntity playingMusicEntity) throws Exception {
+                        if(nowPlay != null && nowPlay == playingMusicEntity){
+                            return;
+                        }
+                        nowPlay = playingMusicEntity;
+                        if(oldPosition != -1){
+                            adapter.notifyItemChanged(oldPosition);
+                        }
+                        for(int i = 0;i < playingMusicEntityList.size();i++){
+                            PlayingMusicEntity entity = playingMusicEntityList.get(i);
+                            if(playingMusicEntity.getSrc().equals(entity.getSrc())){
+                                adapter.notifyItemChanged(i);
+                                oldPosition = i;
+                                return;
+                            }
+                        }
+                    }
+                });
+        RxSubscriptions.add(musicSubscription);
+    }
+
+
+
+    private void removeRxBus(){
+        RxSubscriptions.remove(musicSubscription);
     }
 
     private void initPlayingList(){
@@ -65,19 +119,58 @@ public class PlayingListDialog extends Dialog {
                 .getPlayingMusicEntityDao()
                 .queryBuilder()
                 .list();
-        BaseRecycleAdapter<PlayingMusicEntity> adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.item_playing_song){
+        adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.item_playing_song){
 
             @Override
             public void convert(BaseRecycleViewHolder holder, PlayingMusicEntity item, int position) {
                 holder.setText(R.id.songName,item.getSongName());
                 holder.setText(R.id.singer,item.getSinger());
-            }
+                KLog.d("position" + item.toString());
+                PlayingMusicEntity entity = MusicUtils.getPlayingMusicEntity();
+                if(entity != null && entity.getSrc().equals(item.getSrc())){
+                    //bug处理：当歌曲暂停时进入,没有回传playingMusicEntity,刷新不了该条旧数据
+                    if(oldPosition == -1){
+                        oldPosition = position;
+                    }
+                    holder.setBackground(R.id.songItem,ResourcesCompat.getDrawable(getContext().getResources(),R.drawable.recycleview_item_select,null));
+                    holder.setTextColor(R.id.songName,ContextCompat.getColor(getContext(), R.color.item_songName_check));
+                    holder.setTextColor(R.id.singer,ContextCompat.getColor(getContext(), R.color.item_singer_check));
+                }else{
+                    holder.setBackground(R.id.songItem,ResourcesCompat.getDrawable(getContext().getResources(),R.drawable.recycleview_item_unselect,null));
+                    holder.setTextColor(R.id.songName,ContextCompat.getColor(getContext(), R.color.item_songName_uncheck));
+                    holder.setTextColor(R.id.singer,ContextCompat.getColor(getContext(), R.color.item_singer_uncheck));
+                }
 
+                //长按图标滑动
+                holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        recycleViewTouchHelper.setEdit(false);
+                        return false;
+                    }
+                });
+                holder.getView(R.id.songButton).setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        recycleViewTouchHelper.setEdit(true);
+                        return true;
+                    }
+                });
+            }
         };
         adapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Object object, int position) {
-                KLog.d("onItemClick");
+                Intent intent = new Intent();
+                intent.putExtra(MusicService.SRC,((PlayingMusicEntity) object).getSrc());
+                intent.putExtra(MusicService.ALL_NAME,((PlayingMusicEntity) object).getAllName());
+                intent.putExtra(MusicService.SINGER,((PlayingMusicEntity) object).getSinger());
+                intent.putExtra(MusicService.SINGER_IMAGE,((PlayingMusicEntity) object).getSingerImage());
+                intent.putExtra(MusicService.SONG_NAME,((PlayingMusicEntity) object).getSongName());
+                intent.putExtra(MusicService.SONG_IMAGE,((PlayingMusicEntity) object).getSongImage());
+                intent.putExtra(MusicService.LYRICS,"");
+                intent.putExtra(MusicService.YEAR_ISSUE,"");
+                MusicConnection.musicInterface.play(intent,((PlayingMusicEntity) object).getSrc(),position);
             }
 
             @Override
@@ -87,7 +180,22 @@ public class PlayingListDialog extends Dialog {
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecycleViewTouchHelper<PlayingMusicEntity>(playingMusicEntityList,adapter));
+
+        recycleViewTouchHelper = new RecycleViewTouchHelper<PlayingMusicEntity>(playingMusicEntityList, adapter) {
+            @Override
+            public void moveResult() {
+                for(int i = 0;i < playingMusicEntityList.size();i++){
+                    if(nowPlay.getSrc().equals(playingMusicEntityList.get(i).getSrc())){
+                        SPUtils.getInstance().put(SPUtilsConfig.PLAYING_NUM,i);
+                        AppApplication.daoSession.getPlayingMusicEntityDao().deleteAll();
+                        for(PlayingMusicEntity entity : playingMusicEntityList){
+                            AppApplication.daoSession.getPlayingMusicEntityDao().insert(entity);
+                        }
+                    }
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(recycleViewTouchHelper);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
@@ -138,5 +246,11 @@ public class PlayingListDialog extends Dialog {
         //去除dialog周围padding
         getWindow().setBackgroundDrawableResource(R.color.transparent);
         onWindowAttributesChanged(lp);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        removeRxBus();
     }
 }

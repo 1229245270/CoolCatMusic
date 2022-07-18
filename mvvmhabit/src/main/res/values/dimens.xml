@@ -47,6 +47,11 @@
     <dimen name="seekArc_padding">20dp</dimen>
     <dimen name="seekArc_width">5dp</dimen>
 
+    <dimen name="switch_width">50dp</dimen>
+    <dimen name="switch_height">30dp</dimen>
+    <dimen name="switch_stroke">8dp</dimen>
+    <dimen name="switch_radius">15dp</dimen>
+
     <dimen name="status_bar_height">0dp</dimen>
 
 </resources>

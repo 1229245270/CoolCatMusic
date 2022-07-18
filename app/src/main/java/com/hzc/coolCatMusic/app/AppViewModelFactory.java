@@ -11,6 +11,7 @@ import com.hzc.coolCatMusic.ui.main.HomeFragment2ViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeFragment3ViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeFragmentViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeViewModel;
+import com.hzc.coolCatMusic.ui.main.NavigationThemeViewModel;
 import com.hzc.coolCatMusic.ui.main.NavigationSensorViewModel;
 import com.hzc.coolCatMusic.ui.main.NavigationSleepViewModel;
 import com.hzc.coolCatMusic.ui.network.NetWorkViewModel;
@@ -73,6 +74,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new NavigationSleepViewModel(mApplication,mRepository);
         }else if(modelClass.isAssignableFrom(NavigationSensorViewModel.class)){
             return (T) new NavigationSensorViewModel(mApplication,mRepository);
+        }else if(modelClass.isAssignableFrom(NavigationThemeViewModel.class)){
+            return (T) new NavigationThemeViewModel(mApplication,mRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

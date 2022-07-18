@@ -15,16 +15,27 @@ import com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel;
 import java.util.Collections;
 import java.util.List;
 
-public class RecycleViewTouchHelper<T> extends ItemTouchHelper.Callback {
+import me.goldze.mvvmhabit.utils.KLog;
+
+public abstract class RecycleViewTouchHelper<T> extends ItemTouchHelper.Callback {
     private final List<T> list;
     private final BaseRecycleAdapter<T> adapter;
+    private boolean edit = false;
+
     public RecycleViewTouchHelper(List<T> list, BaseRecycleAdapter<T> adapter){
         this.list = list;
         this.adapter = adapter;
     }
 
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        if(!edit){
+            return 0;
+        }
         if(recyclerView.getLayoutManager() instanceof GridLayoutManager){
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
@@ -51,6 +62,7 @@ public class RecycleViewTouchHelper<T> extends ItemTouchHelper.Callback {
                 Collections.swap(list, i, i - 1);
             }
         }
+        KLog.d("fromPosition:" + fromPosition + "," + toPosition);
         adapter.notifyItemMoved(fromPosition, toPosition);
         return true;
     }
@@ -64,6 +76,7 @@ public class RecycleViewTouchHelper<T> extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null && actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+
             viewHolder.itemView.setBackgroundColor(Color.GRAY);
         }
         super.onSelectedChanged(viewHolder, actionState);
@@ -74,7 +87,11 @@ public class RecycleViewTouchHelper<T> extends ItemTouchHelper.Callback {
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
         viewHolder.itemView.setBackgroundColor(Color.WHITE);
+        edit = false;
+        moveResult();
     }
+
+    public abstract void moveResult();
 
     //重写拖拽不可用
     @Override

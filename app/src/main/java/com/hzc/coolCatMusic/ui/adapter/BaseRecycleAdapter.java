@@ -70,6 +70,8 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         });
     }
 
+
+
     @Override
     public int getItemCount() {
         return mData.size();

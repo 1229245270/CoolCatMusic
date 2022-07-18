@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.base.BaseModel;
@@ -49,6 +50,8 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     private Disposable mSubscription;
     private Disposable musicSubscription;
 
+    private PlayingMusicEntity nowPlay;
+    private int oldPosition = -1;
     @Override
     public void registerRxBus() {
         super.registerRxBus();
@@ -64,10 +67,28 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         RxSubscriptions.add(mSubscription);
 
         musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PlayingMusicEntity>() {
                     @Override
                     public void accept(PlayingMusicEntity playingMusicEntity){
-                        changePlaying.postValue(playingMusicEntity);
+                        if(nowPlay != null && nowPlay == playingMusicEntity){
+                            return;
+                        }
+                        nowPlay = playingMusicEntity;
+                        if(oldPosition != -1){
+                            localSongAdapter.notifyItemChanged(oldPosition);
+                        }
+                        for(int i = 0;i < localSongList.size();i++){
+                            Object entity = localSongList.get(i);
+                            if(entity instanceof LocalSongEntity){
+                                LocalSongEntity localSongEntity = (LocalSongEntity) entity;
+                                if(playingMusicEntity.getSrc().equals(localSongEntity.getPath())){
+                                    localSongAdapter.notifyItemChanged(i);
+                                    oldPosition = i;
+                                    return;
+                                }
+                            }
+                        }
                     }
                 });
         RxSubscriptions.add(musicSubscription);
@@ -81,8 +102,6 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     }
 
     public SingleLiveEvent<Boolean> isRequestRead = new SingleLiveEvent<>();
-
-    public SingleLiveEvent<PlayingMusicEntity> changePlaying = new SingleLiveEvent<>();
 
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
@@ -124,7 +143,12 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         }
     }
 
-    public SongAdapter<Object> localSongAdapter = new SongAdapter<Object>();
+    public SongAdapter<Object> localSongAdapter = new SongAdapter<Object>() {
+        @Override
+        public void setOldPosition(int position) {
+            oldPosition = position;
+        }
+    };
 
     public ObservableList<Object> localSongList = new ObservableArrayList<Object>();
 

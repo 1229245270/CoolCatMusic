@@ -2,6 +2,8 @@ package com.hzc.coolCatMusic.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 
 import com.hzc.coolCatMusic.BuildConfig;
 import com.hzc.coolCatMusic.R;
@@ -10,15 +12,17 @@ import com.hzc.coolCatMusic.entity.DaoSession;
 import com.hzc.coolCatMusic.service.MusicConnection;
 import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.main.HomeActivity;
-import com.hzc.coolCatMusic.utils.NotificationUtils;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.lang.reflect.Field;
+
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
 
 /**
  * Created by goldze on 2017/7/16.
@@ -40,12 +44,31 @@ public class AppApplication extends BaseApplication {
         initDataBase();
         initService();
         initPlayer();
+        AssetManager assetManager = getAssets();
+        Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
+        try {
+            //Field field = Typeface.class.getDeclaredField("SERIF");
+            Field field = Typeface.class.getDeclaredField("MONOSPACE");
+            field.setAccessible(true);
+            field.set(null,typeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+            KLog.e("initTypeface:" + e.toString());
+        }
         //内存泄漏检测
         /*if (!LeakCanary.isInAnalyzerProcess(this)) {
             LeakCanary.install(this);
         }*/
     }
 
+
+    public void initTheme(){
+        if(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL)){
+            setTheme(R.style.AppTheme);
+        }else{
+            setTheme(R.style.AppTheme2);
+        }
+    }
 
     private void initCrash() {
         CaocConfig.Builder.create()
@@ -66,6 +89,11 @@ public class AppApplication extends BaseApplication {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"music-db");
         Database database = helper.getWritableDb();
         daoSession = new DaoMaster(database).newSession();
+        //初始化播放顺序
+        int i = SPUtils.getInstance().getInt(SPUtilsConfig.PLAYING_ORDER,-1);
+        if(i == -1){
+            SPUtils.getInstance().put(SPUtilsConfig.PLAYING_ORDER,SPUtilsConfig.ORDER_PLAY);
+        }
     }
 
     private void initService(){

@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
+import com.hzc.coolCatMusic.utils.MusicUtils;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
-public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
+public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
     @NonNull
     @Override
     public ViewDataBinding onCreateBinding(@NonNull LayoutInflater inflater, int layoutId, @NonNull ViewGroup viewGroup) {
@@ -60,7 +61,10 @@ public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
             TextView songName = binding.getRoot().findViewById(R.id.songName);
             TextView singer = binding.getRoot().findViewById(R.id.singer);
             LinearLayout songItem = binding.getRoot().findViewById(R.id.songItem);
-            if(entity.isCheck()){
+
+            PlayingMusicEntity playingMusicEntity = MusicUtils.getPlayingMusicEntity();
+            if(playingMusicEntity != null && playingMusicEntity.getSrc().equals(((LocalSongEntity) item).getPath())){
+                setOldPosition(position);
                 songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_select,null));
                 songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_check));
                 singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_check));
@@ -72,6 +76,8 @@ public class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
 
         }
     }
+
+    public abstract void setOldPosition(int position);
 
 }
 

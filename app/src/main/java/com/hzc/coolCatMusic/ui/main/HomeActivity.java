@@ -4,23 +4,13 @@ import static com.hzc.coolCatMusic.service.MusicConnection.musicInterface;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorEventListener2;
-import android.hardware.SensorManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,37 +21,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
+import com.hzc.coolCatMusic.app.SPUtilsConfig;
 import com.hzc.coolCatMusic.databinding.ActivityHomeBinding;
-import com.google.android.material.tabs.TabLayout;
-import com.hzc.coolCatMusic.service.MusicService;
-import com.hzc.coolCatMusic.ui.adapter.HomeCollectionAdapter;
 import com.hzc.coolCatMusic.ui.costom.CircleImage;
 import com.hzc.coolCatMusic.ui.costom.NiceImageView;
 import com.hzc.coolCatMusic.ui.costom.PlayingListDialog;
 import com.hzc.coolCatMusic.ui.costom.SeekArc;
-import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicFragment;
-import com.hzc.coolCatMusic.utils.NotificationUtils;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
 
 import me.goldze.mvvmhabit.base.BaseActivity;
-import me.goldze.mvvmhabit.base.BaseViewModel;
 import me.goldze.mvvmhabit.bus.RxBus;
-import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
 
 public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel> {
 
@@ -73,7 +50,32 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     public LinearLayout navigationSleepMode;
     public LinearLayout navigationSensorMode;
+    public LinearLayout navigationActionMode;
     public FrameLayout navigationFrameLayout;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //initTypeface();
+        /*if(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL)){
+            setTheme(R.style.AppTheme);
+        }else{
+            setTheme(R.style.AppTheme2);
+        }*/
+        super.onCreate(savedInstanceState);
+    }
+
+    private void initTypeface(){
+        AssetManager assetManager = getAssets();
+        Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
+        try {
+            Field field = Typeface.class.getDeclaredField("SERIF");
+            field.setAccessible(true);
+            field.set(null,typeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+            KLog.e("initTypeface:" + e.toString());
+        }
+    }
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -219,17 +221,30 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     private void initNavigation(){
         navigationSleepMode = binding.mainNavigation.navigationSleepMode;
         navigationSensorMode = binding.mainNavigation.navigationSensorMode;
+        navigationActionMode = binding.mainNavigation.navigationActionMode;
+        switchNavigationView(NavigationSleepFragment.getInstance());
+        navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+        navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
+        navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
+
         navigationSleepMode.setOnClickListener(view -> {
             navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
             navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
+            navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
             switchNavigationView(NavigationSleepFragment.getInstance());
         });
         navigationSensorMode.setOnClickListener(view -> {
             navigationSleepMode.setBackgroundColor(Color.TRANSPARENT);
             navigationSensorMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+            navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
             switchNavigationView(NavigationSensorFragment.getInstance());
         });
-        navigationFrameLayout = binding.mainNavigation.navigationFrameLayout;
+        navigationActionMode.setOnClickListener(view -> {
+            navigationSleepMode.setBackgroundColor(Color.TRANSPARENT);
+            navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
+            navigationActionMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+            switchNavigationView(NavigationThemeFragment.getInstance());
+        });
 
     }
 
@@ -243,17 +258,19 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         }
         Fragment sleepFragment = NavigationSleepFragment.getInstance();
         Fragment sensorFragment = NavigationSensorFragment.getInstance();
+        Fragment actionFragment = NavigationThemeFragment.getInstance();
         if(!sleepFragment.isHidden()){
             fragmentTransaction.hide(sleepFragment);
         }
         if(!sensorFragment.isHidden()){
             fragmentTransaction.hide(sensorFragment);
         }
-        if(showFragment == HomeFragment.getInstance()){
-            fragmentTransaction
-                    .show(showFragment)
-                    .commit();
+        if(!actionFragment.isHidden()){
+            fragmentTransaction.hide(actionFragment);
         }
+        fragmentTransaction
+                .show(showFragment)
+                .commit();
     }
 
     private boolean isChangePlayImage = true;

@@ -26,6 +26,7 @@ import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntityDao;
 import com.hzc.coolCatMusic.entity.TimingEntity;
+import com.hzc.coolCatMusic.utils.MusicUtils;
 import com.hzc.coolCatMusic.utils.NotificationUtils;
 
 import java.util.List;
@@ -322,9 +323,9 @@ public class MusicService extends Service {
                     //prepare()方法准备完毕后，此方法调用
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
-                        SeekPlayMessage(intent,playingNum);
                         mediaPlayer.start();
                         KLog.d("开始播放中");
+                        SeekPlayMessage(intent,playingNum);
                         SeekPlayCurrent();
                     }
                 });
@@ -340,7 +341,7 @@ public class MusicService extends Service {
         if(playingNum < 0){
             return;
         }
-        List<PlayingMusicEntity> list = getPlayingMusicEntityList();
+        List<PlayingMusicEntity> list = MusicUtils.getPlayingMusicEntityList();
         if(list.size() == 0){
             return;
         }
@@ -422,13 +423,15 @@ public class MusicService extends Service {
         AppApplication.isPlayComplete = false;
         if(timer == null){
             KLog.d("创建音乐timer对象");
-            timer = new Timer();
             //timer就是开启子线程执行任务，与纯粹的子线程不同的是可以控制子线程执行的时间
+        }else{
+            timer.cancel();
         }
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                PlayingMusicEntity entity = getPlayingMusicEntity();
+                PlayingMusicEntity entity = MusicUtils.getPlayingMusicEntity();
                 if(entity != null){
                     boolean isPlay = mediaPlayer.isPlaying();
                     if(!AppApplication.isUserPressThumb){
@@ -443,7 +446,6 @@ public class MusicService extends Service {
                             nextSong();
                         }
                     }
-
                     //通知变化
                     if(AppApplication.isOldPlaying != isPlay){
                         AppApplication.isOldPlaying = isPlay;
@@ -452,35 +454,6 @@ public class MusicService extends Service {
                 }
             }//开始计时任务后的200毫秒后第一次执行run方法，以后每500毫秒执行一次
         },200,500);
-    }
-
-    //获取当前播放歌曲
-    private PlayingMusicEntity getPlayingMusicEntity(){
-        int playingNum = SPUtils.getInstance().getInt(SPUtilsConfig.PLAYING_NUM,0);
-        List<PlayingMusicEntity> list = AppApplication.daoSession
-                .getPlayingMusicEntityDao()
-                .queryBuilder()
-                .list();
-        if(list != null && list.size() >= playingNum + 1) return list.get(playingNum);
-        return null;
-    }
-
-    private PlayingMusicEntity getPlayingMusicEntity(String src){
-        List<PlayingMusicEntity> list = AppApplication.daoSession
-                .getPlayingMusicEntityDao()
-                .queryBuilder()
-                .where(PlayingMusicEntityDao.Properties.Src.eq(src))
-                .list();
-        if(list != null && list.size() > 0) return list.get(0);
-        return null;
-    }
-
-    //获取播放歌曲列表
-    private List<PlayingMusicEntity> getPlayingMusicEntityList(){
-        return AppApplication.daoSession
-                .getPlayingMusicEntityDao()
-                .queryBuilder()
-                .list();
     }
 
     public static final String SRC = "src";
@@ -505,7 +478,7 @@ public class MusicService extends Service {
         String lyrics = intent.getStringExtra(LYRICS);
         String yearIssue = intent.getStringExtra(YEAR_ISSUE);
         //判断歌曲是否已存在播放列表
-        PlayingMusicEntity entity = getPlayingMusicEntity(src);
+        PlayingMusicEntity entity = MusicUtils.getPlayingMusicEntity(src);
         if(entity == null){
             entity = new PlayingMusicEntity();
             entity.setSrc(src);
@@ -517,7 +490,7 @@ public class MusicService extends Service {
             entity.setLyrics(lyrics);
             entity.setYearIssue(yearIssue);
             AppApplication.daoSession.insert(entity);
-            List<PlayingMusicEntity> list = getPlayingMusicEntityList();
+            List<PlayingMusicEntity> list = MusicUtils.getPlayingMusicEntityList();
             SPUtils.getInstance().put(SPUtilsConfig.PLAYING_NUM,list.size() - 1);
         }else{
             SPUtils.getInstance().put(SPUtilsConfig.PLAYING_NUM,playingNum);

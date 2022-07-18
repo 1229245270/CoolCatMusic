@@ -151,4 +151,22 @@ public class PlayingMusicEntity {
     public void setIsPlay(boolean isPlay) {
         this.isPlay = isPlay;
     }
+
+    @Override
+    public String toString() {
+        return "PlayingMusicEntity{" +
+                "id=" + id +
+                ", songName='" + songName + '\'' +
+                ", singer='" + singer + '\'' +
+                ", allName='" + allName + '\'' +
+                ", singerImage='" + singerImage + '\'' +
+                ", songImage='" + songImage + '\'' +
+                ", lyrics='" + lyrics + '\'' +
+                ", src='" + src + '\'' +
+                ", yearIssue='" + yearIssue + '\'' +
+                ", duration=" + duration +
+                ", current=" + current +
+                ", isPlay=" + isPlay +
+                '}';
+    }
 }
