@@ -38,7 +38,7 @@ public class AppApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         //是否开启打印日志
-        KLog.init(BuildConfig.DEBUG);
+        KLog.init(GlobalData.isDebug);
         //初始化全局异常崩溃
         initCrash();
         initDataBase();

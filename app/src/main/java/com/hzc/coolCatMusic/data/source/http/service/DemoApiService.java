@@ -1,5 +1,6 @@
 package com.hzc.coolCatMusic.data.source.http.service;
 
+import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import io.reactivex.Observable;
@@ -20,4 +21,7 @@ public interface DemoApiService {
     @FormUrlEncoded
     @POST("action/apiv2/banner")
     Observable<BaseResponse<DemoEntity>> demoPost(@Field("catalog") String catalog);
+
+    @GET("setting/font")
+    Observable<BaseBean> settingFont();
 }

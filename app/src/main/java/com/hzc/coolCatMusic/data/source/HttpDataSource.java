@@ -1,8 +1,10 @@
 package com.hzc.coolCatMusic.data.source;
 
+import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import io.reactivex.Observable;
+import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.http.BaseResponse;
 
 /**
@@ -19,5 +21,5 @@ public interface HttpDataSource {
 
     Observable<BaseResponse<DemoEntity>> demoPost(String catalog);
 
-
+    Observable<BaseBean> settingFont();
 }

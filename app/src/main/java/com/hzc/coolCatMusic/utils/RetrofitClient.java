@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.hzc.coolCatMusic.BuildConfig;
+import com.hzc.coolCatMusic.app.GlobalData;
 
 import java.io.File;
 import java.util.Map;
@@ -38,8 +39,6 @@ public class RetrofitClient {
     private static final int DEFAULT_TIMEOUT = 20;
     //缓存时间
     private static final int CACHE_TIMEOUT = 10 * 1024 * 1024;
-    //服务端根路径
-    public static String baseUrl = "https://www.oschina.net/";
 
     private static Context mContext = Utils.getContext();
 
@@ -58,13 +57,13 @@ public class RetrofitClient {
     }
 
     private RetrofitClient() {
-        this(baseUrl, null);
+        this(GlobalData.URL(), null);
     }
 
     private RetrofitClient(String url, Map<String, String> headers) {
 
         if (TextUtils.isEmpty(url)) {
-            url = baseUrl;
+            url = GlobalData.URL();
         }
 
         if (httpCacheDirectory == null) {

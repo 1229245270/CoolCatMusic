@@ -1,5 +1,6 @@
 package com.hzc.coolCatMusic.data.source.http;
 
+import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.data.source.HttpDataSource;
 import com.hzc.coolCatMusic.data.source.http.service.DemoApiService;
 import com.hzc.coolCatMusic.entity.DemoEntity;
@@ -73,4 +74,11 @@ public class HttpDataSourceImpl implements HttpDataSource {
     public Observable<BaseResponse<DemoEntity>> demoPost(String catalog) {
         return apiService.demoPost(catalog);
     }
+
+    @Override
+    public Observable<BaseBean> settingFont() {
+        return apiService.settingFont();
+    }
+
+
 }

@@ -6,11 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
+import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
+import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.data.DemoRepository;
+import com.hzc.coolCatMusic.entity.Font;
 import com.hzc.coolCatMusic.ui.adapter.MvAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
+
+import java.util.List;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
@@ -42,28 +47,7 @@ public class HomeFragment2ViewModel extends BaseViewModel<DemoRepository> {
         @Override
         public void onItemBind(@NonNull ItemBinding itemBinding, int position, Object item) {
             itemBinding.set(BR.item,R.layout.item_mv);
-            model.requestApi(new Function<Integer, ObservableSource<BaseModel>>() {
-                @Override
-                public ObservableSource<BaseModel> apply(@NonNull Integer integer) throws Exception {
-                    return null;
-                }
-            },new NetCallback<BaseModel>(){
 
-                @Override
-                public void onSuccess(BaseModel model) {
-
-                }
-
-                @Override
-                public void onFailure(String msg) {
-
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-            });
         }
     };
 

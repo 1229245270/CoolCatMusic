@@ -23,7 +23,6 @@ import me.goldze.mvvmhabit.http.BaseResponse;
 public class DemoRepository extends BaseModel implements HttpDataSource, LocalDataSource {
     private volatile static DemoRepository INSTANCE = null;
     private final HttpDataSource mHttpDataSource;
-
     private final LocalDataSource mLocalDataSource;
 
     private DemoRepository(@NonNull HttpDataSource httpDataSource,
@@ -77,6 +76,11 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
     @Override
     public Observable<BaseResponse<DemoEntity>> demoPost(String catalog) {
         return mHttpDataSource.demoPost(catalog);
+    }
+
+    @Override
+    public Observable<BaseBean> settingFont() {
+        return mHttpDataSource.settingFont();
     }
 
     @Override

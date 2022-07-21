@@ -8,24 +8,32 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;
+import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.databinding.FragmentNavigationThemeBinding;
+import com.hzc.coolCatMusic.entity.Font;
 
+import java.util.List;
+
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
 
 public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThemeBinding, NavigationThemeViewModel> {
 
     public static NavigationThemeFragment instance;
-    private Switch switchTheme;
 
     public static NavigationThemeFragment getInstance(){
         if(instance == null){
@@ -56,8 +64,8 @@ public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThem
     @Override
     public void initData() {
         super.initData();
-        switchTheme = binding.switchTheme;
-        switchTheme.setChecked(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL));
+        viewModel.settingFont();
+        /*switchTheme.setChecked(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL));
         switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -81,7 +89,8 @@ public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThem
                 },1000);
 
             }
-        });
+        });*/
+
     }
 
     @Override

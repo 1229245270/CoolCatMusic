@@ -67,7 +67,6 @@ public class LocalUtils {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(cover,0,cover.length);
                     mediaEntity.setImage(bitmap);
                 }
-                KLog.d(LocalUtilsTAG,mediaEntity.toString());
                 mediaList.add(mediaEntity);
             }
         } catch (Exception e) {
