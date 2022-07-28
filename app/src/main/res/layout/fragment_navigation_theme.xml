@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+
+        <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
         <import type="com.hzc.coolCatMusic.ui.main.NavigationThemeViewModel"/>
         <variable
             name="viewModel"
@@ -26,7 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"/>
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="@dimen/dp_20"
             android:id="@+id/rvTextFont"
+            adapter="@{viewModel.fontAdapter}"
+            app:layoutManager="@{LayoutManagers.grid(3)}"
+            items="@{viewModel.fontObservableList}"
+            app:itemBinding="@{viewModel.fontOnItemBind}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

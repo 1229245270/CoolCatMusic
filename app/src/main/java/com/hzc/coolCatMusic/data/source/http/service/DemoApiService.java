@@ -1,6 +1,6 @@
 package com.hzc.coolCatMusic.data.source.http.service;
 
-import com.hzc.coolCatMusic.data.BaseBean;
+import me.goldze.mvvmhabit.base.BaseBean;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import io.reactivex.Observable;

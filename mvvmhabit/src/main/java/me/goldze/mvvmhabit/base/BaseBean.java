@@ -1,4 +1,4 @@
-package com.hzc.coolCatMusic.data;
+package me.goldze.mvvmhabit.base;
 
 import android.text.TextUtils;
 

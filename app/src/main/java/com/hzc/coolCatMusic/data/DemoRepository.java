@@ -11,8 +11,8 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.http.BaseResponse;
 

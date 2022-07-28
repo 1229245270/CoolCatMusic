@@ -6,22 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 
-import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
-import com.hzc.coolCatMusic.data.BaseBean;
 import com.hzc.coolCatMusic.data.DemoRepository;
-import com.hzc.coolCatMusic.entity.Font;
 import com.hzc.coolCatMusic.ui.adapter.MvAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
-import java.util.List;
-
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
-import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.base.BaseViewModel;
-import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;

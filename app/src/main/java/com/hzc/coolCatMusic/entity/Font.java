@@ -6,6 +6,16 @@ public class Font {
     private String path;
     private String examplePath;
 
+    public Font() {
+    }
+
+    public Font(Long id, String name, String path, String examplePath) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.examplePath = examplePath;
+    }
+
     public Long getId() {
         return id;
     }
@@ -36,5 +46,15 @@ public class Font {
 
     public void setExamplePath(String examplePath) {
         this.examplePath = examplePath;
+    }
+
+    @Override
+    public String toString() {
+        return "Font{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", examplePath='" + examplePath + '\'' +
+                '}';
     }
 }

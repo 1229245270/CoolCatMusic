@@ -2,21 +2,17 @@ package com.hzc.coolCatMusic.ui.homefragment1;
 
 import android.app.Application;
 import android.content.Intent;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
-import com.hzc.coolCatMusic.app.AppViewModelFactory;
-import com.hzc.coolCatMusic.app.SPUtilsConfig;
 import com.hzc.coolCatMusic.base.viewmodel.ToolbarViewModel;
 import com.hzc.coolCatMusic.data.DemoRepository;
-import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.service.MusicConnection;
@@ -24,20 +20,13 @@ import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.SongAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
-import me.goldze.mvvmhabit.utils.KLog;
-import me.goldze.mvvmhabit.utils.SPUtils;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 

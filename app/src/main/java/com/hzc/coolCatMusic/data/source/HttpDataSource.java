@@ -1,10 +1,9 @@
 package com.hzc.coolCatMusic.data.source;
 
-import com.hzc.coolCatMusic.data.BaseBean;
+import me.goldze.mvvmhabit.base.BaseBean;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import io.reactivex.Observable;
-import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.http.BaseResponse;
 
 /**
