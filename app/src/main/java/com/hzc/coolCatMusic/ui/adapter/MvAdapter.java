@@ -3,14 +3,10 @@ package com.hzc.coolCatMusic.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.ui.costom.SampleCoverVideo;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -18,7 +14,6 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
@@ -34,7 +29,7 @@ public class MvAdapter<T> extends BindingRecyclerViewAdapter<T> {
     public void onBindBinding(@NonNull ViewDataBinding binding, int variableId, int layoutRes, int position, T item) {
         super.onBindBinding(binding, variableId, layoutRes, position, item);
         SampleCoverVideo video = binding.getRoot().findViewById(R.id.video);
-        String url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        String url = "https://cos.icxl.xyz/c03328206d894477a3f8c9767a4de5649342908.mov";
         video.loadCoverImage(url,R.mipmap.ic_launcher);
         video.getBackButton().setVisibility(View.GONE);
         //全屏按钮

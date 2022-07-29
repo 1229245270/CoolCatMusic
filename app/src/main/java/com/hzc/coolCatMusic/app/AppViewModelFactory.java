@@ -14,7 +14,6 @@ import com.hzc.coolCatMusic.ui.main.HomeViewModel;
 import com.hzc.coolCatMusic.ui.main.NavigationThemeViewModel;
 import com.hzc.coolCatMusic.ui.main.NavigationSensorViewModel;
 import com.hzc.coolCatMusic.ui.main.NavigationSleepViewModel;
-import com.hzc.coolCatMusic.ui.network.NetWorkViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -54,9 +53,7 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(NetWorkViewModel.class)) {
-            return (T) new NetWorkViewModel(mApplication, mRepository);
-        } else if (modelClass.isAssignableFrom(LoginViewModel.class)) {
+        if (modelClass.isAssignableFrom(LoginViewModel.class)) {
             return (T) new LoginViewModel(mApplication, mRepository);
         }else if(modelClass.isAssignableFrom(HomeViewModel.class)){
             return (T) new HomeViewModel(mApplication,mRepository);

@@ -64,7 +64,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         super.onCreate(savedInstanceState);
     }
 
-    private void initTypeface(){
+    /*private void initTypeface(){
         AssetManager assetManager = getAssets();
         Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
         try {
@@ -75,7 +75,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             e.printStackTrace();
             KLog.e("initTypeface:" + e.toString());
         }
-    }
+    }*/
 
     @Override
     public int initContentView(Bundle savedInstanceState) {

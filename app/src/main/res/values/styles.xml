@@ -30,7 +30,7 @@
         <!--colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色。-->
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="fontFamily">@font/mi_sans_normal</item>
+        <!--<item name="fontFamily">@font/mi_sans_normal</item>-->
     </style>
 
     <style name="ViewLineStyle">

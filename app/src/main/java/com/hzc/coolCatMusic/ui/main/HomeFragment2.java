@@ -17,8 +17,6 @@ import com.hzc.coolCatMusic.databinding.FragmentHome2Binding;
 import com.hzc.coolCatMusic.ui.costom.ScrollCalculatorHelper;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
-import java.util.Objects;
-
 import me.goldze.mvvmhabit.base.BaseFragment;
 
 public class HomeFragment2 extends BaseFragment<FragmentHome2Binding,HomeFragment2ViewModel> {

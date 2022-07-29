@@ -19,6 +19,7 @@ import org.greenrobot.greendao.database.Database;
 
 import java.lang.reflect.Field;
 
+import leakcanary.LeakCanary;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -44,7 +45,7 @@ public class AppApplication extends BaseApplication {
         initDataBase();
         initService();
         initPlayer();
-        AssetManager assetManager = getAssets();
+        /*AssetManager assetManager = getAssets();
         Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
         try {
             //Field field = Typeface.class.getDeclaredField("SERIF");
@@ -54,11 +55,8 @@ public class AppApplication extends BaseApplication {
         } catch (Exception e) {
             e.printStackTrace();
             KLog.e("initTypeface:" + e.toString());
-        }
-        //内存泄漏检测
-        /*if (!LeakCanary.isInAnalyzerProcess(this)) {
-            LeakCanary.install(this);
         }*/
+
     }
 
 
