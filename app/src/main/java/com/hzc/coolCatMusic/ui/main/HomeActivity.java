@@ -9,11 +9,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -219,40 +221,48 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     }
 
     private void initNavigation(){
+
         navigationSleepMode = binding.mainNavigation.navigationSleepMode;
         navigationSensorMode = binding.mainNavigation.navigationSensorMode;
         navigationActionMode = binding.mainNavigation.navigationActionMode;
-        switchNavigationView(NavigationSleepFragment.getInstance());
-        navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+        switchNavigationView(NavigationSleepFragment.getInstance(),0);
         navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
         navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
+        navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
 
         navigationSleepMode.setOnClickListener(view -> {
-            navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
             navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
             navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
-            switchNavigationView(NavigationSleepFragment.getInstance());
+            navigationSleepMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+            switchNavigationView(NavigationSleepFragment.getInstance(),0);
+            navigationIndex = 0;
         });
         navigationSensorMode.setOnClickListener(view -> {
             navigationSleepMode.setBackgroundColor(Color.TRANSPARENT);
-            navigationSensorMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
             navigationActionMode.setBackgroundColor(Color.TRANSPARENT);
-            switchNavigationView(NavigationSensorFragment.getInstance());
+            navigationSensorMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
+            switchNavigationView(NavigationSensorFragment.getInstance(),1);
+            navigationIndex = 1;
         });
         navigationActionMode.setOnClickListener(view -> {
             navigationSleepMode.setBackgroundColor(Color.TRANSPARENT);
             navigationSensorMode.setBackgroundColor(Color.TRANSPARENT);
             navigationActionMode.setBackground(ContextCompat.getDrawable(this,R.drawable.navigation_button_check));
-            switchNavigationView(NavigationThemeFragment.getInstance());
+            switchNavigationView(NavigationThemeFragment.getInstance(),2);
+            navigationIndex = 2;
         });
-
     }
 
-    private void switchNavigationView(Fragment showFragment){
+    private int navigationIndex = 0;
+    private void switchNavigationView(Fragment showFragment,int index){
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         //动画需要设置在最前面
-        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,R.anim.fragment_exit,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        if(navigationIndex < index){
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,R.anim.fragment_exit,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        }else{
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_pop_enter,R.anim.fragment_pop_exit,R.anim.fragment_enter,R.anim.fragment_exit);
+        }
         if(!showFragment.isAdded()){
             fragmentTransaction.add(R.id.navigationFrameLayout, showFragment);
         }

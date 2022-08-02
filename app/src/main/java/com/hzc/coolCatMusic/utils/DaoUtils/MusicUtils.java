@@ -1,4 +1,4 @@
-package com.hzc.coolCatMusic.utils;
+package com.hzc.coolCatMusic.utils.DaoUtils;
 
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;

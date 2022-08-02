@@ -1,20 +1,35 @@
 package com.hzc.coolCatMusic.entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
 public class Font {
+
+    @Id
     private Long id;
     private String name;
     private String path;
     private String examplePath;
 
-    public Font() {
-    }
+    private String localFile;
 
-    public Font(Long id, String name, String path, String examplePath) {
+
+    @Generated(hash = 458731363)
+    public Font(Long id, String name, String path, String examplePath,
+            String localFile) {
         this.id = id;
         this.name = name;
         this.path = path;
         this.examplePath = examplePath;
+        this.localFile = localFile;
     }
+
+    @Generated(hash = 1833324333)
+    public Font() {
+    }
+
 
     public Long getId() {
         return id;
@@ -48,13 +63,11 @@ public class Font {
         this.examplePath = examplePath;
     }
 
-    @Override
-    public String toString() {
-        return "Font{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", examplePath='" + examplePath + '\'' +
-                '}';
+    public String getLocalFile() {
+        return localFile;
+    }
+
+    public void setLocalFile(String localFile) {
+        this.localFile = localFile;
     }
 }

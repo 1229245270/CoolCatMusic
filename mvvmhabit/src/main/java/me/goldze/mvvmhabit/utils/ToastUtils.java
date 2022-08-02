@@ -411,7 +411,7 @@ public final class ToastUtils {
         } else if (backgroundColor != DEFAULT_COLOR) {
             view.setBackgroundColor(backgroundColor);
         }
-        sToast.setGravity(gravity, xOffset, yOffset);
+        //sToast.setGravity(gravity, xOffset, yOffset);
         sToast.show();
     }
 

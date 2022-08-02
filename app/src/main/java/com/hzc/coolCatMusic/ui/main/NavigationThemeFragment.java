@@ -1,18 +1,46 @@
 package com.hzc.coolCatMusic.ui.main;
 
+import static com.hzc.coolCatMusic.app.SPUtilsConfig.Theme_TEXT_FONT_ID;
+import static com.hzc.coolCatMusic.app.SPUtilsConfig.Theme_TEXT_FONT_PATH;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
+import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.databinding.FragmentNavigationThemeBinding;
+import com.hzc.coolCatMusic.entity.Font;
+import com.hzc.coolCatMusic.utils.DaoUtils.FontUtils;
+import com.hzc.coolCatMusic.utils.DialogUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.http.DownLoadManager;
+import me.goldze.mvvmhabit.http.download.ProgressCallBack;
+import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
+import me.goldze.mvvmhabit.utils.StringUtils;
+import me.goldze.mvvmhabit.utils.ToastUtils;
+import okhttp3.ResponseBody;
 
 public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThemeBinding, NavigationThemeViewModel> {
 
@@ -48,38 +76,101 @@ public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThem
     public void initData() {
         super.initData();
         viewModel.settingFont();
+    }
 
+    @Override
+    public void initViewObservable() {
+        super.initViewObservable();
+        viewModel.fontSingleLiveEvent.observe(this,font -> {
 
-        /*switchTheme.setChecked(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL));
-        switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                KLog.d("isChecked:" + isChecked);
-                if(isChecked){
-                    SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT,SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL);
-                }else{
-                    SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT,SPUtilsConfig.THEME_TEXT_FONT_SYSTEM);
+            Font daoFont = FontUtils.getFontEntity(font.getId());
+            if(viewModel.isHaveLocalFile(font)){
+                ToastUtils.showShort("应用");
+                if(daoFont != null){
+                    SPUtils.getInstance().put(Theme_TEXT_FONT_PATH,daoFont.getLocalFile());
+                    SPUtils.getInstance().put(Theme_TEXT_FONT_ID,daoFont.getId());
+                }else if(font.getId().equals(-2L)){
+                    SPUtils.getInstance().put(Theme_TEXT_FONT_PATH,"");
+                    SPUtils.getInstance().put(Theme_TEXT_FONT_ID,-2L);
                 }
+
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = AppApplication.getInstance().getPackageManager().getLaunchIntentForPackage(AppApplication.getInstance().getPackageName());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         AppApplication.getInstance().startActivity(intent);
                         android.os.Process.killProcess(android.os.Process.myPid());
                         System.exit(0);
                     }
                 },1000);
 
+            }else{
+                downFile(font);
             }
-        });*/
-
+        });
     }
 
-    @Override
-    public void initViewObservable() {
-        super.initViewObservable();
+
+    private long oldTime = System.currentTimeMillis();
+    @SuppressLint("CheckResult")
+    private void downFile(Font font){
+        if(getContext() == null){
+            return;
+        }
+        String destFileDir = getContext().getCacheDir().getPath();  //文件存放的路径
+        String destFileName = font.getName() + ".ttf";//文件存放的名称
+        DownLoadManager.getInstance().load(font.getPath(), new ProgressCallBack<ResponseBody>(destFileDir, destFileName) {
+            @Override
+            public void onStart() {
+                if(font.getId().equals(viewModel.getSelectFontId()) && getContext() != null){
+                    viewModel.changeView(100,0,View.VISIBLE,"0%",ContextCompat.getDrawable(getContext(), R.drawable.download_button));
+                }
+                viewModel.isDownloading = true;
+            }
+
+            @Override
+            public void onCompleted() {
+                if(getContext() == null){
+                    return;
+                }
+                if(viewModel.isHaveLocalFile(font)){
+                    if(font.getId().equals(viewModel.getSelectFontId())){
+                        viewModel.changeView(100,100,View.INVISIBLE,"应用",ContextCompat.getDrawable(getContext(), R.drawable.download_button_apply));
+                    }
+                }
+                viewModel.isDownloading = false;
+            }
+
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+                if(getContext() == null){
+                    return;
+                }
+                String destFileDir = getContext().getCacheDir().getPath();  //文件存放的路径
+                File dir = new File(destFileDir);
+                String destFileName = font.getName() + ".ttf";//文件存放的名称
+                File file = new File(dir, destFileName);
+                font.setLocalFile(file.getPath());
+                FontUtils.updateFontEntity(font);
+            }
+
+            @Override
+            public void progress(final long progress, final long total) {
+                long nowTime = System.currentTimeMillis();
+                if(font.getId().equals(viewModel.getSelectFontId()) && getContext() != null && nowTime >= oldTime + 100){
+                    viewModel.changeView((int) total,(int) progress,View.VISIBLE,(int)((double)progress / (double)total * 100) + "%",ContextCompat.getDrawable(getContext(), R.drawable.download_button));
+                    oldTime = nowTime;
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                KLog.d("onError " + e.toString());
+                //下载错误回调
+            }
+        });
     }
+
 }

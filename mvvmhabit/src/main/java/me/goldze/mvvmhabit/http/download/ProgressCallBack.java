@@ -50,6 +50,7 @@ public abstract class ProgressCallBack<T> {
         FileOutputStream fos = null;
         try {
             is = body.byteStream();
+
             File dir = new File(destFileDir);
             if (!dir.exists()) {
                 dir.mkdirs();

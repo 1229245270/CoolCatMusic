@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
@@ -11,7 +12,7 @@
     </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="vertical"
         android:layout_margin="@dimen/dp_20"
         android:layout_width="match_parent"
@@ -28,15 +29,39 @@
             android:background="@color/black"
             android:layout_width="match_parent"
             android:layout_height="80dp"/>
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
+            android:gravity="center"
             android:layout_marginTop="@dimen/dp_20"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <SeekBar
+                android:max="@{viewModel.max}"
+                android:progress="@{viewModel.progress}"
+                android:visibility="@{viewModel.seekbarVisibility}"
+                style="@style/DownloadSeekbarStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <Button
+                onClickCommand="@{viewModel.fontApplyCommand}"
+                android:id="@+id/btApply"
+                android:textColor="@color/black"
+                android:background="@{viewModel.buttonBackground}"
+                android:text="@{viewModel.buttonText}"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_40"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTextFont"
             adapter="@{viewModel.fontAdapter}"
-            app:layoutManager="@{LayoutManagers.grid(3)}"
             items="@{viewModel.fontObservableList}"
-            app:itemBinding="@{viewModel.fontOnItemBind}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            app:itemBinding="@{viewModel.fontOnItemBind}"
+            app:layoutManager="@{LayoutManagers.grid(3)}" />
 
     </LinearLayout>
 </layout>

@@ -1,8 +1,6 @@
 package com.hzc.coolCatMusic.ui.adapter;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,22 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
-import com.hzc.coolCatMusic.utils.MusicUtils;
+import com.hzc.coolCatMusic.utils.DaoUtils.MusicUtils;
 
 import java.util.List;
 
-import me.goldze.mvvmhabit.bus.RxBus;
-import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
 public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {

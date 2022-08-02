@@ -11,10 +11,8 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
@@ -22,11 +20,9 @@ import android.widget.Toast;
 
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;
-import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
-import com.hzc.coolCatMusic.entity.PlayingMusicEntityDao;
 import com.hzc.coolCatMusic.entity.TimingEntity;
-import com.hzc.coolCatMusic.utils.MusicUtils;
+import com.hzc.coolCatMusic.utils.DaoUtils.MusicUtils;
 import com.hzc.coolCatMusic.utils.NotificationUtils;
 
 import java.util.List;
@@ -80,7 +76,8 @@ public class MusicService extends Service {
             public void onScreenOn() {
                 //NotificationUtils.createForeNotification(getApplicationContext(),"0","name");
                 KLog.d("屏幕打开了");
-                Toast.makeText(getApplicationContext(),"屏幕打开了",Toast.LENGTH_LONG).show();
+                ToastUtils.showShort("屏幕打开了");
+                //Toast.makeText(getApplicationContext(),"屏幕打开了",Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -92,7 +89,9 @@ public class MusicService extends Service {
             @Override
             public void onUserPresent() {
                 KLog.d("屏幕解锁了");
-                Toast.makeText(getApplicationContext(),"屏幕解锁了",Toast.LENGTH_LONG).show();
+
+                ToastUtils.showShort("屏幕解锁了");
+                //Toast.makeText(getApplicationContext(),"屏幕解锁了",Toast.LENGTH_LONG).show();
             }
         });
     }

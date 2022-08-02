@@ -1,17 +1,14 @@
 package com.hzc.coolCatMusic.ui.costom;
 
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,13 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;
-import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.service.MusicConnection;
 import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.BaseRecycleAdapter;
 import com.hzc.coolCatMusic.ui.adapter.BaseRecycleViewHolder;
-import com.hzc.coolCatMusic.utils.MusicUtils;
+import com.hzc.coolCatMusic.utils.DaoUtils.MusicUtils;
 
 import java.util.List;
 

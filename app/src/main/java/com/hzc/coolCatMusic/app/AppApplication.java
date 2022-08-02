@@ -45,9 +45,18 @@ public class AppApplication extends BaseApplication {
         initDataBase();
         initService();
         initPlayer();
-        /*AssetManager assetManager = getAssets();
-        Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
+        initFont();
+    }
+
+
+    public void initFont(){
+        AssetManager assetManager = getAssets();
+
         try {
+            if(SPUtils.getInstance().getLong(SPUtilsConfig.Theme_TEXT_FONT_ID) == -2L){
+                return;
+            }
+            Typeface typeface = Typeface.createFromFile(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT_PATH));
             //Field field = Typeface.class.getDeclaredField("SERIF");
             Field field = Typeface.class.getDeclaredField("MONOSPACE");
             field.setAccessible(true);
@@ -55,16 +64,6 @@ public class AppApplication extends BaseApplication {
         } catch (Exception e) {
             e.printStackTrace();
             KLog.e("initTypeface:" + e.toString());
-        }*/
-
-    }
-
-
-    public void initTheme(){
-        if(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL)){
-            setTheme(R.style.AppTheme);
-        }else{
-            setTheme(R.style.AppTheme2);
         }
     }
 

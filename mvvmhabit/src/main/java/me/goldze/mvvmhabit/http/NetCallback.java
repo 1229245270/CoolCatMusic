@@ -1,6 +1,9 @@
 package me.goldze.mvvmhabit.http;
 
 
+import android.app.Application;
+import android.widget.Toast;
+
 import com.google.gson.JsonSyntaxException;
 
 import java.net.ConnectException;
@@ -23,9 +26,9 @@ public abstract class NetCallback<M> implements Observer<M> {
     @Override
     public void onNext(M m) {
         if (((BaseBean)m).getStatus()){
-            onFailureBefore(((BaseBean)m).getMsg());
-        }else {
             onSuccess(m);
+        }else {
+            onFailureBefore(((BaseBean)m).getMsg());
         }
     }
 
