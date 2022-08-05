@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main{
+            res.srcDirs = ['src/main/res', 'src/main/res-night']
+        }
+    }
 }
 
 dependencies {
@@ -60,6 +65,7 @@ dependencies {
     api (rootProject.ext.dependencies.glide){
         exclude group: 'com.android.support'
     }
+    implementation project(path: ':skin-androidx:skin-support-appcompat')
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
     //recyclerview的databinding套装
     api(rootProject.ext.dependencies.bindingcollectionadapter) {
@@ -77,5 +83,4 @@ dependencies {
 
     //沉浸式状态栏
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
-
 }

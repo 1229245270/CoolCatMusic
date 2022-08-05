@@ -4,20 +4,29 @@ import static com.hzc.coolCatMusic.service.MusicConnection.musicInterface;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.customview.widget.ViewDragHelper;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -34,6 +43,7 @@ import com.hzc.coolCatMusic.ui.costom.CircleImage;
 import com.hzc.coolCatMusic.ui.costom.NiceImageView;
 import com.hzc.coolCatMusic.ui.costom.PlayingListDialog;
 import com.hzc.coolCatMusic.ui.costom.SeekArc;
+import com.hzc.coolCatMusic.ui.detail.DetailActivity;
 
 import java.lang.reflect.Field;
 
@@ -45,10 +55,12 @@ import me.goldze.mvvmhabit.utils.SPUtils;
 public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel> {
 
     public DrawerLayout mainDrawerLayout;
+    public RelativeLayout mainRelativeLayout;
     public CircleImage progressImage;
     public SeekArc progressSeekArc;
     public FrameLayout mainFrameLayout;
     public NiceImageView mainPlayingList;
+    public NiceImageView mainDetail;
 
     public LinearLayout navigationSleepMode;
     public LinearLayout navigationSensorMode;
@@ -63,6 +75,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         }else{
             setTheme(R.style.AppTheme2);
         }*/
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setExitTransition(new Explode());
         super.onCreate(savedInstanceState);
     }
 
@@ -91,6 +105,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     @Override
     public HomeViewModel initViewModel() {
+
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
         return ViewModelProviders.of(this, factory).get(HomeViewModel.class);
     }
@@ -153,6 +168,66 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     private void initDrawableLayout(){
         mainDrawerLayout = binding.mainDrawerLayout;
+        mainRelativeLayout = binding.mainRelativeLayout;
+        mainDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                KLog.d("slideOffset" + slideOffset);
+                View mContent = mainDrawerLayout.getChildAt(0);//返回抽屉布局中的索引为0的子view
+                float scale = 1 - slideOffset;//偏移量导致scale从1.0-0.0
+                float rightScale = 0.8f + scale * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
+
+                //if (drawerView.getTag().equals("LEFT"))
+                //{
+
+                    float leftScale = 1 - 0.3f * scale;//0.7-1.0
+                    mainRelativeLayout.setScaleX(leftScale);
+                    mainRelativeLayout.setScaleY(leftScale);
+                    mainRelativeLayout.setAlpha(0.6f + 0.4f * (1 - scale));//开始这里设置成了这样，导致背景透明度有1.0-0.6
+//                    ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * scale);
+                    mainRelativeLayout.setTranslationX(drawerView.getMeasuredWidth() * (1 - scale));
+                    mainRelativeLayout.setPivotX(0);
+                    mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
+                    mContent.invalidate();
+                    mainRelativeLayout.setScaleX(rightScale);
+                    mainRelativeLayout.setScaleY(rightScale);
+                /*} else
+                {
+                    mainRelativeLayout.setTranslationX(-drawerView.getMeasuredWidth() * slideOffset);
+                    //设置大小变化的中心
+                    mainRelativeLayout.setPivotX(mContent.getMeasuredWidth());
+                    mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
+                    mContent.invalidate();
+                    mainRelativeLayout.setScaleX(rightScale);
+                    mainRelativeLayout.setScaleY(rightScale);
+                }*/
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                mainDrawerLayout.setDrawerLockMode(
+                        DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+
+
+        mainDetail = binding.mainDetail;
+        mainDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this,DetailActivity.class);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this).toBundle());
+            }
+        });
     }
 
     private void initProgress(){

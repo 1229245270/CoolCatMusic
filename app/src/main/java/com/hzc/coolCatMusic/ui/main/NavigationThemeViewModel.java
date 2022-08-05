@@ -19,6 +19,7 @@ import me.goldze.mvvmhabit.base.BaseBean;
 
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
+import com.hzc.coolCatMusic.app.SPUtilsConfig;
 import com.hzc.coolCatMusic.data.DemoRepository;
 import com.hzc.coolCatMusic.entity.Font;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
@@ -47,6 +48,7 @@ import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 import okhttp3.ResponseBody;
+import skin.support.SkinCompatManager;
 
 public class NavigationThemeViewModel extends BaseViewModel<DemoRepository> {
     public NavigationThemeViewModel(@NonNull Application application) {
@@ -97,6 +99,13 @@ public class NavigationThemeViewModel extends BaseViewModel<DemoRepository> {
         }
     });
 
+    public BindingCommand<Boolean> textClick = new BindingCommand<>(new BindingAction() {
+        @Override
+        public void call() {
+            KLog.d("11111111111");
+            SkinCompatManager.getInstance().loadSkin(SPUtilsConfig.THEME_MODE_NIGHT, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+        }
+    });
 
     public OnItemBind<Font> fontOnItemBind = new OnItemBind<Font>() {
         @Override

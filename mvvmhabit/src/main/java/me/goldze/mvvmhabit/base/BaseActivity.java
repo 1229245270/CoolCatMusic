@@ -14,7 +14,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.FragmentActivity;
@@ -58,6 +61,12 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         initViewObservable();
         //注册RxBus
         viewModel.registerRxBus();
+    }
+
+    @NonNull
+    @Override
+    public AppCompatDelegate getDelegate() {
+        return SkinAppCompatDelegateImpl.get(this, this);
     }
 
     private void setImmersionBar(){

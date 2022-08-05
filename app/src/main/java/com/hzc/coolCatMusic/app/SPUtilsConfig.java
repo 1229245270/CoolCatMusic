@@ -11,6 +11,6 @@ public class SPUtilsConfig {
     public static final String Theme_TEXT_FONT_PATH = "themeTextFontPath";
     public static final String Theme_TEXT_FONT_ID = "themeTextFontId";
 
-    public static final String THEME_TEXT_FONT_MI_SANS_NORMAL = "themeTextFontMiSansNormal";
-    public static final String THEME_TEXT_FONT_SYSTEM = "themeTextFontSystem";
+    public static final String THEME_MODE_NIGHT = "night_mode";
+    public static final String THEME_MODE_LIGHT = "light_mode";
 }

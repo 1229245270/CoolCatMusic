@@ -60,8 +60,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_20"
             app:itemBinding="@{viewModel.fontOnItemBind}"
             app:layoutManager="@{LayoutManagers.grid(3)}" />
+        <TextView
+            android:layout_marginBottom="@dimen/dp_20"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="个性换肤"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            onClickCommand="@{viewModel.textClick}"
+            android:text="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </layout>

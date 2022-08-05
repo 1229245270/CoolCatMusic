@@ -44,9 +44,11 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.hzc.coolCatMusic.app.SPUtilsConfig;
 import com.hzc.coolCatMusic.service.MusicService.MusicInterface;
 
 import com.hzc.coolCatMusic.R;
@@ -61,6 +63,12 @@ import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.base.BaseViewModel;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
+import me.goldze.mvvmhabit.utils.KLog;
+import skin.support.utils.SkinPreference;
+import skin.support.widget.SkinCompatBackgroundHelper;
+import skin.support.widget.SkinCompatSupportable;
+import skin.support.widget.SkinCompatTextHelper;
+import skin.support.widget.SkinCompatView;
 
 /**
  * 
@@ -72,7 +80,9 @@ import me.goldze.mvvmhabit.bus.RxSubscriptions;
  * @author Neil Davies
  * 
  */
-public class SeekArc extends View {
+public class SeekArc extends SkinCompatView {
+
+	private SkinCompatTextHelper mTextHelper;
 
 	private static final String TAG = SeekArc.class.getSimpleName();
 	private static int INVALID_PROGRESS_VALUE = -1;
@@ -154,7 +164,6 @@ public class SeekArc extends View {
 	private float mTouchIgnoreRadius;
 	private OnSeekArcChangeListener mOnSeekArcChangeListener;
 	private double radiu = 0;
-
 
 	public interface OnSeekArcChangeListener {
 
@@ -265,9 +274,8 @@ public class SeekArc extends View {
 			mArcPaint.setStrokeCap(Paint.Cap.ROUND);
 			mProgressPaint.setStrokeCap(Paint.Cap.ROUND);
 		}
-
-
 	}
+
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -781,5 +789,25 @@ public class SeekArc extends View {
 
 	public void setMax(int mMax) {
 		this.mMax = mMax;
+	}
+
+	@Override
+	public void applySkin() {
+		super.applySkin();
+		switch (SkinPreference.getInstance().getSkinName()){
+			case SPUtilsConfig.THEME_MODE_NIGHT:
+				int arcColor = ContextCompat.getColor(getContext(),R.color.progress_gray_night_mode);
+				int progressColor = ContextCompat.getColor(getContext(),R.color.default_blue_light_night_mode);
+				if(mArcPaint != null){
+					mArcPaint.setColor(arcColor);
+				}
+				if(mProgressPaint != null){
+					mProgressPaint.setColor(progressColor);
+				}
+				break;
+			case SPUtilsConfig.THEME_MODE_LIGHT:
+
+				break;
+		}
 	}
 }

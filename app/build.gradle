@@ -28,7 +28,8 @@ android {
         versionName rootProject.ext.android.versionName
 
         ndk {
-            abiFilters 'armeabi'
+            abiFilters "x86"
+            //abiFilters 'armeabi'
         }
     }
     buildTypes {
@@ -48,6 +49,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.appcompat:appcompat:1.2.0'
+        }
+    }
+
+    sourceSets {
+        main{
+            res.srcDirs = ['src/main/res', 'src/main/res-night']
+        }
+    }
 }
 
 dependencies {
@@ -62,7 +76,13 @@ dependencies {
     }
     //MVVMHabit
     implementation project(':mvvmhabit')
+    implementation project(':skin-androidx:skin-support')
+
     implementation 'androidx.wear:wear:1.1.0'
+    implementation project(path: ':skin-androidx:skin-support-appcompat')
+    implementation project(path: ':skin-androidx:skin-support-design')
+    implementation project(path: ':skin-androidx:skin-support-constraint-layout')
+    implementation project(path: ':skin-androidx:skin-support-cardview')
 //    implementation rootProject.ext.dependencies.MVVMHabit
     //内存泄漏测试
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'

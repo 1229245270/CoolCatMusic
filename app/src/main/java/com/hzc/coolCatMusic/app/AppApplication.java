@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.transition.Explode;
+import android.view.Window;
+
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.hzc.coolCatMusic.BuildConfig;
 import com.hzc.coolCatMusic.R;
@@ -24,6 +28,11 @@ import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
+import skin.support.SkinCompatManager;
+import skin.support.app.SkinAppCompatViewInflater;
+import skin.support.app.SkinCardViewInflater;
+import skin.support.constraint.app.SkinConstraintViewInflater;
+import skin.support.design.app.SkinMaterialViewInflater;
 
 /**
  * Created by goldze on 2017/7/16.
@@ -46,12 +55,12 @@ public class AppApplication extends BaseApplication {
         initService();
         initPlayer();
         initFont();
+        initSkin();
+
     }
 
 
-    public void initFont(){
-        AssetManager assetManager = getAssets();
-
+    private void initFont(){
         try {
             if(SPUtils.getInstance().getLong(SPUtilsConfig.Theme_TEXT_FONT_ID) == -2L){
                 return;
@@ -65,6 +74,19 @@ public class AppApplication extends BaseApplication {
             e.printStackTrace();
             KLog.e("initTypeface:" + e.toString());
         }
+    }
+
+    private void initSkin(){
+        SkinCompatManager.withoutActivity(this)
+                .addInflater(new SkinAppCompatViewInflater())   // 基础控件换肤
+                .addInflater(new SkinMaterialViewInflater())    // material design
+                .addInflater(new SkinConstraintViewInflater())  // ConstraintLayout
+                .addInflater(new SkinCardViewInflater())        // CardView v7
+                //.addInflater(new SeekArcInflater())
+                //.setSkinStatusBarColorEnable(true)              // 关闭状态栏换肤
+//                .setSkinWindowBackgroundEnable(false)           // 关闭windowBackground换肤
+//                .setSkinAllActivityEnable(false)                // true: 默认所有的Activity都换肤; false: 只有实现SkinCompatSupportable接口的Activity换肤
+                .loadSkin();
     }
 
     private void initCrash() {

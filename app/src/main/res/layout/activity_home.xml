@@ -20,6 +20,7 @@
             android:layout_height="match_parent">
 
             <RelativeLayout
+                android:id="@+id/mainRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -29,6 +30,18 @@
                     android:id="@+id/mainFrameLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
+                <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    android:id="@+id/mainDetail"
+                    app:is_circle="true"
+                    android:src="@mipmap/ic_launcher"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_marginRight="@dimen/dp_50"
+                    android:layout_toLeftOf="@+id/mainProgress"
+                    android:layout_alignBottom="@+id/mainProgress"
+                    android:layout_alignTop="@+id/mainProgress" />
+
                 <include
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
@@ -60,6 +73,7 @@
                     android:layout_height="match_parent"
                     layout="@layout/navigation_view"/>
             </com.google.android.material.navigation.NavigationView>
+
         </androidx.drawerlayout.widget.DrawerLayout>
     </LinearLayout>
 </layout>

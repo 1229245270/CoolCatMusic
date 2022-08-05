@@ -15,10 +15,12 @@ import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.event.ChangeFragmentEvent;
 import com.hzc.coolCatMusic.event.IsOpenDrawerLayoutEvent;
+import com.hzc.coolCatMusic.ui.detail.DetailActivity;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.base.BaseViewModel;
+import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -67,6 +69,9 @@ public class HomeViewModel extends BaseViewModel<DemoRepository> {
         RxBus.getDefault().post(event);
     }
 
+    /*public BindingCommand<Boolean> openDetailActivity = new BindingCommand<Boolean>(() -> {
+        startActivity(DetailActivity.class);
+    });*/
 
     //音乐条显示
     public SingleLiveEvent<PlayingMusicEntity> changePlaying = new SingleLiveEvent<>();
