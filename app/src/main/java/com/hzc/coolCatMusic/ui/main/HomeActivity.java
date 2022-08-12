@@ -9,11 +9,13 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.LinearInterpolator;
@@ -44,6 +46,7 @@ import com.hzc.coolCatMusic.ui.costom.NiceImageView;
 import com.hzc.coolCatMusic.ui.costom.PlayingListDialog;
 import com.hzc.coolCatMusic.ui.costom.SeekArc;
 import com.hzc.coolCatMusic.ui.detail.DetailActivity;
+import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicFragment;
 
 import java.lang.reflect.Field;
 
@@ -69,29 +72,101 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //initTypeface();
-        /*if(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT).equals(SPUtilsConfig.THEME_TEXT_FONT_MI_SANS_NORMAL)){
-            setTheme(R.style.AppTheme);
-        }else{
-            setTheme(R.style.AppTheme2);
-        }*/
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
         super.onCreate(savedInstanceState);
     }
 
-    /*private void initTypeface(){
-        AssetManager assetManager = getAssets();
-        Typeface typeface = Typeface.createFromAsset(assetManager, "font/mi_sans_normal.ttf");
-        try {
-            Field field = Typeface.class.getDeclaredField("SERIF");
-            field.setAccessible(true);
-            field.set(null,typeface);
-        } catch (Exception e) {
-            e.printStackTrace();
-            KLog.e("initTypeface:" + e.toString());
+    float startX = 0;
+    float startY = 0;
+    boolean isBack = false;
+    View showView;
+    View hideView;
+    long time;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                HomeFragment.getInstance().mainViewPager.requestDisallowInterceptTouchEvent(true);
+                startX = ev.getX();
+                startY = ev.getY();
+                isBack = false;
+                time = System.currentTimeMillis();
+                int count = mainFrameLayout.getChildCount();
+                if(count >= 2){
+                    showView = mainFrameLayout.getChildAt(count - 1);
+                    hideView = mainFrameLayout.getChildAt(count - 2);
+                }else{
+                    showView = null;
+                    hideView = null;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                //来到新的坐标
+                float endX = ev.getX();
+                float endY = ev.getY();
+                //计算偏移量
+                float distanceX = endX - startX;
+                float distanceY = endY - startY;
+                //判断滑动方向
+                HomeFragment homeFragment = HomeFragment.getInstance();
+                if(Math.abs(distanceX) > Math.abs(distanceY)){
+                    //水平方向滑动
+                    //当滑动到ViewPager的第0个页面，并且是从左到右滑动
+                    int currentItem = homeFragment.mainViewPager.getCurrentItem();
+                    FragmentManager manager = getSupportFragmentManager();
+                    //存在fragment回退栈
+                    if(manager.getBackStackEntryCount() > 0 && distanceX > 0){
+                        if(showView != null && hideView != null){
+                            showView.setTranslationX(distanceX);
+                            hideView.setTranslationX(hideView.getMeasuredWidth());
+                            long moveTime = System.currentTimeMillis();
+                            /*if(moveTime - ){
+
+                            }else if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
+                                isBack = true;
+                            }else{
+
+                            }*/
+                        }
+                        /*float scale = distanceX;//偏移量导致scale从1.0-0.0
+                        float rightScale = 0.8f + scale * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
+                        showView.setAlpha(0.6f + 0.4f * scale);//开始这里设置成了这样，导致背景透明度有1.0-0.6
+                        showView.setTranslationX(showView.getMeasuredWidth() * (1 - scale));
+                        showView.setPivotX(0);
+                        showView.setPivotY(showView.getMeasuredHeight() / 2);
+                        showView.setScaleX(rightScale);
+                        showView.setScaleY(rightScale);*/
+                        //isBack = true;
+                    }else if(currentItem == 0 && distanceX > 0){
+                        homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                    } else{
+                        //其他,中间部分
+                        homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                    }
+                }else{
+                    //竖直方向滑动
+                    homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+
+                if(isBack){
+                    super.onBackPressed();
+                }else{
+                    if(showView != null && hideView != null){
+                        showView.setTranslationX(0);
+                        hideView.setTranslationX(0);
+                    }
+                }
+                break;
+            default:
+                break;
         }
-    }*/
+        return super.dispatchTouchEvent(ev);
+
+    }
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -137,6 +212,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             exitTime = System.currentTimeMillis();
         }else{
             super.onBackPressed();
+            setMEdgeSize();
         }
     }
 
@@ -154,16 +230,20 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 fragmentTransaction.hide(fragment);
             }
         }
+
+        //主页展示
         if(showFragment == HomeFragment.getInstance()){
             fragmentTransaction
                     .show(showFragment)
-                    .commit();
+                    .commitNow();
         }else{
             fragmentTransaction
                     .show(showFragment)
                     .addToBackStack(null)
                     .commit();
+            manager.executePendingTransactions();
         }
+        setMEdgeSize();
     }
 
     private void initDrawableLayout(){
@@ -172,35 +252,16 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         mainDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                KLog.d("slideOffset" + slideOffset);
                 View mContent = mainDrawerLayout.getChildAt(0);//返回抽屉布局中的索引为0的子view
                 float scale = 1 - slideOffset;//偏移量导致scale从1.0-0.0
                 float rightScale = 0.8f + scale * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
-
-                //if (drawerView.getTag().equals("LEFT"))
-                //{
-
-                    float leftScale = 1 - 0.3f * scale;//0.7-1.0
-                    mainRelativeLayout.setScaleX(leftScale);
-                    mainRelativeLayout.setScaleY(leftScale);
-                    mainRelativeLayout.setAlpha(0.6f + 0.4f * (1 - scale));//开始这里设置成了这样，导致背景透明度有1.0-0.6
-//                    ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * scale);
-                    mainRelativeLayout.setTranslationX(drawerView.getMeasuredWidth() * (1 - scale));
-                    mainRelativeLayout.setPivotX(0);
-                    mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
-                    mContent.invalidate();
-                    mainRelativeLayout.setScaleX(rightScale);
-                    mainRelativeLayout.setScaleY(rightScale);
-                /*} else
-                {
-                    mainRelativeLayout.setTranslationX(-drawerView.getMeasuredWidth() * slideOffset);
-                    //设置大小变化的中心
-                    mainRelativeLayout.setPivotX(mContent.getMeasuredWidth());
-                    mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
-                    mContent.invalidate();
-                    mainRelativeLayout.setScaleX(rightScale);
-                    mainRelativeLayout.setScaleY(rightScale);
-                }*/
+                mainRelativeLayout.setAlpha(0.6f + 0.4f * scale);//开始这里设置成了这样，导致背景透明度有1.0-0.6
+                mainRelativeLayout.setTranslationX(drawerView.getMeasuredWidth() * (1 - scale));
+                mainRelativeLayout.setPivotX(0);
+                mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
+                mContent.invalidate();
+                mainRelativeLayout.setScaleX(rightScale);
+                mainRelativeLayout.setScaleY(rightScale);
             }
 
             @Override
@@ -210,15 +271,12 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-                mainDrawerLayout.setDrawerLockMode(
-                        DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
             }
         });
-
 
         mainDetail = binding.mainDetail;
         mainDetail.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +286,52 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this).toBundle());
             }
         });
+    }
+
+    private void setMEdgeSize(){
+        boolean isOpen = true;
+        FragmentManager manager = getSupportFragmentManager();
+        if(manager.getBackStackEntryCount() > 0){
+            isOpen = false;
+        }
+        try {
+            Field leftDraggerField = mainDrawerLayout.getClass().getDeclaredField("mLeftDragger");//通过反射获得DrawerLayout类中mLeftDragger字段
+            leftDraggerField.setAccessible(true);//私有属性要允许修改
+            ViewDragHelper vdh = (ViewDragHelper) leftDraggerField.get(mainDrawerLayout);//获取ViewDragHelper的实例, 通过ViewDragHelper实例获取mEdgeSize字段
+            Field edgeSizeField = vdh.getClass().getDeclaredField("mEdgeSize");//依旧是通过反射获取ViewDragHelper类中mEdgeSize字段, 这个字段控制边缘触发范围
+            edgeSizeField.setAccessible(true);//依然是私有属性要允许修改
+            int edgeSize = edgeSizeField.getInt(vdh);//这里获得mEdgeSize真实值
+            //KLog.d("mEdgeSize: "+edgeSize);//这里可以打印一下看看值是多少
+
+            //Start 获取手机屏幕宽度，单位px
+            Point point = new Point();
+            getWindowManager().getDefaultDisplay().getRealSize(point);
+            //End 获取手机屏幕
+
+            //KLog.d("point: "+point.x);//依然可以打印一下看看值是多少
+            edgeSizeField.setInt(vdh, Math.max(isOpen ? edgeSize : 0,isOpen ? point.x : 0));//这里设置mEdgeSize的值！！！，Math.max函数取得是最大值，也可以自己指定想要触发的范围值，如: 500,注意单位是px
+            //写到这里已经实现了，但是你会发现，如果长按触发范围，侧边栏也会弹出来，而且速度不太同步，稳定
+
+            //Start 解决长按会触发侧边栏
+            //长按会触发侧边栏是DrawerLayout类的私有类ViewDragCallback中的mPeekRunnable实现导致，我们通过反射把它置空
+            Field leftCallbackField = mainDrawerLayout.getClass().getDeclaredField("mLeftCallback");//通过反射拿到私有类ViewDragCallback字段
+            leftCallbackField.setAccessible(true);//私有字段设置允许修改
+            ViewDragHelper.Callback vdhCallback = (ViewDragHelper.Callback) leftCallbackField.get(mainDrawerLayout);//ViewDragCallback类是私有类，我们返回类型定义成他的父类
+            Field peekRunnableField = vdhCallback.getClass().getDeclaredField("mPeekRunnable");//我们依然是通过反射拿到关键字段，mPeekRunnable
+            peekRunnableField.setAccessible(true);//不解释了
+            //定义一个空的实现
+            Runnable nullRunnable = new Runnable(){
+                @Override
+                public void run() {
+
+                }
+            };
+            peekRunnableField.set(vdhCallback, nullRunnable);//给mPeekRunnable字段置空
+            //End 解决长按触发侧边栏
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initProgress(){

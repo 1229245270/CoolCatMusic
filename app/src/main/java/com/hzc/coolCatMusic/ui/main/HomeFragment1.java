@@ -46,6 +46,7 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         return BR.viewModel;
     }
 
+
     @Override
     public HomeFragment1ViewModel initViewModel() {
         if(getActivity() == null){
@@ -54,6 +55,7 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getActivity().getApplication());
         return ViewModelProviders.of(this,factory).get(HomeFragment1ViewModel.class);
     }
+
 
     @Override
     public void initData() {

@@ -18,7 +18,7 @@
     <drawable name="unselectColor">#000000</drawable>
 
     <color name="ic_launcher_background">#FFEE5F</color>
-    <color name="transparent">#ffffffff</color>
+    <color name="transparent">#01ffffff</color>
 
     <color name="recycleViewRipple">#aaaaaa</color>
     <color name="recycleViewSelect">#eeeeee</color>

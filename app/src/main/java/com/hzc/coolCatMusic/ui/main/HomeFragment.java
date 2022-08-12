@@ -4,11 +4,14 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -24,10 +27,12 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
+import java.lang.reflect.Field;
+
 import me.goldze.mvvmhabit.base.BaseFragment;
 import me.goldze.mvvmhabit.utils.KLog;
 
-public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentViewModel> {
+public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentViewModel> implements SlidingPaneLayout.PanelSlideListener {
 
     public static HomeFragment instance;
 
@@ -68,6 +73,8 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentV
         super.initData();
         initMainRightMenu();
         initMainTab();
+
+        //initSwipeBackFinish();
     }
 
     private void initMainRightMenu(){
@@ -160,6 +167,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentV
         ).attach();
     }
 
+
     @Override
     public void initViewObservable() {
         super.initViewObservable();
@@ -169,4 +177,60 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentV
             //mainDrawerLayout.openDrawer(GravityCompat.START);
         });
     }
+
+    @Override
+    public void onPanelSlide(@NonNull View panel, float slideOffset) {
+
+    }
+
+    @Override
+    public void onPanelOpened(@NonNull View panel) {
+        super.onDestroy();
+        //getActivity().overridePendingTransition(0,R.anim.back_to_right);
+        //KLog.d("onPanelOpened");
+    }
+
+    @Override
+    public void onPanelClosed(@NonNull View panel) {
+
+    }
+
+    protected boolean isSupportSwipeBack() {
+        return true;
+    }
+
+    /**
+     * 初始化滑动返回
+     */
+    /*private void initSwipeBackFinish() {
+        if (isSupportSwipeBack()) {
+            SlidingPaneLayout slidingPaneLayout = new SlidingPaneLayout();
+            //通过反射改变mOverhangSize的值为0，这个mOverhangSize值为菜单到右边屏幕的最短距离，默认
+            //是32dp，现在给它改成0
+            try {
+                //mOverhangSize属性，意思就是左菜单离右边屏幕边缘的距离
+                Field f_overHang = SlidingPaneLayout.class.getDeclaredField("mOverhangSize");
+                f_overHang.setAccessible(true);
+                //设置左菜单离右边屏幕边缘的距离为0，设置全屏
+                f_overHang.set(slidingPaneLayout, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            slidingPaneLayout.setPanelSlideListener(this);
+            slidingPaneLayout.setSliderFadeColor(getResources().getColor(android.R.color.transparent));
+            // 左侧的透明视图
+            View leftView = new View(getContext());
+            leftView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            leftView.setBackgroundColor(Color.TRANSPARENT);
+            slidingPaneLayout.addView(leftView, 0);  //添加到SlidingPaneLayout中
+            // 右侧的内容视图
+            ViewGroup decor = (ViewGroup) getActivity().getWindow().getDecorView();
+            ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
+            decorChild.setBackgroundColor(getResources().getColor(android.R.color.white));
+            decor.removeView(decorChild);
+            decor.addView(slidingPaneLayout);
+            // 为 SlidingPaneLayout 添加内容视图
+            slidingPaneLayout.addView(decorChild, 1);
+        }
+    }*/
 }

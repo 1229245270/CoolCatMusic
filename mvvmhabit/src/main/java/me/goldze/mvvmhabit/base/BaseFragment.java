@@ -1,6 +1,7 @@
 package me.goldze.mvvmhabit.base;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,9 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, initContentView(inflater, container, savedInstanceState), container, false);
-        return binding.getRoot();
+        View view = binding.getRoot();
+        view.setBackgroundColor(Color.WHITE);
+        return view;
     }
 
     @Override

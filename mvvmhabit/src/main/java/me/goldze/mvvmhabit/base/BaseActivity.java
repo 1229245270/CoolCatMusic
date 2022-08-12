@@ -3,6 +3,7 @@ package me.goldze.mvvmhabit.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -45,6 +46,9 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     private int viewModelId;
     private MaterialDialog dialog;
 
+    BaseGestureHandler baseGestureHandler = new BaseGestureHandler();
+    private boolean backGesture = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +74,6 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     }
 
     private void setImmersionBar(){
-
         ImmersionBar.with(this).init();
         /*ImmersionBar.with(this)
                 .transparentStatusBar()
@@ -78,8 +81,19 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
                 .init();*/
     }
 
+    public void setBackGesture(boolean backGesture) {
+        this.backGesture = backGesture;
+    }
 
-
+    /*@Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(backGesture){
+            KLog.d("event" + ev.toString());
+            return baseGestureHandler.doEventF(ev) || super.dispatchTouchEvent(ev);
+        }else{
+            return super.dispatchTouchEvent(ev);
+        }
+    }*/
 
     @Override
     protected void onDestroy() {

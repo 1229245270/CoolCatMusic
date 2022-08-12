@@ -41,6 +41,11 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_localmusic;
     }
