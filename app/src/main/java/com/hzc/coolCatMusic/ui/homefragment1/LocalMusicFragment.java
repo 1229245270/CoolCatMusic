@@ -17,7 +17,9 @@ import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.databinding.FragmentLocalmusicBinding;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
+import com.hzc.coolCatMusic.ui.main.HomeActivity;
 import com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel;
+import com.hzc.coolCatMusic.ui.main.HomeViewModel;
 import com.hzc.coolCatMusic.utils.DialogUtils;
 import com.hzc.coolCatMusic.utils.LocalUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -46,6 +48,11 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return R.layout.fragment_localmusic;
     }
@@ -54,6 +61,7 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
     public int initVariableId() {
         return BR.viewModel;
     }
+
 
 
     @Override

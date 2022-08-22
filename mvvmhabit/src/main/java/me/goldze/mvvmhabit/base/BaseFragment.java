@@ -6,10 +6,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -42,10 +48,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         initParam();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+
+
 
     @Nullable
     @Override
@@ -156,6 +160,17 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                     manager.popBackStack();
                 }else{
                     getActivity().finish();
+                }
+                KLog.e("fragment getFinishEvent");
+                try {
+                    final Class homeActivity = Class.forName("com.hzc.coolCatMusic.ui.main.HomeActivity");
+                    Method method = homeActivity.getMethod("setMEdgeSize",boolean.class);
+                    //Constructor constructor = homeActivity.getConstructor();
+                    //method.invoke(constructor.newInstance(),true);
+                    method.invoke(null,true);
+                } catch (Exception e) {
+                    KLog.e("fragment error:" + e.toString());
+                    e.printStackTrace();
                 }
             }
         });

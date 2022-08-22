@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -17,8 +18,12 @@ import android.transition.Explode;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,6 +40,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.navigation.NavigationView;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
@@ -64,6 +70,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     public FrameLayout mainFrameLayout;
     public NiceImageView mainPlayingList;
     public NiceImageView mainDetail;
+    public NavigationView mainNavigationView;
 
     public LinearLayout navigationSleepMode;
     public LinearLayout navigationSensorMode;
@@ -82,7 +89,12 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     boolean isBack = false;
     View showView;
     View hideView;
-    long time;
+    long beforeTime;
+    long lastTime;
+    //每毫秒初始宽度
+    float comeWidth = 0;
+    //每毫秒变化宽度
+    float moveWidth = 0;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -92,11 +104,14 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 startX = ev.getX();
                 startY = ev.getY();
                 isBack = false;
-                time = System.currentTimeMillis();
+                beforeTime = System.currentTimeMillis();
+                comeWidth = 0;
                 int count = mainFrameLayout.getChildCount();
+                KLog.d("getChildCount " + count);
                 if(count >= 2){
                     showView = mainFrameLayout.getChildAt(count - 1);
                     hideView = mainFrameLayout.getChildAt(count - 2);
+                    //hideView.setTranslationX(hideView.getMeasuredWidth());
                 }else{
                     showView = null;
                     hideView = null;
@@ -120,25 +135,22 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                     if(manager.getBackStackEntryCount() > 0 && distanceX > 0){
                         if(showView != null && hideView != null){
                             showView.setTranslationX(distanceX);
-                            hideView.setTranslationX(hideView.getMeasuredWidth());
-                            long moveTime = System.currentTimeMillis();
-                            /*if(moveTime - ){
-
-                            }else if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
+                            lastTime = System.currentTimeMillis();
+                            if(lastTime - beforeTime > 100){
+                                beforeTime = lastTime;
+                                moveWidth = distanceX - comeWidth;
+                                comeWidth = distanceX;
+                                KLog.d("变化的宽度" + moveWidth);
+                                if(moveWidth > 100){
+                                    isBack = true;
+                                }else{
+                                    isBack = false;
+                                }
+                            }
+                            if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
                                 isBack = true;
-                            }else{
-
-                            }*/
+                            }
                         }
-                        /*float scale = distanceX;//偏移量导致scale从1.0-0.0
-                        float rightScale = 0.8f + scale * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
-                        showView.setAlpha(0.6f + 0.4f * scale);//开始这里设置成了这样，导致背景透明度有1.0-0.6
-                        showView.setTranslationX(showView.getMeasuredWidth() * (1 - scale));
-                        showView.setPivotX(0);
-                        showView.setPivotY(showView.getMeasuredHeight() / 2);
-                        showView.setScaleX(rightScale);
-                        showView.setScaleY(rightScale);*/
-                        //isBack = true;
                     }else if(currentItem == 0 && distanceX > 0){
                         homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
                     } else{
@@ -153,11 +165,37 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             case MotionEvent.ACTION_UP:
 
                 if(isBack){
-                    super.onBackPressed();
+                    if(showView != null && hideView != null){
+                        TranslateAnimation translateAnimation = new TranslateAnimation (
+                                0,showView.getMeasuredWidth() - showView.getTranslationX(),0,0);
+                        translateAnimation.setDuration(100);
+                        showView.startAnimation(translateAnimation);
+                        translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                //禁止全局触摸
+                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                onBackPressed();
+                                //开启全局触摸
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                    }else{
+                        onBackPressed();
+                    }
                 }else{
                     if(showView != null && hideView != null){
                         showView.setTranslationX(0);
-                        hideView.setTranslationX(0);
+                        //hideView.setTranslationX(hideView.getMeasuredWidth());
                     }
                 }
                 break;
@@ -195,6 +233,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         initNavigation();
         mainFrameLayout = binding.mainFrameLayout;
         startFrameLayout(HomeFragment.getInstance(),null);
+        initBackStackListener();
     }
 
     @Override
@@ -212,16 +251,20 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             exitTime = System.currentTimeMillis();
         }else{
             super.onBackPressed();
-            setMEdgeSize();
         }
     }
 
+    /**
+     * 开启fragment
+     * */
     public void startFrameLayout(Fragment showFragment, Bundle bundle){
         FragmentManager manager = getSupportFragmentManager();
         showFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         //动画需要设置在最前面
-        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,R.anim.fragment_exit,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        //fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0);
+
         if(!showFragment.isAdded()){
             fragmentTransaction.add(R.id.mainFrameLayout, showFragment);
         }
@@ -234,18 +277,20 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         //主页展示
         if(showFragment == HomeFragment.getInstance()){
             fragmentTransaction
-                    .show(showFragment)
+                    //.show(showFragment)
                     .commitNow();
         }else{
             fragmentTransaction
-                    .show(showFragment)
+                    //.show(showFragment)
                     .addToBackStack(null)
                     .commit();
             manager.executePendingTransactions();
         }
-        setMEdgeSize();
     }
 
+    /**
+     * 初始化侧边栏布局
+     * */
     private void initDrawableLayout(){
         mainDrawerLayout = binding.mainDrawerLayout;
         mainRelativeLayout = binding.mainRelativeLayout;
@@ -255,13 +300,17 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 View mContent = mainDrawerLayout.getChildAt(0);//返回抽屉布局中的索引为0的子view
                 float scale = 1 - slideOffset;//偏移量导致scale从1.0-0.0
                 float rightScale = 0.8f + scale * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
-                mainRelativeLayout.setAlpha(0.6f + 0.4f * scale);//开始这里设置成了这样，导致背景透明度有1.0-0.6
+                float drawerScale = 0.8f + slideOffset * 0.2f;//将内容区域从1.0-0.0转化为1.0-0.8
+                //mainRelativeLayout.setAlpha(0.6f + 0.4f * scale);//开始这里设置成了这样，导致背景透明度有1.0-0.6
                 mainRelativeLayout.setTranslationX(drawerView.getMeasuredWidth() * (1 - scale));
                 mainRelativeLayout.setPivotX(0);
                 mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
                 mContent.invalidate();
+                mainDrawerLayout.setScrimColor(Color.TRANSPARENT);
                 mainRelativeLayout.setScaleX(rightScale);
                 mainRelativeLayout.setScaleY(rightScale);
+                drawerView.setScaleX(drawerScale);
+                drawerView.setScaleY(drawerScale);
             }
 
             @Override
@@ -288,13 +337,32 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         });
     }
 
-    private void setMEdgeSize(){
-        boolean isOpen = true;
+    /**
+     * 初始化监听返回栈，兼容侧边栏滑动
+     * */
+    private void initBackStackListener(){
+        setMEdgeSize(true);
+        FragmentManager manager = getSupportFragmentManager();
+        manager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                setMEdgeSize(true);
+            }
+        });
+    }
+
+    /**
+     * 反射，修改侧边栏响应范围
+     * */
+    public void setMEdgeSize(boolean isOpen){
         FragmentManager manager = getSupportFragmentManager();
         if(manager.getBackStackEntryCount() > 0){
             isOpen = false;
         }
         try {
+            if(mainDrawerLayout == null){
+                return;
+            }
             Field leftDraggerField = mainDrawerLayout.getClass().getDeclaredField("mLeftDragger");//通过反射获得DrawerLayout类中mLeftDragger字段
             leftDraggerField.setAccessible(true);//私有属性要允许修改
             ViewDragHelper vdh = (ViewDragHelper) leftDraggerField.get(mainDrawerLayout);//获取ViewDragHelper的实例, 通过ViewDragHelper实例获取mEdgeSize字段
@@ -334,11 +402,27 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         }
     }
 
+    /**
+     * 初始化进度栏
+     * */
     private void initProgress(){
         progressImage = binding.mainProgress.findViewById(R.id.progress_image);
         progressSeekArc = binding.mainProgress.findViewById(R.id.progress_seekArc);
 
         progressSeekArc.setOnLongClick(new SeekArc.OnLongClick() {
+
+            @Override
+            public void actionDown() {
+                //锁定侧边栏弹出，防止冲突
+                mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+
+            @Override
+            public void actionUp() {
+                //解锁侧边栏
+                mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
+
             @Override
             public void upSong() {
                 try {
@@ -391,6 +475,9 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         });
     }
 
+    /**
+     * 初始化音乐列表点击
+     * */
     private void initPlayingList(){
         mainPlayingList = binding.mainPlayingList;
         mainPlayingList.setOnClickListener(view -> {
@@ -399,8 +486,10 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         });
     }
 
+    /**
+     * 初始化侧边栏跳转
+     * */
     private void initNavigation(){
-
         navigationSleepMode = binding.mainNavigation.navigationSleepMode;
         navigationSensorMode = binding.mainNavigation.navigationSensorMode;
         navigationActionMode = binding.mainNavigation.navigationActionMode;

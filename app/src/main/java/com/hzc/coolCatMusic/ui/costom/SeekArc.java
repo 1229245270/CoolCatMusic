@@ -341,6 +341,7 @@ public class SeekArc extends SkinCompatView {
 			float y = event.getY();
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
+					onLongClick.actionDown();
 					double downR = Math.sqrt(Math.pow((radiu - x),2) + Math.pow((radiu - y),2));
 					//进度条控制
 					if((radiu - downR) <= getResources().getDimension(R.dimen.seekArc_width) + getResources().getDimension(R.dimen.seekArc_padding)){
@@ -360,6 +361,7 @@ public class SeekArc extends SkinCompatView {
 					}
 					break;
 				case MotionEvent.ACTION_UP:
+					onLongClick.actionUp();
 					if(isProgress){
 						onStopTrackingTouch();
 						setPressed(false);
@@ -377,10 +379,13 @@ public class SeekArc extends SkinCompatView {
 	}
 
 	public interface OnLongClick{
+		void actionDown();
+		void actionUp();
 		void upSong();
 		void play();
 		void nextSong();
 	}
+
 
 	private OnLongClick onLongClick;
 	public void setOnLongClick(OnLongClick onLongClick){
@@ -441,7 +446,7 @@ public class SeekArc extends SkinCompatView {
 				if(auto){
 					playBeforeUnCheck = false;
 					if(!playBeforeCheck){
-						image.setImageResource(R.drawable.home_music_nextsong_check);
+						image.setImageResource(R.drawable.home_music_upsong_check);
 						playBeforeCheck = true;
 					}
 				}else{

@@ -91,22 +91,24 @@ public class NotificationUtils {
                 .setContentText("emailObject.getSubject()")
                 .setContent(remoteViews)
                 .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setSound(Uri.EMPTY)//声音
+                //.setPriority(NotificationCompat.PRIORITY_MAX)
+                //.setSound(Uri.EMPTY)//声音
                 .setColor(Color.RED)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)//统一消除声音和震动
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)// 所有情况下显示，包括锁屏
+                .setPriority(NotificationCompat.PRIORITY_MIN)
                 .build();
         return notification;
     }
 
     public static void initCreateChannel(NotificationManager manager,String channelId,String channelName){
-        NotificationChannel channel = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_HIGH);
+        //取消自动弹出
+        NotificationChannel channel = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_MIN);
         channel.setSound(null,null);
         channel.enableLights(true);//通知灯
         channel.setLightColor(Color.BLUE);//通知灯颜色
         channel.setShowBadge(true);//角标
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);//所有情况下显示，包括锁屏
+        channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
         channel.setDescription("description");
         manager.createNotificationChannel(channel);
     }
