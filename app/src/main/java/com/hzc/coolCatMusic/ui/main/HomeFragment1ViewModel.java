@@ -56,7 +56,7 @@ public class HomeFragment1ViewModel extends HomeViewModel {
         @Override
         public void onItemClick(int position,Object entity) {
             if(entity instanceof HomeFragment1ItemEntity){
-                startFragment(LocalMusicFragment.getInstance(),null);
+                startFragment(new LocalMusicFragment(),null);
             }
         }
     };

@@ -82,6 +82,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
         super.onCreate(savedInstanceState);
+
     }
 
     float startX = 0;
@@ -165,33 +166,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             case MotionEvent.ACTION_UP:
 
                 if(isBack){
-                    if(showView != null && hideView != null){
-                        TranslateAnimation translateAnimation = new TranslateAnimation (
-                                0,showView.getMeasuredWidth() - showView.getTranslationX(),0,0);
-                        translateAnimation.setDuration(100);
-                        showView.startAnimation(translateAnimation);
-                        translateAnimation.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                //禁止全局触摸
-                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                onBackPressed();
-                                //开启全局触摸
-                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                    }else{
-                        onBackPressed();
-                    }
+                    onBackPressed();
                 }else{
                     if(showView != null && hideView != null){
                         showView.setTranslationX(0);
@@ -234,6 +209,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         mainFrameLayout = binding.mainFrameLayout;
         startFrameLayout(HomeFragment.getInstance(),null);
         initBackStackListener();
+
     }
 
     @Override
@@ -250,7 +226,40 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             Toast.makeText(this,"再按一次返回",Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         }else{
-            super.onBackPressed();
+            int count = mainFrameLayout.getChildCount();
+            KLog.d("getChildCount " + count);
+            if(count >= 2){
+                showView = mainFrameLayout.getChildAt(count - 1);
+                hideView = mainFrameLayout.getChildAt(count - 2);
+            }else{
+                showView = null;
+                hideView = null;
+            }
+            if(showView != null){
+                TranslateAnimation translateAnimation = new TranslateAnimation (
+                        0,showView.getMeasuredWidth() - showView.getTranslationX(),0,0);
+                translateAnimation.setDuration(300);
+                showView.startAnimation(translateAnimation);
+                translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        //禁止全局触摸
+                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        HomeActivity.super.onBackPressed();
+                        //开启全局触摸
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
         }
     }
 
@@ -262,8 +271,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         showFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         //动画需要设置在最前面
-        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
-        //fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0);
+        //fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0);
 
         if(!showFragment.isAdded()){
             fragmentTransaction.add(R.id.mainFrameLayout, showFragment);
@@ -294,6 +303,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     private void initDrawableLayout(){
         mainDrawerLayout = binding.mainDrawerLayout;
         mainRelativeLayout = binding.mainRelativeLayout;
+        mainDrawerLayout.setScrimColor(Color.TRANSPARENT);
+        mainDrawerLayout.setDrawerElevation(0);
         mainDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -306,7 +317,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 mainRelativeLayout.setPivotX(0);
                 mainRelativeLayout.setPivotY(mContent.getMeasuredHeight() / 2);
                 mContent.invalidate();
-                mainDrawerLayout.setScrimColor(Color.TRANSPARENT);
                 mainRelativeLayout.setScaleX(rightScale);
                 mainRelativeLayout.setScaleY(rightScale);
                 drawerView.setScaleX(drawerScale);

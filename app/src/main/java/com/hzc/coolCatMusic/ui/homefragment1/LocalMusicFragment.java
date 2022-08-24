@@ -33,14 +33,14 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,LocalMusicViewModel> {
 
-    public static LocalMusicFragment instance;
+    /*public LocalMusicFragment instance;
 
-    public static LocalMusicFragment getInstance(){
+    public LocalMusicFragment getInstance(){
         if(instance == null){
             instance = new LocalMusicFragment();
         }
         return instance;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

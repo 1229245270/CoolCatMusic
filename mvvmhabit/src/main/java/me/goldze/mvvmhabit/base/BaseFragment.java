@@ -157,7 +157,8 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
             public void onChanged(@Nullable Void v) {
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 if(manager.getBackStackEntryCount() > 0){
-                    manager.popBackStack();
+                    //manager.popBackStack();
+                    getActivity().onBackPressed();
                 }else{
                     getActivity().finish();
                 }
