@@ -3,7 +3,6 @@
     xmlns:binding="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.hzc.coolCatMusic.R"/>
         <import type="com.hzc.coolCatMusic.ui.main.HomeViewModel"/>
         <variable
             name="viewModel"

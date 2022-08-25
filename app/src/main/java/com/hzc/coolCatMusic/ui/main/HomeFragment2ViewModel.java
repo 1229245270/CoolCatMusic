@@ -9,6 +9,8 @@ import androidx.databinding.ObservableList;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.data.DemoRepository;
+import com.hzc.coolCatMusic.entity.LookEntity;
+import com.hzc.coolCatMusic.ui.adapter.LookAdapter;
 import com.hzc.coolCatMusic.ui.adapter.MvAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
@@ -30,14 +32,14 @@ public class HomeFragment2ViewModel extends BaseViewModel<DemoRepository> {
         }
     };
 
-    public MvAdapter<Object> mvAdapter = new MvAdapter<>();
+    public LookAdapter<LookEntity> lookAdapter = new LookAdapter<>();
 
-    public ObservableList<Object> mvList = new ObservableArrayList<Object>();
+    public ObservableList<LookEntity> lookEntities = new ObservableArrayList<LookEntity>();
 
-    public OnItemBind<Object> mvBind = new OnItemBind<Object>() {
+    public OnItemBind<LookEntity> lookBind = new OnItemBind<LookEntity>() {
         @Override
-        public void onItemBind(@NonNull ItemBinding itemBinding, int position, Object item) {
-            itemBinding.set(BR.item,R.layout.item_mv);
+        public void onItemBind(@NonNull ItemBinding itemBinding, int position, LookEntity item) {
+            itemBinding.set(BR.item,R.layout.item_look);
 
         }
     };

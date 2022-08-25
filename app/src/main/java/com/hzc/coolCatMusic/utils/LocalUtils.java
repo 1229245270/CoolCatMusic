@@ -24,7 +24,7 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalUtils {
 
-    public static List<LocalSongEntity> getAllMediaList(Context context, int minDuration,int minSize) {
+    public static List<LocalSongEntity> getAllMediaList(Context context, int minDuration,int minSize,int... searchSize) {
         Cursor cursor = null;
         List<LocalSongEntity> mediaList = new ArrayList<LocalSongEntity>();
         try {
@@ -68,6 +68,9 @@ public class LocalUtils {
                     mediaEntity.setImage(bitmap);
                 }
                 mediaList.add(mediaEntity);
+                if(searchSize != null && searchSize.length >= 1 && mediaList.size() >= searchSize[0]){
+                    return mediaList;
+                }
             }
         } catch (Exception e) {
             KLog.d(LocalUtilsTAG,e.toString());

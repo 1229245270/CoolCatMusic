@@ -14,6 +14,7 @@ import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.databinding.FragmentHome2Binding;
+import com.hzc.coolCatMusic.entity.LookEntity;
 import com.hzc.coolCatMusic.ui.costom.ScrollCalculatorHelper;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 
@@ -46,11 +47,17 @@ public class HomeFragment2 extends BaseFragment<FragmentHome2Binding,HomeFragmen
     public void initData() {
         super.initData();
         for (int i = 0; i < 19; i++) {
-            Object videoModel = new Object();
-            viewModel.mvList.add(videoModel);
+            LookEntity lookEntity = new LookEntity();
+            lookEntity.setTitleImage("https://fanyi-cdn.cdn.bcebos.com/static/translation/img/header/logo_e835568.png");
+            lookEntity.setTitleText("title");
+            lookEntity.setAuthorImage("https://profile.csdnimg.cn/6/E/0/0_weixin_44360546");
+            lookEntity.setAuthorName("authorName");
+            lookEntity.setLookTimes("1");
+
+            viewModel.lookEntities.add(lookEntity);
         }
         //限定范围为屏幕一半的上下偏移180
-        int playTop = CommonUtil.getScreenHeight(requireContext()) / 2 - CommonUtil.dip2px(requireContext(), 180);
+        /*int playTop = CommonUtil.getScreenHeight(requireContext()) / 2 - CommonUtil.dip2px(requireContext(), 180);
         int playBottom = CommonUtil.getScreenHeight(requireContext()) / 2 + CommonUtil.dip2px(requireContext(), 180);
         ScrollCalculatorHelper helper = new ScrollCalculatorHelper(R.id.video, playTop, playBottom);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -75,6 +82,6 @@ public class HomeFragment2 extends BaseFragment<FragmentHome2Binding,HomeFragmen
                     helper.onScroll(recyclerView, firstVisibleItem, lastVisibleItem, lastVisibleItem - firstVisibleItem);
                 }
             }
-        });
+        });*/
     }
 }

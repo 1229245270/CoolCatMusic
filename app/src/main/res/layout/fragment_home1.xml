@@ -24,6 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            app:itemBinding="@{viewModel.listenerEntityOnItemBind}"
+            adapter="@{viewModel.listenerAdapter}"
+            items="@{viewModel.listenerEntityList}"
+            app:layoutManager="@{LayoutManagers.linear()}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </layout>

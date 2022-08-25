@@ -1,5 +1,7 @@
 package com.hzc.coolCatMusic.ui.main;
 
+import static com.hzc.coolCatMusic.app.SPUtilsConfig.Theme_TEXT_FONT_ID;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -10,29 +12,40 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.databinding.FragmentHome1Binding;
+import com.hzc.coolCatMusic.entity.Font;
 import com.hzc.coolCatMusic.entity.HomeFragment1DetailEntity;
 import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
+import com.hzc.coolCatMusic.entity.ListenerEntity;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.utils.DialogUtils;
 import com.hzc.coolCatMusic.utils.LocalUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
 
 public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragment1ViewModel> {
 
@@ -71,8 +84,6 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         KLog.d("onHiddenChanged",hidden);
     }
 
-    public HomeFragment1DetailEntity fragment1DetailEntity = new HomeFragment1DetailEntity();
-
     private void initItem(){
         List<HomeFragment1ItemEntity> itemEntityList = new ArrayList<>();
         HomeFragment1ItemEntity entity = new HomeFragment1ItemEntity(getDrawable(R.drawable.home_localmusic),"本地音乐");
@@ -81,10 +92,28 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         itemEntityList.add(entity);
         entity = new HomeFragment1ItemEntity(getDrawable(R.drawable.home_ranking),"排行榜");
         itemEntityList.add(entity);
-        entity = new HomeFragment1ItemEntity(getDrawable(R.drawable.home_ranking),"排行榜");
+        entity = new HomeFragment1ItemEntity(getDrawable(R.drawable.home_ranking),"新歌版");
         itemEntityList.add(entity);
         viewModel.itemEntityList.addAll(itemEntityList);
+
+        ListenerEntity<Object> listenerEntity = new ListenerEntity<>();
+        listenerEntity.setTitle("本地歌曲");
+        listenerEntity.setTip("本地歌曲");
+        viewModel.listenerEntityList.add(listenerEntity);
+        listenerEntity = new ListenerEntity<>();
+        listenerEntity.setTitle("每日推荐");
+        listenerEntity.setTip("每日推荐");
+        viewModel.listenerEntityList.add(listenerEntity);
+        listenerEntity = new ListenerEntity<>();
+        listenerEntity.setTitle("排行版");
+        listenerEntity.setTip("排行版");
+        viewModel.listenerEntityList.add(listenerEntity);
+        listenerEntity = new ListenerEntity<>();
+        listenerEntity.setTitle("新歌版");
+        listenerEntity.setTip("新歌版");
+        viewModel.listenerEntityList.add(listenerEntity);
         initLocalSong();
+        viewModel.loadSong();
     }
 
     @SuppressLint("CheckResult")
@@ -93,8 +122,9 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
-                        List<LocalSongEntity> localMusic = LocalUtils.getAllMediaList(getActivity(),60,0);
-                        fragment1DetailEntity.setLocalSongEntityList(localMusic.subList(0, Math.min(localMusic.size(), 3)));
+                        List<LocalSongEntity> localSongEntities = LocalUtils.getAllMediaList(getActivity(), 60, 0, 10);
+                        List<Object> objectList = new ArrayList<>(localSongEntities);
+                        viewModel.listenerEntityList.get(0).setList(objectList);
                     }
                 });
     }
