@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50">
             <ImageView
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/icon_drop_down"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
@@ -39,11 +39,11 @@
             <ImageView
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/icon_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageView
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/icon_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -62,7 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:src="@mipmap/ic_launcher"
+                        android:src="@drawable/rank_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <com.hzc.coolCatMusic.ui.costom.NiceImageView
@@ -81,7 +81,6 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleView"
                 items="@{item.list}"
-                adapter="@{viewModel.listenerListAdapter}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

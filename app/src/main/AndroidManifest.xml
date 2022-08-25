@@ -39,11 +39,11 @@
 
         <service android:exported="false" android:name=".service.MusicService"/>
 
-        <provider
+        <!--<provider
             android:name="leakcanary.internal.MainProcessAppWatcherInstaller"
             android:authorities="${applicationId}.leakcanary-installer"
             android:enabled="@bool/leak_canary_watcher_auto_install"
-            android:exported="false" />
+            android:exported="false" />-->
 
         <!--ImmersionBar设置-->
         <!--适配华为（huawei）刘海屏-->

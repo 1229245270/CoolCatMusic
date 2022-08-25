@@ -23,7 +23,6 @@ import org.greenrobot.greendao.database.Database;
 
 import java.lang.reflect.Field;
 
-import leakcanary.LeakCanary;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
