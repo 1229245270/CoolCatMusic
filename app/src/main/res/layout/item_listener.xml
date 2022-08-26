@@ -74,6 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
+                    android:id="@+id/llRankTwo"
                     android:layout_margin="@dimen/dp_10"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -96,6 +97,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/llRankOne"
                     android:layout_margin="@dimen/dp_10"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -118,6 +120,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/llRankThree"
                     android:layout_margin="@dimen/dp_10"
                     android:orientation="vertical"
                     android:gravity="center"

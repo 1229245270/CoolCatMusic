@@ -30,6 +30,7 @@ import com.hzc.coolCatMusic.entity.NetworkSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.service.MusicConnection;
 import com.hzc.coolCatMusic.service.MusicService;
+import com.hzc.coolCatMusic.ui.costom.NiceImageView;
 import com.hzc.coolCatMusic.ui.main.HomeActivity;
 import com.hzc.coolCatMusic.utils.AnimationUtils;
 import com.hzc.coolCatMusic.utils.DaoUtils.MusicUtils;
@@ -246,32 +247,37 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                 break;
             case "排行版":
                 LinearLayout llRank = binding.getRoot().findViewById(R.id.llRank);
-                ImageView ivRankOne = binding.getRoot().findViewById(R.id.ivRankOne);
-                ImageView ivRankTwo = binding.getRoot().findViewById(R.id.ivRankTwo);
-                ImageView ivRankThree = binding.getRoot().findViewById(R.id.ivRankThree);
+                LinearLayout llRankOne = binding.getRoot().findViewById(R.id.llRankOne);
+                LinearLayout llRankTwo = binding.getRoot().findViewById(R.id.llRankTwo);
+                LinearLayout llRankThree = binding.getRoot().findViewById(R.id.llRankThree);
+                NiceImageView ivRankOne = binding.getRoot().findViewById(R.id.ivRankOne);
+                NiceImageView ivRankTwo = binding.getRoot().findViewById(R.id.ivRankTwo);
+                NiceImageView ivRankThree = binding.getRoot().findViewById(R.id.ivRankThree);
                 TextView tvRankOne = binding.getRoot().findViewById(R.id.tvRankOne);
                 TextView tvRankTwo = binding.getRoot().findViewById(R.id.tvRankTwo);
                 TextView tvRankThree = binding.getRoot().findViewById(R.id.tvRankThree);
                 llRank.setVisibility(View.VISIBLE);
 
-                ivRankOne.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        KLog.d("11111111");
                         TextView textView = new TextView(binding.getRoot().getContext());
                         textView.setText("+1");
                         textView.setTextColor(Color.RED);
                         ValueAnimator animator = ValueAnimator.ofInt(10,200);
                         animator.setDuration(1000);
-                        new AnimationUtils(llShow, textView, new AnimationUtils.ViewLikeClickListener() {
+
+                        new AnimationUtils(v, textView, new AnimationUtils.ViewLikeClickListener() {
                             @Override
                             public void onClick(View view, boolean toggle, AnimationUtils animationUtils) {
-                                KLog.d("11112222");
                                 animationUtils.startLikeAnim(animator);
                             }
                         });
                     }
-                });
+                };
+                llRankOne.setOnClickListener(onClickListener);
+                llRankTwo.setOnClickListener(onClickListener);
+                llRankThree.setOnClickListener(onClickListener);
 
                 break;
             case "新歌版":
