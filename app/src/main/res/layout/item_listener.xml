@@ -2,6 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
         <import type="com.hzc.coolCatMusic.R"/>
         <variable
             name="item"
@@ -20,13 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingRight="@dimen/dp_10"
+            android:id="@+id/llShow"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50">
             <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
                 android:src="@drawable/icon_drop_down"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -36,22 +37,40 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:src="@drawable/icon_menu"
+            <LinearLayout
+                android:id="@+id/llMenu"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:src="@drawable/icon_more"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:src="@drawable/icon_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llMore"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent">
+                <ImageView
+                    android:src="@drawable/icon_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/llShowView"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llRank"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
@@ -66,13 +85,57 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <com.hzc.coolCatMusic.ui.costom.NiceImageView
-                        url=""
-                        placeholderRes="@{R.mipmap.ic_launcher}"
+                        android:id="@+id/ivRankTwo"
                         android:scaleType="centerCrop"
                         app:corner_radius="@dimen/dp_10"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
                     <TextView
+                        android:id="@+id/tvRankTwo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_margin="@dimen/dp_10"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/rank_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                        android:id="@+id/ivRankOne"
+                        android:scaleType="centerCrop"
+                        app:corner_radius="@dimen/dp_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/tvRankOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_margin="@dimen/dp_10"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/rank_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                        android:id="@+id/ivRankThree"
+                        android:scaleType="centerCrop"
+                        app:corner_radius="@dimen/dp_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/tvRankThree"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -80,7 +143,6 @@
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleView"
-                items="@{item.list}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
