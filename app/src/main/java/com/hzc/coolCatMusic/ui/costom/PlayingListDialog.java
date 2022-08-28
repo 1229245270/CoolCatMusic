@@ -124,7 +124,7 @@ public class PlayingListDialog extends Dialog {
                 KLog.d("position" + item.toString());
                 PlayingMusicEntity entity = MusicUtils.getPlayingMusicEntity();
                 if(entity != null && entity.getSrc().equals(item.getSrc())){
-                    //bug处理：当歌曲暂停时进入,没有回传playingMusicEntity,刷新不了该条旧数据
+                    //修复bug:当歌曲暂停时进入,没有回传playingMusicEntity,刷新不了该条旧数据
                     if(oldPosition == -1){
                         oldPosition = position;
                     }

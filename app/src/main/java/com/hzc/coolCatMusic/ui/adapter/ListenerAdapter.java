@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +37,9 @@ import com.hzc.coolCatMusic.utils.AnimationUtils;
 import com.hzc.coolCatMusic.utils.DaoUtils.MusicUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
@@ -54,8 +57,18 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
 
     }
 
-    private boolean isOpen = true;
-    private int showHeight = 0;
+    private final Map<Integer,Integer> showHeightMap = new HashMap<>();
+    private final Map<Integer,Boolean> IsOpenMap = new HashMap<>();
+    private final Map<Integer,BaseRecycleAdapter<Object>> adapterMap = new HashMap<>();
+
+    public BaseRecycleAdapter<Object> getAdapter(int position){
+        return adapterMap.get(position);
+    }
+    private int oldPosition = -1;
+    public int getOldPosition(){
+        return oldPosition;
+    }
+
     @Override
     public void onBindBinding(@NonNull ViewDataBinding binding, int variableId, int layoutRes, int position, ListenerEntity<Object> item) {
         super.onBindBinding(binding, variableId, layoutRes, position, item);
@@ -65,15 +78,15 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
         LinearLayout llMenu = binding.getRoot().findViewById(R.id.llMenu);
         LinearLayout llMore = binding.getRoot().findViewById(R.id.llMore);
         List<Object> list = item.getList();
+        if(list == null){
+            list = new ArrayList<>();
+        }
 
         LinearLayout llShowView = binding.getRoot().findViewById(R.id.llShowView);
         llShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(showHeight == 0){
-                    showHeight = llShowView.getMeasuredHeight();
-                }
+                showHeightMap.putIfAbsent(position,llShowView.getMeasuredHeight());
                 //修复bug:布局高度为0时不执行动画
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llShowView.getLayoutParams();
                 if(params.height == 0){
@@ -81,55 +94,66 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                     llShowView.setLayoutParams(params);
                 }
                 Animation animation;
-                if(isOpen){
-                    animation = new Animation() {
+
+                IsOpenMap.putIfAbsent(position, true);
+                Boolean isOpen = IsOpenMap.get(position);
+                if(isOpen != null){
+                    if(isOpen){
+                        animation = new Animation() {
+                            @Override
+                            public boolean willChangeBounds() {
+                                return super.willChangeBounds();
+                            }
+
+                            @Override
+                            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                super.applyTransformation(interpolatedTime, t);
+                                Integer value = showHeightMap.get(position);
+                                if(value != null){
+                                    params.height = (int) (value * (1 - interpolatedTime));
+                                    llShowView.setLayoutParams(params);
+                                }
+                            }
+                        };
+                    }else{
+                        animation = new Animation() {
+                            @Override
+                            public boolean willChangeBounds() {
+                                return super.willChangeBounds();
+                            }
+
+                            @Override
+                            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                super.applyTransformation(interpolatedTime, t);
+                                Integer value = showHeightMap.get(position);
+                                if(value != null){
+                                    params.height = (int) (value * interpolatedTime);
+                                    llShowView.setLayoutParams(params);
+                                }
+                            }
+                        };
+                    }
+                    animation.setAnimationListener(new Animation.AnimationListener() {
                         @Override
-                        public boolean willChangeBounds() {
-                            return super.willChangeBounds();
+                        public void onAnimationStart(Animation animation) {
+                            //禁止点击
+                            llShow.setEnabled(false);
                         }
 
                         @Override
-                        protected void applyTransformation(float interpolatedTime, Transformation t) {
-                            super.applyTransformation(interpolatedTime, t);
-                            params.height = (int) (showHeight * (1 - interpolatedTime));
-                            llShowView.setLayoutParams(params);
-                        }
-                    };
-                }else{
-                    animation = new Animation() {
-                        @Override
-                        public boolean willChangeBounds() {
-                            return super.willChangeBounds();
+                        public void onAnimationEnd(Animation animation) {
+                            IsOpenMap.put(position, !isOpen);
+                            llShow.setEnabled(true);
                         }
 
                         @Override
-                        protected void applyTransformation(float interpolatedTime, Transformation t) {
-                            super.applyTransformation(interpolatedTime, t);
-                            params.height = (int) (showHeight * interpolatedTime);
-                            llShowView.setLayoutParams(params);
+                        public void onAnimationRepeat(Animation animation) {
+
                         }
-                    };
+                    });
+                    animation.setDuration(300);
+                    llShowView.startAnimation(animation);
                 }
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        //禁止点击
-                        llShow.setEnabled(false);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        isOpen = !isOpen;
-                        llShow.setEnabled(true);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                animation.setDuration(1000);
-                llShowView.startAnimation(animation);
             }
         });
 
@@ -154,9 +178,15 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                             TextView songName = holder.getView(R.id.songName);
                             TextView singer = holder.getView(R.id.singer);
                             LinearLayout songItem = holder.getView(R.id.songItem);
+                            songName.setText(entity.getAlbums());
+                            singer.setText(entity.getArtist());
 
                             PlayingMusicEntity playingMusicEntity = MusicUtils.getPlayingMusicEntity();
                             if(playingMusicEntity != null && playingMusicEntity.getSrc().equals(((LocalSongEntity) item).getPath())){
+                                //修复bug:当歌曲暂停时进入,没有回传playingMusicEntity,刷新不了该条旧数据
+                                if(oldPosition == -1){
+                                    oldPosition = position;
+                                }
                                 songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_select,null));
                                 songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_check));
                                 singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_check));
@@ -189,8 +219,9 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
 
                     }
                 });
+                adapterMap.put(0,adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
-                recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapterMap.get(0));
                 break;
             case "每日推荐":
                 adapter = new BaseRecycleAdapter<Object>(binding.getRoot().getContext(), list,R.layout.item_song) {
@@ -199,7 +230,6 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                         ImageView imageView = holder.getView(R.id.songImage);
                         if(item instanceof NetworkSongEntity){
                             NetworkSongEntity entity = (NetworkSongEntity) item;
-
                             Glide.with(binding.getRoot().getContext())
                                     .load(entity.getSongImage())
                                     .into(imageView);
@@ -222,6 +252,7 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                         }
                     }
                 };
+                adapterMap.put(1,adapter);
                 adapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Object object, int position) {
@@ -243,7 +274,7 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                     }
                 });
                 recyclerView.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
-                //recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapterMap.get(1));
                 break;
             case "排行版":
                 LinearLayout llRank = binding.getRoot().findViewById(R.id.llRank);
@@ -265,7 +296,7 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                         textView.setText("+1");
                         textView.setTextColor(Color.RED);
                         ValueAnimator animator = ValueAnimator.ofInt(10,200);
-                        animator.setDuration(1000);
+                        animator.setDuration(3000);
 
                         new AnimationUtils(v, textView, new AnimationUtils.ViewLikeClickListener() {
                             @Override

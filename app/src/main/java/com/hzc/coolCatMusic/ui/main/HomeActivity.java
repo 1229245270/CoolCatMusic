@@ -108,11 +108,9 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 beforeTime = System.currentTimeMillis();
                 comeWidth = 0;
                 int count = mainFrameLayout.getChildCount();
-                KLog.d("getChildCount " + count);
                 if(count >= 2){
                     showView = mainFrameLayout.getChildAt(count - 1);
                     hideView = mainFrameLayout.getChildAt(count - 2);
-                    //hideView.setTranslationX(hideView.getMeasuredWidth());
                 }else{
                     showView = null;
                     hideView = null;
@@ -227,7 +225,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             exitTime = System.currentTimeMillis();
         }else{
             int count = mainFrameLayout.getChildCount();
-            KLog.d("getChildCount " + count);
             if(count >= 2){
                 showView = mainFrameLayout.getChildAt(count - 1);
                 hideView = mainFrameLayout.getChildAt(count - 2);

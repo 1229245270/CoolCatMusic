@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
+
+import me.goldze.mvvmhabit.R;
 import me.goldze.mvvmhabit.base.BaseViewModel.ParameterField;
 import me.goldze.mvvmhabit.bus.Messenger;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -56,7 +58,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, initContentView(inflater, container, savedInstanceState), container, false);
         View view = binding.getRoot();
-        view.setBackgroundColor(Color.WHITE);
+        view.setBackgroundColor(binding.getRoot().getContext().getColor(R.color.windowBackground));
         return view;
     }
 

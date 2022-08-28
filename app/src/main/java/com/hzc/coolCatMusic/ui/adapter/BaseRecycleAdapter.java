@@ -55,6 +55,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     @Override
     public void onBindViewHolder(@NonNull BaseRecycleViewHolder holder, int position) {
         convert(holder, mData.get(position), position);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,5 +79,6 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     }
 
     public abstract void convert(BaseRecycleViewHolder holder,T item,int position);
+
 
 }

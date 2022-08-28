@@ -11,10 +11,13 @@ import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.data.DemoRepository;
 import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.ListenerEntity;
+import com.hzc.coolCatMusic.entity.LocalSongEntity;
+import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.ui.adapter.ListenerAdapter;
 import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicFragment;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -30,6 +33,10 @@ public class HomeFragment1ViewModel extends HomeViewModel {
     }
 
     private Disposable mSubscription;
+    private Disposable musicSubscription;
+
+    private PlayingMusicEntity nowPlay;
+    private int oldPosition = -1;
     @Override
     public void registerRxBus() {
         super.registerRxBus();
@@ -42,13 +49,42 @@ public class HomeFragment1ViewModel extends HomeViewModel {
                         }
                     }
                 });
+
+        musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<PlayingMusicEntity>() {
+                    @Override
+                    public void accept(PlayingMusicEntity playingMusicEntity) throws Exception {
+                        if(nowPlay != null && nowPlay == playingMusicEntity){
+                            return;
+                        }
+                        nowPlay = playingMusicEntity;
+                        if(oldPosition == -1){
+                            oldPosition = listenerAdapter.getOldPosition();
+                        }
+                        if(oldPosition != -1){
+                            listenerAdapter.getAdapter(0).notifyItemChanged(oldPosition);
+                        }
+                        for(int i = 0;i < listenerEntityList.get(0).getList().size();i++){
+                            LocalSongEntity entity = (LocalSongEntity) listenerEntityList.get(0).getList().get(i);
+                            if(playingMusicEntity.getSrc().equals(entity.getPath())){
+                                listenerAdapter.getAdapter(0).notifyItemChanged(i);
+                                oldPosition = i;
+                                return;
+                            }
+                        }
+                    }
+                });
+
         RxSubscriptions.add(mSubscription);
+        RxSubscriptions.add(musicSubscription);
     }
 
     @Override
     public void removeRxBus() {
         super.removeRxBus();
         RxSubscriptions.remove(mSubscription);
+        RxSubscriptions.remove(musicSubscription);
     }
 
     SingleLiveEvent<Boolean> isRequestRead = new SingleLiveEvent<>();

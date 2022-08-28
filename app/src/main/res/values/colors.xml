@@ -30,5 +30,4 @@
     <color name="item_songName_uncheck">#000000</color>
     <color name="item_singer_uncheck">#999999</color>
 
-    <color name="windowBackground">#eeeeee</color>
 </resources>

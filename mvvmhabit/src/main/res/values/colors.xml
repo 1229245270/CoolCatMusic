@@ -9,7 +9,7 @@
     <color name="orange">#FFA500</color>
     <color name="actionBar">#FFA555</color>
 
-    <color name="mainBg">#90FFA000</color>
+    <color name="mainBg">#FFCC55</color>
 
     <array name="in_colors_light">
         <item>#4B03A9F4</item>
@@ -17,4 +17,5 @@
         <item>#1903A9F4</item>
     </array>
 
+    <color name="windowBackground">#FAFAFA</color>
 </resources>

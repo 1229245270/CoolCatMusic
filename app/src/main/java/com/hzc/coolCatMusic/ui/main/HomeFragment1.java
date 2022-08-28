@@ -29,6 +29,7 @@ import com.hzc.coolCatMusic.entity.HomeFragment1DetailEntity;
 import com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolCatMusic.entity.ListenerEntity;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
+import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.utils.DialogUtils;
 import com.hzc.coolCatMusic.utils.LocalUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -40,9 +41,13 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
@@ -76,12 +81,6 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         initItem();
         //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SongItemTouchHelper(list, viewModel.localSongAdapter));
         //itemTouchHelper.attachToRecyclerView(binding.recycleView);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        KLog.d("onHiddenChanged",hidden);
     }
 
     private void initItem(){
@@ -122,9 +121,10 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
-                        List<LocalSongEntity> localSongEntities = LocalUtils.getAllMediaList(getActivity(), 60, 0, 10);
+                        List<LocalSongEntity> localSongEntities = LocalUtils.getAllMediaList(getActivity(), 60, 0, 3);
                         List<Object> objectList = new ArrayList<>(localSongEntities);
                         viewModel.listenerEntityList.get(0).setList(objectList);
+                        viewModel.listenerAdapter.notifyItemChanged(0);
                     }
                 });
     }
