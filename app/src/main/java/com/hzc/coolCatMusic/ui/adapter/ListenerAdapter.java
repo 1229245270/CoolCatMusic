@@ -287,29 +287,39 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                 TextView tvRankOne = binding.getRoot().findViewById(R.id.tvRankOne);
                 TextView tvRankTwo = binding.getRoot().findViewById(R.id.tvRankTwo);
                 TextView tvRankThree = binding.getRoot().findViewById(R.id.tvRankThree);
-                llRank.setVisibility(View.VISIBLE);
+                if(list.size() >= 3){
+                    llRank.setVisibility(View.VISIBLE);
+                    NetworkSongEntity networkSongOne = (NetworkSongEntity) list.get(0);
+                    NetworkSongEntity networkSongTwo = (NetworkSongEntity) list.get(1);
+                    NetworkSongEntity networkSongThree = (NetworkSongEntity) list.get(2);
+                    Glide.with(binding.getRoot().getContext()).load(networkSongOne.getSongImage()).into(ivRankOne);
+                    Glide.with(binding.getRoot().getContext()).load(networkSongTwo.getSongImage()).into(ivRankTwo);
+                    Glide.with(binding.getRoot().getContext()).load(networkSongThree.getSongImage()).into(ivRankThree);
+                    tvRankOne.setText(networkSongOne.getSongName());
+                    tvRankTwo.setText(networkSongTwo.getSongName());
+                    tvRankThree.setText(networkSongThree.getSongName());
 
-                View.OnClickListener onClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TextView textView = new TextView(binding.getRoot().getContext());
-                        textView.setText("+1");
-                        textView.setTextColor(Color.RED);
-                        ValueAnimator animator = ValueAnimator.ofInt(10,200);
-                        animator.setDuration(3000);
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TextView textView = new TextView(binding.getRoot().getContext());
+                            textView.setText("+1");
+                            textView.setTextColor(Color.RED);
+                            ValueAnimator animator = ValueAnimator.ofInt(10,200);
+                            animator.setDuration(3000);
 
-                        new AnimationUtils(v, textView, new AnimationUtils.ViewLikeClickListener() {
-                            @Override
-                            public void onClick(View view, boolean toggle, AnimationUtils animationUtils) {
-                                animationUtils.startLikeAnim(animator);
-                            }
-                        });
-                    }
-                };
-                llRankOne.setOnClickListener(onClickListener);
-                llRankTwo.setOnClickListener(onClickListener);
-                llRankThree.setOnClickListener(onClickListener);
-
+                            new AnimationUtils(v, textView, new AnimationUtils.ViewLikeClickListener() {
+                                @Override
+                                public void onClick(View view, boolean toggle, AnimationUtils animationUtils) {
+                                    animationUtils.startLikeAnim(animator);
+                                }
+                            });
+                        }
+                    };
+                    llRankOne.setOnClickListener(onClickListener);
+                    llRankTwo.setOnClickListener(onClickListener);
+                    llRankThree.setOnClickListener(onClickListener);
+                }
                 break;
             case "新歌版":
                 break;
