@@ -1,48 +1,40 @@
 package com.hzc.coolCatMusic.utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class FileUtil {
 
-    public static void qwq() {
-//        new ProjectListActivity().getAllDataFileName();
-        String asd = "data/gisreport";
-        // 获得SD卡根目录路径 "/sdcard"
-        File sdDir = Environment.getExternalStorageDirectory();
-        KLog.d("sdDir" + sdDir);
-        //File kgMusicPath = new File(sdDir);
-        //获取到全部的路径
-        File path = new File(sdDir + File.separator + asd.toString().trim());
 
-        // 判断SD卡是否存在，并且是否具有读写权限
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File[] files = path.listFiles();// 读取文件夹下文件
-            Log.i("eee",getFileName(files));//读取指定目录下的所有对应文件的文件名
-            //   Log.i("eee",getFileContent(files));
-        }
+    public static File[] getFiles() {
+        File sdDir = Environment.getExternalStorageDirectory();
+        File kgMusicPath = new File(sdDir + "/kgmusic/download/kgmusic");
+        File[] files = kgMusicPath.listFiles();
+        return files;
     }
 
-    public void kgm(){
-        try {
-            String path = System.getProperty("user.dir");
-            Runtime mt = Runtime.getRuntime();
-            String cmd = path + "\\exe\\kgm-decoder.exe F:\\kugoumusic";
-            Process pro = mt.exec(cmd);
-            InputStream ers = pro.getErrorStream();
-            pro.waitFor();
-        } catch (IOException | InterruptedException ioe) {
-            ioe.printStackTrace();
-        } // TODO Auto-generated catch block
 
+    public static String execute_command(String cmd) {
+        try {
+            //String keyCommand = "setprop " + propName;
+            Runtime runtime = Runtime.getRuntime();
+            Process proc = runtime.exec(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  cmd;
     }
 
     //读取指定目录下的所有TXT文件的文件名

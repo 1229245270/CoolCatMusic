@@ -5,10 +5,16 @@ import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.http.BaseResponse;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Created by goldze on 2017/6/15.
@@ -24,4 +30,8 @@ public interface DemoApiService {
 
     @GET("setting/font")
     Observable<BaseBean> settingFont();
+
+    @POST("song/unlock/window64")
+    @Multipart
+    Observable<BaseBean> songUnlockWindow64(@Part MultipartBody.Part path, @Part("username") RequestBody username);
 }

@@ -3,6 +3,8 @@ package com.hzc.coolCatMusic.data.source;
 import me.goldze.mvvmhabit.base.BaseBean;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
+import java.io.File;
+
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.http.BaseResponse;
 
@@ -21,4 +23,6 @@ public interface HttpDataSource {
     Observable<BaseResponse<DemoEntity>> demoPost(String catalog);
 
     Observable<BaseBean> settingFont();
+
+    Observable<BaseBean> songUnlockWindow64(File file, String username);
 }

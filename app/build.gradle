@@ -28,8 +28,8 @@ android {
         versionName rootProject.ext.android.versionName
 
         ndk {
-            //abiFilters "x86"
             abiFilters 'armeabi'
+            //abiFilters "x86"
         }
     }
     buildTypes {

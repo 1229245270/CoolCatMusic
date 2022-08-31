@@ -5,6 +5,7 @@ import com.hzc.coolCatMusic.data.source.HttpDataSource;
 import com.hzc.coolCatMusic.data.source.http.service.DemoApiService;
 import com.hzc.coolCatMusic.entity.DemoEntity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,10 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.goldze.mvvmhabit.http.BaseResponse;
+import me.goldze.mvvmhabit.utils.KLog;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by goldze on 2019/3/26.
@@ -78,6 +83,14 @@ public class HttpDataSourceImpl implements HttpDataSource {
     @Override
     public Observable<BaseBean> settingFont() {
         return apiService.settingFont();
+    }
+
+    @Override
+    public Observable<BaseBean> songUnlockWindow64(File file, String username) {
+        RequestBody fileRQ = RequestBody.create(null, file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("path", file.getName(), fileRQ);
+        RequestBody user = RequestBody.create(null,username);
+        return apiService.songUnlockWindow64(part,user);
     }
 
 

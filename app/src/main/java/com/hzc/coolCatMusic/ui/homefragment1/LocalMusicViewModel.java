@@ -1,5 +1,7 @@
 package com.hzc.coolCatMusic.ui.homefragment1;
 
+import static com.hzc.coolCatMusic.app.SPUtilsConfig.Theme_TEXT_FONT_ID;
+
 import android.app.Application;
 import android.content.Intent;
 
@@ -8,25 +10,37 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.base.viewmodel.ToolbarViewModel;
 import com.hzc.coolCatMusic.data.DemoRepository;
+import com.hzc.coolCatMusic.entity.Font;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.service.MusicConnection;
 import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.SongAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
+import com.hzc.coolCatMusic.utils.FileUtil;
 
 
+import java.io.File;
+import java.util.List;
+
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.http.NetCallback;
+import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
@@ -158,4 +172,31 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         }
     };
 
+    @Override
+    protected void rightIconOnClick() {
+        super.rightIconOnClick();
+        File[] files = FileUtil.getFiles();
+        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+            @Override
+            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
+                return model.songUnlockWindow64(files[0],"zhangsan");
+            }
+        },new NetCallback<BaseBean>(){
+
+            @Override
+            public void onSuccess(BaseBean result) {
+                KLog.d("result:" + result);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+    }
 }

@@ -6,6 +6,9 @@ import com.hzc.coolCatMusic.entity.DemoEntity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+
+import java.io.File;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -81,6 +84,11 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
     @Override
     public Observable<BaseBean> settingFont() {
         return mHttpDataSource.settingFont();
+    }
+
+    @Override
+    public Observable<BaseBean> songUnlockWindow64(File file, String username) {
+        return mHttpDataSource.songUnlockWindow64(file, username);
     }
 
     @Override

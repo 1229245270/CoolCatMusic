@@ -3,12 +3,19 @@ package com.hzc.coolCatMusic.ui.homefragment1;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.hzc.coolCatMusic.BR;
@@ -29,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,LocalMusicViewModel> {
@@ -76,8 +84,17 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
     @Override
     public void initData() {
         super.initData();
-
         initLocalSong(false);
+        viewModel.setRightIconVisible(View.VISIBLE);
+        viewModel.setRightIcon(R.mipmap.ic_launcher);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {// android 11  且 不是已经被拒绝
+            // 先判断有没有权限
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                startActivityForResult(intent, 1024);
+            }
+        }
     }
 
     @SuppressLint("CheckResult")
