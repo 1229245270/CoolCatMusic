@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
@@ -34,5 +35,20 @@ public class ScanningMusicFragment extends BaseFragment<FragmentScanningmusicBin
         }
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getActivity().getApplication());
         return ViewModelProviders.of(this,factory).get(ScanningMusicViewModel.class);
+    }
+
+    public LottieAnimationView lottie;
+    @Override
+    public void initData() {
+        super.initData();
+        lottie = binding.lottie;
+    }
+
+    @Override
+    public void initViewObservable() {
+        super.initViewObservable();
+        viewModel.scanEvent.observe(this,(bool) -> {
+            lottie.playAnimation();
+        });
     }
 }

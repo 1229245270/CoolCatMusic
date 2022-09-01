@@ -67,10 +67,12 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
     public ObservableField<String> unlockSuccessText = new ObservableField<>("0");
     public ObservableField<String> unlockFailText = new ObservableField<>("0");
 
+    public SingleLiveEvent<Boolean> scanEvent = new SingleLiveEvent<>();
     public BindingCommand<Boolean> startScan = new BindingCommand<Boolean>(new BindingAction() {
         @Override
         public void call() {
             isScan.set(true);
+            scanEvent.setValue(true);
             List<LocalSongEntity> list = LocalUtils.getAllMediaList(getApplication(),timeSwitch.get() ? 60 : 0, sizeSwitch.get() ? 0.1 : 0);
             scanText.set(String.valueOf(list.size()));
             List<File> file = FileUtil.getAllFiles();
