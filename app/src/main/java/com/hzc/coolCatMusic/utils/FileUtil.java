@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,46 +18,23 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class FileUtil {
 
+    private static final File sdDir = Environment.getExternalStorageDirectory();
 
-    public static File[] getFiles() {
-        File sdDir = Environment.getExternalStorageDirectory();
-        File kgMusicPath = new File(sdDir + "/kgmusic/download/kgmusic");
-        File[] files = kgMusicPath.listFiles();
+    public static List<File> getAllFiles(){
+        List<File> files = new ArrayList<>();
+        files.addAll(Arrays.asList(getKgFiles()));
+        files.addAll(Arrays.asList(getWyyFiles()));
         return files;
     }
 
-
-    public static String execute_command(String cmd) {
-        try {
-            //String keyCommand = "setprop " + propName;
-            Runtime runtime = Runtime.getRuntime();
-            Process proc = runtime.exec(cmd);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  cmd;
+    private static File[] getKgFiles() {
+        File kgMusicPath = new File(sdDir + "/kgmusic/download/kgmusic");
+        return kgMusicPath.listFiles();
     }
 
-    //读取指定目录下的所有TXT文件的文件名
-    private static String getFileName(File[] files) {
-        String str = "";
-        if (files != null) {	// 先判断目录是否为空，否则会报空指针
-            for (File file : files) {
-                if (file.isDirectory()){//检查此路径名的文件是否是一个目录(文件夹)
-                    Log.i("zeng-eee", "若是文件目录。继续读1" +file.getName().toString()+file.getPath().toString());
-                    getFileName(file.listFiles());
-                    Log.i("zeng-eee", "若是文件目录。继续读2" +file.getName().toString()+ file.getPath().toString());
-                } else {
-                    String fileName = file.getName();
-                    if (fileName.endsWith(".txt")) {
-                        String s=fileName.substring(0,fileName.lastIndexOf(".")).toString();
-                        Log.i("zeng-eee", "文件名txt：：   " + s);
-                        str += fileName.substring(0,fileName.lastIndexOf("."))+"\n";
-                    }
-                }
-            }
-        }
-        return str;
+    private static File[] getWyyFiles() {
+        File wyyMusicPath = new File(sdDir + "/netease/cloudmusic/Music");
+        return wyyMusicPath.listFiles();
     }
 
     public static boolean copyFile(String oldPathName, String newPathName) {

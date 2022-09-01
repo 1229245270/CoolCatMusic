@@ -6,6 +6,7 @@ import android.app.Application;
 import com.hzc.coolCatMusic.data.DemoRepository;
 import com.hzc.coolCatMusic.ui.detail.DetailViewModel;
 import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicViewModel;
+import com.hzc.coolCatMusic.ui.homefragment1.ScanningMusicViewModel;
 import com.hzc.coolCatMusic.ui.login.LoginViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeFragment2ViewModel;
@@ -76,6 +77,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new NavigationThemeViewModel(mApplication,mRepository);
         }else if(modelClass.isAssignableFrom(DetailViewModel.class)){
             return (T) new DetailViewModel(mApplication,mRepository);
+        }else if(modelClass.isAssignableFrom(ScanningMusicViewModel.class)){
+            return (T) new ScanningMusicViewModel(mApplication,mRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

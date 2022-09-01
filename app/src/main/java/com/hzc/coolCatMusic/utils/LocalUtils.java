@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalUtils {
 
-    public static List<LocalSongEntity> getAllMediaList(Context context, int minDuration,int minSize,int... searchSize) {
+    public static List<LocalSongEntity> getAllMediaList(Context context, int minDuration,double minSize,int... searchSize) {
         Cursor cursor = null;
         List<LocalSongEntity> mediaList = new ArrayList<LocalSongEntity>();
         try {
@@ -70,6 +71,39 @@ public class LocalUtils {
                 mediaList.add(mediaEntity);
                 if(searchSize != null && searchSize.length >= 1 && mediaList.size() >= searchSize[0]){
                     return mediaList;
+                }
+            }
+            String destFileDir = context.getCacheDir().getPath();
+            File destFile = new File(destFileDir);
+            File[] files = destFile.listFiles();
+            if(files != null){
+                for(File file : files){
+                    if(file.isFile()){
+                        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                        String str = file.getPath();
+                        mmr.setDataSource(str);
+                        String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                        String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+                        String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                        String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION); // 播放时长单位为毫秒
+                        byte[] pic = mmr.getEmbeddedPicture();  // 图片，可以通过BitmapFactory.decodeByteArray转换为bitmap图片
+
+                        mediaEntity = new LocalSongEntity();
+                        mediaEntity.setDisplay_name(file.getName());
+                        mediaEntity.setDuration(Integer.parseInt(duration));
+                        mediaEntity.setArtist(artist);
+                        mediaEntity.setPath(str);
+                        mediaEntity.setAlbums(album);
+                        if(pic != null){
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(pic,0,pic.length);
+                            mediaEntity.setImage(bitmap);
+                        }
+                        mediaList.add(mediaEntity);
+
+                        if(searchSize != null && searchSize.length >= 1 && mediaList.size() >= searchSize[0]){
+                            return mediaList;
+                        }
+                    }
                 }
             }
         } catch (Exception e) {

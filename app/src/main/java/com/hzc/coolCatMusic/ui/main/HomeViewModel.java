@@ -19,6 +19,7 @@ import com.hzc.coolCatMusic.ui.detail.DetailActivity;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import me.goldze.mvvmhabit.base.BaseModel;
 import me.goldze.mvvmhabit.base.BaseViewModel;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.RxBus;
@@ -27,7 +28,7 @@ import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
-public class HomeViewModel extends BaseViewModel<DemoRepository> {
+public class HomeViewModel<M extends BaseModel> extends BaseViewModel<M> {
 
     private Disposable musicSubscription;
     private Disposable isOpenDrawerSubscription;
@@ -83,7 +84,7 @@ public class HomeViewModel extends BaseViewModel<DemoRepository> {
     public SingleLiveEvent<ChangeFragmentEvent> changeFragment = new SingleLiveEvent<>();
 
 
-    public HomeViewModel(@NonNull Application application, DemoRepository model) {
+    public HomeViewModel(@NonNull Application application, M model) {
         super(application, model);
     }
 

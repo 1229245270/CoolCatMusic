@@ -41,15 +41,6 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,LocalMusicViewModel> {
 
-    /*public LocalMusicFragment instance;
-
-    public LocalMusicFragment getInstance(){
-        if(instance == null){
-            instance = new LocalMusicFragment();
-        }
-        return instance;
-    }*/
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

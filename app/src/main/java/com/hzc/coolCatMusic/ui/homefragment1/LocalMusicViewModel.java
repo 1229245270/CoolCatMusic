@@ -175,28 +175,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     @Override
     protected void rightIconOnClick() {
         super.rightIconOnClick();
-        File[] files = FileUtil.getFiles();
-        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
-            @Override
-            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
-                return model.songUnlockWindow64(files[0],"zhangsan");
-            }
-        },new NetCallback<BaseBean>(){
-
-            @Override
-            public void onSuccess(BaseBean result) {
-                KLog.d("result:" + result);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        });
+        startFragment(new ScanningMusicFragment(),null);
     }
+
 }

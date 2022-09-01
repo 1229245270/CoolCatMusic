@@ -46,6 +46,7 @@ import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
 import com.hzc.coolCatMusic.app.AppViewModelFactory;
 import com.hzc.coolCatMusic.app.SPUtilsConfig;
+import com.hzc.coolCatMusic.data.DemoRepository;
 import com.hzc.coolCatMusic.databinding.ActivityHomeBinding;
 import com.hzc.coolCatMusic.ui.costom.CircleImage;
 import com.hzc.coolCatMusic.ui.costom.NiceImageView;
@@ -61,7 +62,7 @@ import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
 
-public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel> {
+public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel<DemoRepository>> {
 
     public DrawerLayout mainDrawerLayout;
     public RelativeLayout mainRelativeLayout;
