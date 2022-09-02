@@ -56,7 +56,8 @@ public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
             LinearLayout songItem = binding.getRoot().findViewById(R.id.songItem);
 
             PlayingMusicEntity playingMusicEntity = MusicUtils.getPlayingMusicEntity();
-            if(playingMusicEntity != null && playingMusicEntity.getSrc().equals(((LocalSongEntity) item).getPath())){
+            if(playingMusicEntity != null && playingMusicEntity.getSrc() != null && ((LocalSongEntity) item).getPath() != null &&
+                    playingMusicEntity.getSrc().equals(((LocalSongEntity) item).getPath())){
                 setOldPosition(position);
                 songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_select,null));
                 songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_check));

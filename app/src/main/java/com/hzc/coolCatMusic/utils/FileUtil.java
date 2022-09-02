@@ -22,19 +22,27 @@ public class FileUtil {
 
     public static List<File> getAllFiles(){
         List<File> files = new ArrayList<>();
-        files.addAll(Arrays.asList(getKgFiles()));
-        files.addAll(Arrays.asList(getWyyFiles()));
+        files.addAll(getFiles("/kgmusic/download/kgmusic"));
+        files.addAll(getFiles("/netease/cloudmusic/Music"));
         return files;
     }
 
-    private static File[] getKgFiles() {
-        File kgMusicPath = new File(sdDir + "/kgmusic/download/kgmusic");
-        return kgMusicPath.listFiles();
-    }
-
-    private static File[] getWyyFiles() {
-        File wyyMusicPath = new File(sdDir + "/netease/cloudmusic/Music");
-        return wyyMusicPath.listFiles();
+    private static List<File> getFiles(String path) {
+        List<File> files = new ArrayList<>();
+        File musicPath = new File(sdDir + path);
+        File[] listFiles = musicPath.listFiles();
+        if(listFiles != null){
+            for(File file : listFiles){
+                try{
+                    if(file.isFile() && !file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")).equals(".mp3")){
+                        files.add(file);
+                    }
+                }catch (Exception e){
+                    KLog.e("文件解析失败:" + e.toString());
+                }
+            }
+        }
+        return files;
     }
 
     public static boolean copyFile(String oldPathName, String newPathName) {

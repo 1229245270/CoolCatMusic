@@ -89,11 +89,21 @@ public class LocalUtils {
                         byte[] pic = mmr.getEmbeddedPicture();  // 图片，可以通过BitmapFactory.decodeByteArray转换为bitmap图片
 
                         mediaEntity = new LocalSongEntity();
-                        mediaEntity.setDisplay_name(file.getName());
+                        String fileName = file.getName();
+                        mediaEntity.setDisplay_name(fileName);
                         mediaEntity.setDuration(Integer.parseInt(duration));
-                        mediaEntity.setArtist(artist);
                         mediaEntity.setPath(str);
+                        if(album == null || artist == null){
+                            try {
+                                album = fileName.substring(fileName.indexOf(" - ") + 3,fileName.lastIndexOf(".mp3"));
+                                artist = fileName.substring(0,fileName.indexOf(" - "));
+                            }catch (Exception e){
+                                KLog.e(e.toString());
+                            }
+                        }
+                        mediaEntity.setArtist(artist);
                         mediaEntity.setAlbums(album);
+                        mediaEntity.setTitle(title);
                         if(pic != null){
                             Bitmap bitmap = BitmapFactory.decodeByteArray(pic,0,pic.length);
                             mediaEntity.setImage(bitmap);

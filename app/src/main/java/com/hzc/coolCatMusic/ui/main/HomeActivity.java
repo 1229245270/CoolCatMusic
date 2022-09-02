@@ -39,6 +39,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hzc.coolCatMusic.BR;
@@ -98,10 +99,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     //每毫秒变化宽度
     float moveWidth = 0;
 
+    //当前事件是否被消耗,0未消耗，1横向，2竖向
+    private int eventEat;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
+                eventEat = 0;
                 HomeFragment.getInstance().mainViewPager.requestDisallowInterceptTouchEvent(true);
                 startX = ev.getX();
                 startY = ev.getY();
@@ -126,59 +130,121 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 float distanceY = endY - startY;
                 //判断滑动方向
                 HomeFragment homeFragment = HomeFragment.getInstance();
-                if(Math.abs(distanceX) > Math.abs(distanceY)){
-                    //水平方向滑动
-                    //当滑动到ViewPager的第0个页面，并且是从左到右滑动
-                    int currentItem = homeFragment.mainViewPager.getCurrentItem();
-                    FragmentManager manager = getSupportFragmentManager();
-                    //存在fragment回退栈
-                    if(manager.getBackStackEntryCount() > 0 && distanceX > 0){
-                        if(showView != null && hideView != null){
-                            showView.setTranslationX(distanceX);
-                            lastTime = System.currentTimeMillis();
-                            if(lastTime - beforeTime > 100){
-                                beforeTime = lastTime;
-                                moveWidth = distanceX - comeWidth;
-                                comeWidth = distanceX;
-                                KLog.d("变化的宽度" + moveWidth);
-                                if(moveWidth > 100){
-                                    isBack = true;
-                                }else{
-                                    isBack = false;
-                                }
-                            }
-                            if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
-                                isBack = true;
-                            }
+                FragmentManager manager = getSupportFragmentManager();
+                int currentItem = homeFragment.mainViewPager.getCurrentItem();
+                //主页
+                if(manager.getBackStackEntryCount() == 0){
+                    if(currentItem == 0){
+                        if(distanceX > 0){
+                            //取消viewpager触摸，使得左滑更流畅
+                            homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                        }else if(distanceX < 0){
+                            //添加viewpager触摸
+                            homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                         }
-                    }else if(currentItem == 0 && distanceX > 0){
-                        homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-                    } else{
-                        //其他,中间部分
+                    }else{
                         homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                     }
+                //子页
                 }else{
+                    if(eventEat == 0){
+                        if(Math.abs(distanceX) > 100){
+                            eventEat = 1;
+                        }else if(Math.abs(distanceY) > 100){
+                            eventEat = 2;
+                        }
+                    }
+                    //水平方向滑动
+                    if(eventEat == 1){
+                        //左滑
+                        if(distanceX > 0){
+                            if(showView != null && hideView != null){
+                                showView.setTranslationX(distanceX);
+                                lastTime = System.currentTimeMillis();
+                                if(lastTime - beforeTime > 100){
+                                    beforeTime = lastTime;
+                                    moveWidth = distanceX - comeWidth;
+                                    comeWidth = distanceX;
+                                    if(moveWidth > 100){
+                                        isBack = true;
+                                    }else{
+                                        isBack = false;
+                                    }
+                                }
+                                if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
+                                    isBack = true;
+                                }
+                            }
+                        }
                     //竖直方向滑动
-                    homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                    }else if(eventEat == 2){
+
+                    }
                 }
+                //水平方向滑动
+                /*if(Math.abs(distanceX) > Math.abs(distanceY)){
+                        int currentItem = homeFragment.mainViewPager.getCurrentItem();
+                        FragmentManager manager = getSupportFragmentManager();
+                        //存在fragment回退栈
+                        if(manager.getBackStackEntryCount() > 0 && distanceX > 0){
+                            if(showView != null && hideView != null){
+                                showView.setTranslationX(distanceX);
+                                lastTime = System.currentTimeMillis();
+                                if(lastTime - beforeTime > 100){
+                                    beforeTime = lastTime;
+                                    moveWidth = distanceX - comeWidth;
+                                    comeWidth = distanceX;
+                                    KLog.d("变化的宽度" + moveWidth);
+                                    if(moveWidth > 100){
+                                        isBack = true;
+                                    }else{
+                                        isBack = false;
+                                    }
+                                }
+                                if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
+                                    isBack = true;
+                                }
+                            }
+                            //当滑动到ViewPager的第0个页面，并且是从左到右滑动
+                        }else if(currentItem == 0){
+                            if(distanceX > 0){
+                                //取消viewpager触摸，使得左滑更流畅
+                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                            }else if(distanceX < 0){
+                                //添加viewpager触摸
+                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                            }
+                            //其他,中间部分
+                        } else{
+                            homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                        }
+                        //竖直方向滑动
+                    }else{
+                        //homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                    }*/
                 break;
             case MotionEvent.ACTION_UP:
-
                 if(isBack){
                     onBackPressed();
                 }else{
                     if(showView != null && hideView != null){
                         showView.setTranslationX(0);
-                        //hideView.setTranslationX(hideView.getMeasuredWidth());
                     }
                 }
                 break;
             default:
                 break;
         }
+        FragmentManager manager = getSupportFragmentManager();
+        //拦截水平方向事件
+        if((eventEat == 1) && manager.getBackStackEntryCount() > 0){
+            return true;
+        }
         return super.dispatchTouchEvent(ev);
 
     }
+
+
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -299,6 +365,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
      * 初始化侧边栏布局
      * */
     private void initDrawableLayout(){
+        mainNavigationView = binding.mainNavigationView;
         mainDrawerLayout = binding.mainDrawerLayout;
         mainRelativeLayout = binding.mainRelativeLayout;
         mainDrawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -323,7 +390,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-
             }
 
             @Override

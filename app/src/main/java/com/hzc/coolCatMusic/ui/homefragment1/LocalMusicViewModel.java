@@ -35,6 +35,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.base.BaseBean;
+import me.goldze.mvvmhabit.binding.command.BindingAction;
+import me.goldze.mvvmhabit.bus.Messenger;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -46,8 +48,16 @@ import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
 public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
 
+    public static final String TOKEN_LOCAL_MUSIC_SET_RESULT = "";
     public LocalMusicViewModel(@NonNull Application application, DemoRepository model) {
         super(application, model);
+
+        Messenger.getDefault().register(this, TOKEN_LOCAL_MUSIC_SET_RESULT, new BindingAction() {
+            @Override
+            public void call() {
+                isRequestRead.setValue(false);
+            }
+        });
     }
 
     private Disposable mSubscription;
@@ -67,8 +77,6 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                         }
                     }
                 });
-        RxSubscriptions.add(mSubscription);
-
         musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PlayingMusicEntity>() {
@@ -94,6 +102,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                         }
                     }
                 });
+        RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(musicSubscription);
     }
 

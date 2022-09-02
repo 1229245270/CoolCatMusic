@@ -334,6 +334,11 @@ public class SeekArc extends SkinCompatView {
 	}
 
 	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		return super.dispatchTouchEvent(event);
+	}
+
+	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mEnabled) {
 			this.getParent().requestDisallowInterceptTouchEvent(true);

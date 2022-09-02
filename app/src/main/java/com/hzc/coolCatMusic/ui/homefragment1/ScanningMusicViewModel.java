@@ -39,6 +39,7 @@ import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.Messenger;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
@@ -71,19 +72,22 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
     public BindingCommand<Boolean> startScan = new BindingCommand<Boolean>(new BindingAction() {
         @Override
         public void call() {
-            isScan.set(true);
             scanEvent.setValue(true);
-            List<LocalSongEntity> list = LocalUtils.getAllMediaList(getApplication(),timeSwitch.get() ? 60 : 0, sizeSwitch.get() ? 0.1 : 0);
-            scanText.set(String.valueOf(list.size()));
-            List<File> file = FileUtil.getAllFiles();
-            scanText.set(String.valueOf(list.size() + file.size()));
-            select = 0;
-            successSize = 0;
-            failSize = 0;
-            files = file;
-            unlockSong();
         }
     });
+
+    public void startScan(){
+        isScan.set(true);
+        List<LocalSongEntity> list = LocalUtils.getAllMediaList(getApplication(),timeSwitch.get() ? 60 : 0, sizeSwitch.get() ? 0.1 : 0);
+        scanText.set(String.valueOf(list.size()));
+        List<File> file = FileUtil.getAllFiles();
+        scanText.set(String.valueOf(list.size() + file.size()));
+        select = 0;
+        successSize = 0;
+        failSize = 0;
+        files = file;
+        unlockSong();
+    }
 
     private int select;
     private int successSize;
@@ -105,14 +109,7 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
             @Override
             public void onFailure(String msg) {
                 failSize++;
-                select++;
-                unlockSuccessText.set(String.valueOf(successSize));
-                unlockFailText.set(String.valueOf(failSize));
-                if(select < files.size()){
-                    unlockSong();
-                } else {
-                    finish();
-                }
+                nextUnlock();
             }
 
             @Override
@@ -130,17 +127,8 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
 
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
-
-
                     successSize++;
-                    select++;
-                    unlockSuccessText.set(String.valueOf(successSize));
-                    unlockFailText.set(String.valueOf(failSize));
-                    if(select < files.size()){
-                        unlockSong();
-                    } else {
-                        finish();
-                    }
+                    nextUnlock();
                 }
 
                 @Override
@@ -151,29 +139,25 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
                 @Override
                 public void onError(Throwable e) {
                     failSize++;
-                    select++;
-                    unlockSuccessText.set(String.valueOf(successSize));
-                    unlockFailText.set(String.valueOf(failSize));
-                    if(select < files.size()){
-                        unlockSong();
-                    } else {
-                        finish();
-                    }
+                    nextUnlock();
                 }
             });
         }catch (Exception e){
             failSize++;
-            select++;
-            unlockSuccessText.set(String.valueOf(successSize));
-            unlockFailText.set(String.valueOf(failSize));
-            if(select < files.size()){
-                unlockSong();
-            } else {
-                finish();
-            }
+            nextUnlock();
             KLog.e(e.toString());
         }
-
     }
 
+    private void nextUnlock(){
+        select++;
+        unlockSuccessText.set(String.valueOf(successSize));
+        unlockFailText.set(String.valueOf(failSize));
+        if(select < files.size()){
+            unlockSong();
+        } else {
+            Messenger.getDefault().sendNoMsg(LocalMusicViewModel.TOKEN_LOCAL_MUSIC_SET_RESULT);
+            finish();
+        }
+    }
 }

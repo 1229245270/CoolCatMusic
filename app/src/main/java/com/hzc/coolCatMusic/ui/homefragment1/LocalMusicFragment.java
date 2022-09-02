@@ -36,7 +36,9 @@ import java.util.List;
 import java.util.Objects;
 
 import me.goldze.mvvmhabit.base.BaseFragment;
+import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
+import me.goldze.mvvmhabit.bus.Messenger;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,LocalMusicViewModel> {
@@ -78,15 +80,8 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
         initLocalSong(false);
         viewModel.setRightIconVisible(View.VISIBLE);
         viewModel.setRightIcon(R.mipmap.ic_launcher);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {// android 11  且 不是已经被拒绝
-            // 先判断有没有权限
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                startActivityForResult(intent, 1024);
-            }
-        }
     }
+
 
     @SuppressLint("CheckResult")
     public void initLocalSong(boolean isRestart){
@@ -95,6 +90,14 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                 .subscribe(aBoolean -> {
                     List<Object> list = new ArrayList<>();
                     if (aBoolean) {
+                        for(int i = 0;i < 20;i++){
+                            LocalSongEntity localSongEntity = new LocalSongEntity();
+                            localSongEntity.setAlbums("Albums");
+                            localSongEntity.setArtist("Artist");
+                            localSongEntity.setPath("Artist");
+                            list.add(localSongEntity);
+                        }
+
                         list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
                         list.add("共" + list.size() + "首");
 
@@ -135,5 +138,10 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
             KLog.d("aBoolean",aBoolean);
             initLocalSong(aBoolean);
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
