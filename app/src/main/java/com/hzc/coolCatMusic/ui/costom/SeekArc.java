@@ -341,7 +341,7 @@ public class SeekArc extends SkinCompatView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mEnabled) {
-			this.getParent().requestDisallowInterceptTouchEvent(true);
+			//this.getParent().requestDisallowInterceptTouchEvent(false);
 			float x = event.getX();
 			float y = event.getY();
 			switch (event.getAction()) {
@@ -370,7 +370,7 @@ public class SeekArc extends SkinCompatView {
 					if(isProgress){
 						onStopTrackingTouch();
 						setPressed(false);
-						this.getParent().requestDisallowInterceptTouchEvent(false);
+						//this.getParent().requestDisallowInterceptTouchEvent(false);
 					}else{
 						longClickActionUp(x,y);
 					}

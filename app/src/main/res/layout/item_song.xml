@@ -43,7 +43,7 @@
             <TextView
                 android:gravity="center_vertical"
                 android:id="@+id/songName"
-                android:textColor="@color/item_songName_uncheck"
+                android:textColor="@color/black_text"
                 android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
@@ -54,7 +54,7 @@
             <TextView
                 android:gravity="center_vertical"
                 android:id="@+id/singer"
-                android:textColor="@color/item_singer_uncheck"
+                android:textColor="@color/gray_text"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"

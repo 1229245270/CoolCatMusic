@@ -101,6 +101,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     //当前事件是否被消耗,0未消耗，1横向，2竖向
     private int eventEat;
+    private boolean eventEnd = true;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()){
@@ -110,6 +112,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 startX = ev.getX();
                 startY = ev.getY();
                 isBack = false;
+                eventEnd = true;
                 beforeTime = System.currentTimeMillis();
                 comeWidth = 0;
                 int count = mainFrameLayout.getChildCount();
@@ -178,50 +181,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                         }
                     //竖直方向滑动
                     }else if(eventEat == 2){
-
                     }
                 }
-                //水平方向滑动
-                /*if(Math.abs(distanceX) > Math.abs(distanceY)){
-                        int currentItem = homeFragment.mainViewPager.getCurrentItem();
-                        FragmentManager manager = getSupportFragmentManager();
-                        //存在fragment回退栈
-                        if(manager.getBackStackEntryCount() > 0 && distanceX > 0){
-                            if(showView != null && hideView != null){
-                                showView.setTranslationX(distanceX);
-                                lastTime = System.currentTimeMillis();
-                                if(lastTime - beforeTime > 100){
-                                    beforeTime = lastTime;
-                                    moveWidth = distanceX - comeWidth;
-                                    comeWidth = distanceX;
-                                    KLog.d("变化的宽度" + moveWidth);
-                                    if(moveWidth > 100){
-                                        isBack = true;
-                                    }else{
-                                        isBack = false;
-                                    }
-                                }
-                                if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
-                                    isBack = true;
-                                }
-                            }
-                            //当滑动到ViewPager的第0个页面，并且是从左到右滑动
-                        }else if(currentItem == 0){
-                            if(distanceX > 0){
-                                //取消viewpager触摸，使得左滑更流畅
-                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-                            }else if(distanceX < 0){
-                                //添加viewpager触摸
-                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                            }
-                            //其他,中间部分
-                        } else{
-                            homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                        }
-                        //竖直方向滑动
-                    }else{
-                        //homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                    }*/
                 break;
             case MotionEvent.ACTION_UP:
                 if(isBack){
@@ -238,7 +199,21 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         FragmentManager manager = getSupportFragmentManager();
         //拦截水平方向事件
         if((eventEat == 1) && manager.getBackStackEntryCount() > 0){
-            return true;
+            /*if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                onUserInteraction();
+            }*/
+            /*if (getWindow().superDispatchTouchEvent(ev)) {
+                return false;
+            }*/
+            //showView.dispatchTouchEvent(ev);
+            try {
+                RecyclerView recyclerView = showView.findViewById(R.id.recycleView);
+                recyclerView.getParent().requestDisallowInterceptTouchEvent(true);
+                //recyclerView.onTouchEvent(ev);
+            }catch (Exception e){
+
+            }
+            return false;
         }
         return super.dispatchTouchEvent(ev);
 

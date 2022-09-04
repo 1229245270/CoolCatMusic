@@ -64,8 +64,8 @@ public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
                 singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_check));
             }else{
                 songItem.setBackground(ResourcesCompat.getDrawable(binding.getRoot().getResources(),R.drawable.recycleview_item_unselect,null));
-                songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_songName_uncheck));
-                singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.item_singer_uncheck));
+                songName.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.black_text));
+                singer.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), R.color.gray_text));
             }
 
         }

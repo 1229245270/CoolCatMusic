@@ -133,8 +133,8 @@ public class PlayingListDialog extends Dialog {
                     holder.setTextColor(R.id.singer,ContextCompat.getColor(getContext(), R.color.item_singer_check));
                 }else{
                     holder.setBackground(R.id.songItem,ResourcesCompat.getDrawable(getContext().getResources(),R.drawable.recycleview_item_unselect,null));
-                    holder.setTextColor(R.id.songName,ContextCompat.getColor(getContext(), R.color.item_songName_uncheck));
-                    holder.setTextColor(R.id.singer,ContextCompat.getColor(getContext(), R.color.item_singer_uncheck));
+                    holder.setTextColor(R.id.songName,ContextCompat.getColor(getContext(), R.color.black_text));
+                    holder.setTextColor(R.id.singer,ContextCompat.getColor(getContext(), R.color.gray_text));
                 }
 
                 //长按图标滑动

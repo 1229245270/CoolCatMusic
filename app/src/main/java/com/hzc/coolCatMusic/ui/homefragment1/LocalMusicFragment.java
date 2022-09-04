@@ -10,13 +10,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
@@ -25,6 +28,7 @@ import com.hzc.coolCatMusic.databinding.FragmentLocalmusicBinding;
 import com.hzc.coolCatMusic.entity.LocalSongEntity;
 import com.hzc.coolCatMusic.entity.PlayingMusicEntity;
 import com.hzc.coolCatMusic.ui.main.HomeActivity;
+import com.hzc.coolCatMusic.ui.main.HomeFragment;
 import com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel;
 import com.hzc.coolCatMusic.ui.main.HomeViewModel;
 import com.hzc.coolCatMusic.utils.DialogUtils;
@@ -74,12 +78,51 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
         return ViewModelProviders.of(this,factory).get(LocalMusicViewModel.class);
     }
 
+    float startX = 0;
+    float startY = 0;
+    private int eventEat;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initData() {
         super.initData();
         initLocalSong(false);
         viewModel.setRightIconVisible(View.VISIBLE);
         viewModel.setRightIcon(R.mipmap.ic_launcher);
+
+        /*binding.recycleView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent ev) {
+                switch (ev.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startX = ev.getX();
+                        startY = ev.getY();
+                        eventEat = 0;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        //来到新的坐标
+                        float endX = ev.getX();
+                        float endY = ev.getY();
+                        //计算偏移量
+                        float distanceX = endX - startX;
+                        float distanceY = endY - startY;
+                        //主页
+                        if(Math.abs(distanceX) > 100){
+                            eventEat = 1;
+                        }else if(Math.abs(distanceY) > 100){
+                            eventEat = 2;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if(eventEat == 1){
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+                return binding.recycleView.onTouchEvent(ev);
+            }
+        });*/
     }
 
 
@@ -90,14 +133,6 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                 .subscribe(aBoolean -> {
                     List<Object> list = new ArrayList<>();
                     if (aBoolean) {
-                        for(int i = 0;i < 20;i++){
-                            LocalSongEntity localSongEntity = new LocalSongEntity();
-                            localSongEntity.setAlbums("Albums");
-                            localSongEntity.setArtist("Artist");
-                            localSongEntity.setPath("Artist");
-                            list.add(localSongEntity);
-                        }
-
                         list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
                         list.add("共" + list.size() + "首");
 
