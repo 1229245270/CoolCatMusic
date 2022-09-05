@@ -84,7 +84,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
         super.onCreate(savedInstanceState);
-
     }
 
     float startX = 0;
@@ -101,10 +100,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     //当前事件是否被消耗,0未消耗，1横向，2竖向
     private int eventEat;
-    private boolean eventEnd = true;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        //点击音乐条,禁止侧滑
+        if(isOpenProgress){
+            return super.dispatchTouchEvent(ev);
+        }
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
                 eventEat = 0;
@@ -112,7 +114,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 startX = ev.getX();
                 startY = ev.getY();
                 isBack = false;
-                eventEnd = true;
                 beforeTime = System.currentTimeMillis();
                 comeWidth = 0;
                 int count = mainFrameLayout.getChildCount();
@@ -199,27 +200,16 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         FragmentManager manager = getSupportFragmentManager();
         //拦截水平方向事件
         if((eventEat == 1) && manager.getBackStackEntryCount() > 0){
-            /*if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                onUserInteraction();
-            }*/
-            /*if (getWindow().superDispatchTouchEvent(ev)) {
-                return false;
-            }*/
-            //showView.dispatchTouchEvent(ev);
-            try {
-                RecyclerView recyclerView = showView.findViewById(R.id.recycleView);
-                recyclerView.getParent().requestDisallowInterceptTouchEvent(true);
-                //recyclerView.onTouchEvent(ev);
-            }catch (Exception e){
-
+            //移除链表路径,使触摸事件只执行到外层
+            if(showView != null){
+                ev.setAction(MotionEvent.ACTION_CANCEL);
+                showView.dispatchTouchEvent(ev);
             }
-            return false;
         }
+
         return super.dispatchTouchEvent(ev);
 
     }
-
-
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -233,7 +223,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     @Override
     public HomeViewModel initViewModel() {
-
         AppViewModelFactory factory = AppViewModelFactory.getInstance(getApplication());
         return ViewModelProviders.of(this, factory).get(HomeViewModel.class);
     }
@@ -454,6 +443,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     /**
      * 初始化进度栏
      * */
+    private boolean isOpenProgress = false;
     private void initProgress(){
         progressImage = binding.mainProgress.findViewById(R.id.progress_image);
         progressSeekArc = binding.mainProgress.findViewById(R.id.progress_seekArc);
@@ -464,12 +454,14 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             public void actionDown() {
                 //锁定侧边栏弹出，防止冲突
                 mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                isOpenProgress = true;
             }
 
             @Override
             public void actionUp() {
                 //解锁侧边栏
                 mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                isOpenProgress = false;
             }
 
             @Override

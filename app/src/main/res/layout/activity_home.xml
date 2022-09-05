@@ -32,14 +32,14 @@
 
                 <com.hzc.coolCatMusic.ui.costom.NiceImageView
                     android:id="@+id/mainDetail"
-                    app:is_circle="true"
-                    android:src="@mipmap/ic_launcher"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
+                    android:layout_alignTop="@+id/mainProgress"
+                    android:layout_alignBottom="@+id/mainProgress"
                     android:layout_marginRight="@dimen/dp_50"
                     android:layout_toLeftOf="@+id/mainProgress"
-                    android:layout_alignBottom="@+id/mainProgress"
-                    android:layout_alignTop="@+id/mainProgress" />
+                    android:src="@mipmap/ic_launcher"
+                    app:is_circle="true" />
 
                 <include
                     android:layout_centerHorizontal="true"

@@ -136,6 +136,14 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                         list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
                         list.add("共" + list.size() + "首");
 
+                        for(int i = 0;i < 20;i++){
+                            LocalSongEntity localSongEntity = new LocalSongEntity();
+                            localSongEntity.setPath("" + i);
+                            localSongEntity.setArtist("artist");
+                            localSongEntity.setAlbums("albums");
+                            list.add(localSongEntity);
+                        }
+
                         //还原当前正在播放的歌曲
                         LocalSongEntity localSongEntity = null;
                         for(int i = 0;i < viewModel.localSongList.size();i++){
