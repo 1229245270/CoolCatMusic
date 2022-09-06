@@ -453,6 +453,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             @Override
             public void actionDown() {
                 //锁定侧边栏弹出，防止冲突
+                mainDrawerLayout.requestDisallowInterceptTouchEvent(true);
                 mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 isOpenProgress = true;
             }
@@ -460,6 +461,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             @Override
             public void actionUp() {
                 //解锁侧边栏
+                mainDrawerLayout.requestDisallowInterceptTouchEvent(false);
                 mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 isOpenProgress = false;
             }
