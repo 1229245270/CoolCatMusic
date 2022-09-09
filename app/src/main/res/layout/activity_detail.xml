@@ -7,10 +7,21 @@
             name="viewModel"
             type="DetailViewModel" />
     </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <LinearLayout
+            android:paddingTop="@dimen/status_bar_height"
+            android:layout_height="@dimen/dp_50"
+            android:layout_width="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+        <ImageView
+            android:transitionName="song"
+            android:id="@+id/aaa"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
 </layout>

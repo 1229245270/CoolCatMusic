@@ -15,6 +15,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Explode;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -366,11 +367,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         });
 
         mainDetail = binding.mainDetail;
+        mainDetail.setTransitionName("song");
         mainDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this,DetailActivity.class);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this).toBundle());
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this, Pair.create(mainDetail, "song"));
+                startActivity(intent, activityOptions.toBundle());
             }
         });
     }
