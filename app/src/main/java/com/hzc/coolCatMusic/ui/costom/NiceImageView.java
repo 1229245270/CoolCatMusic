@@ -156,7 +156,17 @@ public class NiceImageView extends AppCompatImageView {
             srcPath.addRect(srcRectF, Path.Direction.CCW);
             // 计算tempPath和path的差集
             srcPath.op(path, Path.Op.DIFFERENCE);
-            canvas.drawPath(srcPath, paint);
+            if(isCircle){
+                Paint newPaint = new Paint();
+                newPaint.setAntiAlias(true);
+                PorterDuffXfermode xfermode2 = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
+                newPaint.setStyle(Paint.Style.FILL);
+                newPaint.setXfermode(xfermode2);
+                canvas.drawCircle(width / 2.0f, height / 2.0f, radius,newPaint);
+            }else{
+                canvas.drawPath(srcPath, paint);
+            }
+            //canvas.drawPath(srcPath, paint);
         }
         srcPath.reset();
         paint.setXfermode(null);

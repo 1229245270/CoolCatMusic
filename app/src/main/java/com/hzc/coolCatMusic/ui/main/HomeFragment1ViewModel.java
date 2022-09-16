@@ -17,16 +17,20 @@ import com.hzc.coolCatMusic.ui.adapter.ListenerAdapter;
 import com.hzc.coolCatMusic.ui.homefragment1.LocalMusicFragment;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
-public class HomeFragment1ViewModel extends HomeViewModel {
+public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
 
     public HomeFragment1ViewModel(@NonNull Application application, DemoRepository model) {
         super(application, model);
@@ -126,8 +130,7 @@ public class HomeFragment1ViewModel extends HomeViewModel {
 
     public void loadSong(){
 
-
-        /*model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
             @Override
             public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
                 return model.settingFont();
@@ -135,6 +138,7 @@ public class HomeFragment1ViewModel extends HomeViewModel {
         },new NetCallback<BaseBean>(){
             @Override
             public void onSuccess(BaseBean result) {
+
             }
 
             @Override
@@ -146,6 +150,6 @@ public class HomeFragment1ViewModel extends HomeViewModel {
             public void onFinish() {
 
             }
-        });*/
+        });
     }
 }

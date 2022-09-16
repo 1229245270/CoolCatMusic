@@ -1,8 +1,11 @@
 package com.hzc.coolCatMusic.base.viewmodel;
 
+
 import android.app.Application;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -10,6 +13,7 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.ui.main.HomeFragment;
 import com.hzc.coolCatMusic.ui.main.HomeViewModel;
 
@@ -37,6 +41,8 @@ public class ToolbarViewModel<M extends BaseModel> extends HomeViewModel<M> {
     public ObservableInt rightIconVisibleObservable = new ObservableInt(View.GONE);
     //右边图标
     public Drawable rightIcon;
+    //背景
+    public ObservableInt mainColor = new ObservableInt(ContextCompat.getColor(getApplication(),R.color.mainBg));
     //兼容databinding，去泛型化
     public ToolbarViewModel toolbarViewModel;
 
