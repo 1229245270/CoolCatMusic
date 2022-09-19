@@ -20,6 +20,7 @@
     <color name="ic_launcher_background">#FFEE5F</color>
     <color name="transparent">#01ffffff</color>
 
+
     <color name="recycleViewRipple">#aaaaaa</color>
     <color name="recycleViewSelect">#eeeeee</color>
     <color name="recycleViewUnSelect">#ffffff</color>

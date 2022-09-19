@@ -1,6 +1,8 @@
 package me.goldze.mvvmhabit.base;
 
+import android.app.Instrumentation;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -187,7 +189,7 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
         viewModel.getUC().getFinishEvent().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(@Nullable Void v) {
-                finish();
+                finishAfterTransition();
             }
         });
         //关闭上一层
@@ -197,6 +199,41 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
                 onBackPressed();
             }
         });
+    }
+
+    /**
+     * android共享元素动画在Home键或跳转第三个页面返回后调用finishAfterTransition动画失效:
+     * Android 10以上，Activity先走了onStop方法导致mEnterTransitionCoordinator为null，然后才走了performSaveInstanceState，
+     * 在这里虽然有调用ActivityTransitionState的saveState，但是因为mEnterTransitionCoordinator已经为null，数据拿不到了，所以没有保存成功。
+     * 严重怀疑这是Google的Bug
+     * 另外需要注意一点，调用这句之后onSaveInstanceState会走两遍，第一遍是这句调用的，第二遍是ActivityThread调用的，
+     * 如果你在这块有代码，需要注意一下，最简单的方法就是在这块传入的Bundle传入一个标记位，来进行识别，例如：
+     * @Override
+     * protected void onSaveInstanceState(@NonNull Bundle outState) {
+     *     super.onSaveInstanceState(outState);
+     *     if (outState.containsKey("InstrumentationFixBug") && outState.getBoolean("InstrumentationFixBug")){
+     *         //new Instrumentation().callActivityOnSaveInstanceState(this, bundle);
+     *     }else {
+     *         //ActivityThread调用，用于保存逻辑
+     *     }
+     * }
+     *
+     * @Override
+     * protected void onStop() {
+     *     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
+     *         Bundle bundle = new Bundle();
+     *         bundle.putBoolean("InstrumentationFixBug",true);
+     *         new Instrumentation().callActivityOnSaveInstanceState(this, bundle);
+     *     }
+     *     super.onStop();
+     * }
+     * */
+    @Override
+    protected void onStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
+            new Instrumentation().callActivityOnSaveInstanceState(this, new Bundle());
+        }
+        super.onStop();
     }
 
     public void showDialog(String title) {

@@ -32,8 +32,6 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
     //管理RxJava，主要针对RxJava异步操作造成的内存泄漏
     private CompositeDisposable mCompositeDisposable;
 
-    public int mainBg = R.color.mainBg;
-
     public BaseViewModel(@NonNull Application application) {
         this(application, null);
     }
@@ -130,10 +128,6 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
             params.put(ParameterField.BUNDLE, bundle);
         }
         uc.startContainerActivityEvent.postValue(params);
-    }
-
-    public void setMainBg(int mainBg) {
-        this.mainBg = mainBg;
     }
 
     /**

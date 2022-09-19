@@ -3,14 +3,21 @@ package com.hzc.coolCatMusic.ui.costom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.Xfermode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 
@@ -156,17 +163,7 @@ public class NiceImageView extends AppCompatImageView {
             srcPath.addRect(srcRectF, Path.Direction.CCW);
             // 计算tempPath和path的差集
             srcPath.op(path, Path.Op.DIFFERENCE);
-            if(isCircle){
-                Paint newPaint = new Paint();
-                newPaint.setAntiAlias(true);
-                PorterDuffXfermode xfermode2 = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
-                newPaint.setStyle(Paint.Style.FILL);
-                newPaint.setXfermode(xfermode2);
-                canvas.drawCircle(width / 2.0f, height / 2.0f, radius,newPaint);
-            }else{
-                canvas.drawPath(srcPath, paint);
-            }
-            //canvas.drawPath(srcPath, paint);
+            canvas.drawPath(srcPath, paint);
         }
         srcPath.reset();
         paint.setXfermode(null);

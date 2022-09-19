@@ -175,8 +175,6 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                 try {
                     final Class homeActivity = Class.forName("com.hzc.coolCatMusic.ui.main.HomeActivity");
                     Method method = homeActivity.getMethod("setMEdgeSize",boolean.class);
-                    //Constructor constructor = homeActivity.getConstructor();
-                    //method.invoke(constructor.newInstance(),true);
                     method.invoke(null,true);
                 } catch (Exception e) {
                     KLog.e("fragment error:" + e.toString());
