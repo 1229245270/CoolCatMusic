@@ -78,10 +78,6 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
         return ViewModelProviders.of(this,factory).get(LocalMusicViewModel.class);
     }
 
-    float startX = 0;
-    float startY = 0;
-    private int eventEat;
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initData() {
         super.initData();
@@ -89,40 +85,6 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
         viewModel.setRightIconVisible(View.VISIBLE);
         viewModel.setRightIcon(R.mipmap.ic_launcher);
 
-        /*binding.recycleView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent ev) {
-                switch (ev.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        startX = ev.getX();
-                        startY = ev.getY();
-                        eventEat = 0;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        //来到新的坐标
-                        float endX = ev.getX();
-                        float endY = ev.getY();
-                        //计算偏移量
-                        float distanceX = endX - startX;
-                        float distanceY = endY - startY;
-                        //主页
-                        if(Math.abs(distanceX) > 100){
-                            eventEat = 1;
-                        }else if(Math.abs(distanceY) > 100){
-                            eventEat = 2;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if(eventEat == 1){
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-                return binding.recycleView.onTouchEvent(ev);
-            }
-        });*/
     }
 
 
@@ -136,13 +98,13 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                         list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
                         list.add("共" + list.size() + "首");
 
-                        for(int i = 0;i < 20;i++){
+                        /*for(int i = 0;i < 20;i++){
                             LocalSongEntity localSongEntity = new LocalSongEntity();
                             localSongEntity.setPath("" + i);
                             localSongEntity.setArtist("artist");
                             localSongEntity.setAlbums("albums");
                             list.add(localSongEntity);
-                        }
+                        }*/
 
                         //还原当前正在播放的歌曲
                         LocalSongEntity localSongEntity = null;
