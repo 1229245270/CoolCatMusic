@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -39,10 +40,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.base.BaseFragment;
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
 import me.goldze.mvvmhabit.bus.Messenger;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,LocalMusicViewModel> {
@@ -81,6 +88,7 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
     @Override
     public void initData() {
         super.initData();
+
         initLocalSong(false);
         viewModel.setRightIconVisible(View.VISIBLE);
         viewModel.setRightIcon(R.mipmap.ic_launcher);
@@ -90,14 +98,12 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
 
     @SuppressLint("CheckResult")
     public void initLocalSong(boolean isRestart){
+
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     List<Object> list = new ArrayList<>();
                     if (aBoolean) {
-                        list.addAll(LocalUtils.getAllMediaList(getActivity(),60,0));
-                        list.add("共" + list.size() + "首");
-
                         /*for(int i = 0;i < 20;i++){
                             LocalSongEntity localSongEntity = new LocalSongEntity();
                             localSongEntity.setPath("" + i);
@@ -105,25 +111,7 @@ public class LocalMusicFragment extends BaseFragment<FragmentLocalmusicBinding,L
                             localSongEntity.setAlbums("albums");
                             list.add(localSongEntity);
                         }*/
-
-                        //还原当前正在播放的歌曲
-                        LocalSongEntity localSongEntity = null;
-                        for(int i = 0;i < viewModel.localSongList.size();i++){
-                            if(viewModel.localSongList.get(i) instanceof LocalSongEntity && ((LocalSongEntity) viewModel.localSongList.get(i)).isCheck()){
-                                localSongEntity = (LocalSongEntity) viewModel.localSongList.get(i);
-                                break;
-                            }
-                        }
-                        if(localSongEntity != null){
-                            for(int i = 0;i < list.size();i++){
-                                if(list.get(i) instanceof LocalSongEntity && ((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
-                                    list.set(i,localSongEntity);
-                                    break;
-                                }
-                            }
-                        }
-                        viewModel.localSongList.clear();
-                        viewModel.localSongList.addAll(list);
+                        viewModel.loadLocalSong(getActivity());
                     } else if(!isRestart){
                         list.add(false);
                         viewModel.localSongList.clear();

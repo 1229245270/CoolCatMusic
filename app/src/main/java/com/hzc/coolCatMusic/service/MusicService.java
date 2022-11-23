@@ -167,10 +167,13 @@ public class MusicService extends Service {
                 if(connectType != type){
                     connectType = type;
                     if(type == ConnectivityManager.TYPE_WIFI){
+                        KLog.d("当前为WIFI");
                         ToastUtils.showShort("当前为WIFI");
                     }else if(type == ConnectivityManager.TYPE_MOBILE){
+                        KLog.d("当前为数据");
                         ToastUtils.showShort("当前为数据");
                     }else{
+                        KLog.d("未知网络");
                         ToastUtils.showShort("未知网络");
                     }
                 }

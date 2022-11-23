@@ -87,21 +87,18 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         super.onCreate(savedInstanceState);
     }
 
-    float startX = 0;
-    float startY = 0;
+    private float startX = 0;
+    private float startY = 0;
     boolean isBack = false;
-    View showView;
-    View hideView;
-    long beforeTime;
-    long lastTime;
+    private View showView;
+    private View hideView;
+    private long beforeTime;
     //每毫秒初始宽度
-    float comeWidth = 0;
-    //每毫秒变化宽度
-    float moveWidth = 0;
+    private float comeWidth = 0;
 
     //当前事件是否被消耗,0未消耗，1横向，2竖向
     private int eventEat;
-
+    private int moveY = 0;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //点击音乐条,禁止侧滑
@@ -111,6 +108,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
                 eventEat = 0;
+                moveY = 0;
                 HomeFragment.getInstance().mainViewPager.requestDisallowInterceptTouchEvent(true);
                 startX = ev.getX();
                 startY = ev.getY();
@@ -133,6 +131,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 //计算偏移量
                 float distanceX = endX - startX;
                 float distanceY = endY - startY;
+                moveY += Math.abs(distanceY);
                 //判断滑动方向
                 HomeFragment homeFragment = HomeFragment.getInstance();
                 FragmentManager manager = getSupportFragmentManager();
@@ -141,8 +140,12 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 if(manager.getBackStackEntryCount() == 0){
                     if(currentItem == 0){
                         if(distanceX > 0){
-                            //取消viewpager触摸，使得左滑更流畅
-                            homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                            //左滑时，取消viewpager触摸，防止抢夺drawerLayout事件,当竖直方向累计偏移量大于100时，只允许竖直滑动
+                            if(moveY > 100){
+                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                            }else{
+                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                            }
                         }else if(distanceX < 0){
                             //添加viewpager触摸
                             homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
@@ -165,10 +168,11 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                         if(distanceX > 0){
                             if(showView != null && hideView != null){
                                 showView.setTranslationX(distanceX);
-                                lastTime = System.currentTimeMillis();
+                                long lastTime = System.currentTimeMillis();
                                 if(lastTime - beforeTime > 100){
                                     beforeTime = lastTime;
-                                    moveWidth = distanceX - comeWidth;
+                                    //每毫秒变化宽度
+                                    float moveWidth = distanceX - comeWidth;
                                     comeWidth = distanceX;
                                     if(moveWidth > 100){
                                         isBack = true;
@@ -315,11 +319,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         //主页展示
         if(showFragment == HomeFragment.getInstance()){
             fragmentTransaction
+                    //.replace(R.id.mainFrameLayout, showFragment)
                     //.show(showFragment)
                     .commitNow();
         }else{
             fragmentTransaction
                     //.show(showFragment)
+                    //.replace(R.id.mainFrameLayout, showFragment)
                     .addToBackStack(null)
                     .commit();
             manager.executePendingTransactions();
@@ -359,6 +365,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
+
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.hzc.coolCatMusic.ui.homefragment1;
 
 import static com.hzc.coolCatMusic.app.SPUtilsConfig.Theme_TEXT_FONT_ID;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
@@ -10,7 +11,6 @@ import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.google.gson.reflect.TypeToken;
 import com.hzc.coolCatMusic.BR;
 import com.hzc.coolCatMusic.R;
 import com.hzc.coolCatMusic.app.AppApplication;
@@ -24,12 +24,18 @@ import com.hzc.coolCatMusic.service.MusicService;
 import com.hzc.coolCatMusic.ui.adapter.SongAdapter;
 import com.hzc.coolCatMusic.ui.listener.OnItemClickListener;
 import com.hzc.coolCatMusic.utils.FileUtil;
+import com.hzc.coolCatMusic.utils.LocalUtils;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -187,4 +193,62 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         startFragment(new ScanningMusicFragment(),null);
     }
 
+    public void loadLocalSong(Activity activity){
+        Observable<List<Object>> observable = Observable.create(new ObservableOnSubscribe<List<Object>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Object>> emitter) throws Exception {
+                List<Object> list = new ArrayList<>(LocalUtils.getAllMediaList(activity, 60, 0));
+                list.add("共" + list.size() + "首");
+                emitter.onNext(list);
+            }
+        }).map(new Function<List<Object>, List<Object>>() {
+            @Override
+            public List<Object> apply(@NonNull List<Object> objects) throws Exception {
+                return objects;
+            }
+        });
+        model.requestApi(new Function<Integer, ObservableSource<List<Object>>>() {
+            @Override
+            public ObservableSource<List<Object>> apply(@NonNull Integer integer) throws Exception {
+                return observable;
+            }
+        }, new Observer<List<Object>>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull List<Object> list) {
+                //还原当前正在播放的歌曲
+                LocalSongEntity localSongEntity = null;
+                for(int i = 0;i < localSongList.size();i++){
+                    if(localSongList.get(i) instanceof LocalSongEntity && ((LocalSongEntity) localSongList.get(i)).isCheck()){
+                        localSongEntity = (LocalSongEntity) localSongList.get(i);
+                        break;
+                    }
+                }
+                if(localSongEntity != null){
+                    for(int i = 0;i < list.size();i++){
+                        if(list.get(i) instanceof LocalSongEntity && ((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
+                            list.set(i,localSongEntity);
+                            break;
+                        }
+                    }
+                }
+                localSongList.clear();
+                localSongList.addAll(list);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
 }
