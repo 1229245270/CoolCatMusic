@@ -1,4 +1,4 @@
-package com.hzc.coolCatMusic;
+package com.hzc.coolcatmusic;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * @see <app href="http://d.android.com/tools/testing">Testing documentation</app>
  */
 public class ExampleUnitTest {
     @Test

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.hzc.coolCatMusic.ui.login.LoginViewModel" />
+            type="com.hzc.coolcatmusic.ui.login.LoginViewModel" />
     </data>
 
     <RelativeLayout

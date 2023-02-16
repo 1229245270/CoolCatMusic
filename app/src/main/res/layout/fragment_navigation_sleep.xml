@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.hzc.coolCatMusic.ui.main.NavigationSleepViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.main.NavigationSleepViewModel"/>
         <variable
             name="viewModel"
-            type="NavigationSleepViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.NavigationSleepViewModel" />
     </data>
 
 

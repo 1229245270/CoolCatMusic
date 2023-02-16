@@ -4,7 +4,7 @@
     <data>
         <variable
             name="item"
-            type="com.hzc.coolCatMusic.entity.Font" />
+            type="com.hzc.coolcatmusic.entity.Font" />
         <variable
             name="position"
             type="Integer" />
@@ -13,7 +13,7 @@
             type="Long" />
         <variable
             name="onItemClickListener"
-            type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

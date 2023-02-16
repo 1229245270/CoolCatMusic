@@ -3,10 +3,10 @@
     <data>
         <variable
             name="item"
-            type="com.hzc.coolCatMusic.entity.HomeFragment1ItemEntity" />
+            type="com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity" />
         <variable
             name="onItemClickListener"
-            type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
         <variable
             name="position"
             type="Integer" />

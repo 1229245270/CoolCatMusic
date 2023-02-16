@@ -2,11 +2,11 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.hzc.coolCatMusic.R"/>
-        <import type="com.hzc.coolCatMusic.ui.main.HomeViewModel"/>
+        <import type="com.hzc.coolcatmusic.R"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeViewModel"/>
         <variable
             name="viewModel"
-            type="HomeViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeViewModel" />
     </data>
 
     <LinearLayout
@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         app:corner_radius="@dimen/dp_10"
                         android:src="@mipmap/ic_launcher"
                         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         app:corner_radius="@dimen/dp_10"
                         android:src="@mipmap/ic_launcher"
                         android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         app:corner_radius="@dimen/dp_10"
                         android:src="@mipmap/ic_launcher"
                         android:layout_width="match_parent"

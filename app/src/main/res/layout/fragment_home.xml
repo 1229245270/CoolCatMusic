@@ -2,11 +2,11 @@
 <layout xmlns:binding="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.hzc.coolCatMusic.R"/>
-        <import type="com.hzc.coolCatMusic.ui.main.HomeFragmentViewModel"/>
+        <import type="com.hzc.coolcatmusic.R"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeFragmentViewModel"/>
         <variable
             name="viewModel"
-            type="HomeFragmentViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeFragmentViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

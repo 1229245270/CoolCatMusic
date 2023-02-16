@@ -3,10 +3,10 @@
     xmlns:binding="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.hzc.coolCatMusic.ui.main.HomeViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeViewModel"/>
         <variable
             name="viewModel"
-            type="HomeViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
                     android:id="@+id/mainDetail"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"
@@ -49,7 +49,7 @@
                     android:id="@+id/mainProgress"
                     layout="@layout/circle_image_progress"/>
 
-                <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
                     android:id="@+id/mainPlayingList"
                     android:layout_width="@dimen/dp_50"
                     android:layout_height="@dimen/dp_50"

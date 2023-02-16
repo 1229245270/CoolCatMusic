@@ -2,10 +2,10 @@
 <layout>
 
     <data>
-        <import type="com.hzc.coolCatMusic.ui.main.HomeFragment3ViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeFragment3ViewModel"/>
         <variable
             name="viewModel"
-            type="HomeFragment3ViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeFragment3ViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -26,7 +26,7 @@
 
 #------------------------------------------主项目混淆规则----------------------------------------------
 #实体类不参与混淆
--keep class com.hzc.coolCatMusic.entity.** { *; }
+-keep class com.hzc.coolcatmusic.entity.** { *; }
 
 #tkrefreshlayout
 -keep class com.lcodecore.tkrefreshlayout.** { *; }

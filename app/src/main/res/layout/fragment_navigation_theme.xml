@@ -5,10 +5,10 @@
     <data>
 
         <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
-        <import type="com.hzc.coolCatMusic.ui.main.NavigationThemeViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.main.NavigationThemeViewModel"/>
         <variable
             name="viewModel"
-            type="NavigationThemeViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.NavigationThemeViewModel" />
     </data>
 
 

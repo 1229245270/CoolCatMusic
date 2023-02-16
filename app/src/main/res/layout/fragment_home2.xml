@@ -4,10 +4,10 @@
     <data>
         <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
         <import type="androidx.recyclerview.widget.LinearLayoutManager"/>
-        <import type="com.hzc.coolCatMusic.ui.main.HomeFragment2ViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeFragment2ViewModel"/>
         <variable
             name="viewModel"
-            type="HomeFragment2ViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeFragment2ViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

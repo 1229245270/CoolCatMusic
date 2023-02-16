@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.hzc.coolCatMusic.ui.detail.DetailViewModel"/>
+        <import type="com.hzc.coolcatmusic.ui.detail.DetailViewModel"/>
         <variable
             name="viewModel"
-            type="DetailViewModel" />
+            type="com.hzc.coolcatmusic.ui.detail.DetailViewModel" />
 
     </data>
     <RelativeLayout
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:paddingTop="@dimen/status_bar_height">
 
-            <com.hzc.coolCatMusic.ui.costom.NiceImageView
+            <com.hzc.coolcatmusic.ui.costom.NiceImageView
                 android:id="@+id/songImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

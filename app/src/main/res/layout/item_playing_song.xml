@@ -6,10 +6,10 @@
     <data>
         <variable
             name="item"
-            type="com.hzc.coolCatMusic.entity.LocalSongEntity" />
+            type="com.hzc.coolcatmusic.entity.LocalSongEntity" />
         <variable
             name="onItemClickListener"
-            type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
         <variable
             name="position"
             type="Integer" />
@@ -26,7 +26,7 @@
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
-        <com.hzc.coolCatMusic.ui.costom.NiceImageView
+        <com.hzc.coolcatmusic.ui.costom.NiceImageView
             android:layout_marginRight="16dp"
             android:id="@+id/songImage"
             android:scaleType="centerCrop"

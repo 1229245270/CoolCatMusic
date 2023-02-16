@@ -6,18 +6,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.hzc.coolCatMusic.ui.costom.CircleImage
+    <com.hzc.coolcatmusic.ui.costom.CircleImage
         android:id="@+id/playBefore"
         android:layout_width="@dimen/seekArc_popup_item"
         android:layout_height="@dimen/seekArc_popup_item"/>
-    <com.hzc.coolCatMusic.ui.costom.CircleImage
+    <com.hzc.coolcatmusic.ui.costom.CircleImage
         android:layout_marginBottom="@dimen/seekArc_popup_marginBottom"
         android:layout_marginLeft="@dimen/seekArc_popup_marginLeft"
         android:layout_marginRight="@dimen/seekArc_popup_marginRight"
         android:id="@+id/playButton"
         android:layout_width="@dimen/seekArc_popup_item"
         android:layout_height="@dimen/seekArc_popup_item"/>
-    <com.hzc.coolCatMusic.ui.costom.CircleImage
+    <com.hzc.coolcatmusic.ui.costom.CircleImage
         android:id="@+id/playNext"
         android:layout_width="@dimen/seekArc_popup_item"
         android:layout_height="@dimen/seekArc_popup_item"/>

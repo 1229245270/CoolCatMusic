@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <com.hzc.coolCatMusic.ui.costom.SampleCoverVideo
+        <com.hzc.coolcatmusic.ui.costom.SampleCoverVideo
             android:padding="@dimen/dp_20"
             android:id="@+id/video"
             android:layout_width="match_parent"

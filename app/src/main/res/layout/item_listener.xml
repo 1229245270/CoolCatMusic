@@ -3,13 +3,13 @@
 
     <data>
         <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
-        <import type="com.hzc.coolCatMusic.R"/>
+        <import type="com.hzc.coolcatmusic.R"/>
         <variable
             name="item"
-            type="com.hzc.coolCatMusic.entity.ListenerEntity" />
+            type="com.hzc.coolcatmusic.entity.ListenerEntity" />
         <variable
             name="viewModel"
-            type="com.hzc.coolCatMusic.ui.main.HomeFragment1ViewModel" />
+            type="com.hzc.coolcatmusic.ui.main.HomeFragment1ViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -85,7 +85,7 @@
                         android:src="@drawable/rank_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         android:id="@+id/ivRankTwo"
                         android:scaleType="centerCrop"
                         app:corner_radius="@dimen/dp_10"
@@ -108,7 +108,7 @@
                         android:src="@drawable/rank_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         android:id="@+id/ivRankOne"
                         android:scaleType="centerCrop"
                         app:corner_radius="@dimen/dp_10"
@@ -131,7 +131,7 @@
                         android:src="@drawable/rank_one"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                    <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                    <com.hzc.coolcatmusic.ui.costom.NiceImageView
                         android:id="@+id/ivRankThree"
                         android:scaleType="centerCrop"
                         app:corner_radius="@dimen/dp_10"

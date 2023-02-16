@@ -7,7 +7,7 @@
             type="Boolean" />
         <variable
             name="onItemClickListener"
-            type="com.hzc.coolCatMusic.ui.listener.OnItemClickListener" />
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
         <variable
             name="position"
             type="Integer" />

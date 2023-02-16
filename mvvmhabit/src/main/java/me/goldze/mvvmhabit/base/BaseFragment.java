@@ -52,8 +52,6 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
     }
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -173,7 +171,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                 }
                 KLog.e("fragment getFinishEvent");
                 try {
-                    final Class homeActivity = Class.forName("com.hzc.coolCatMusic.ui.main.HomeActivity");
+                    final Class homeActivity = Class.forName("com.hzc.coolcatmusic.ui.main.HomeActivity");
                     Method method = homeActivity.getMethod("setMEdgeSize",boolean.class);
                     method.invoke(null,true);
                 } catch (Exception e) {

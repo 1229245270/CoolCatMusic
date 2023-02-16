@@ -4,10 +4,10 @@
     xmlns:binding="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.hzc.coolCatMusic.R"/>
+        <import type="com.hzc.coolcatmusic.R"/>
         <variable
             name="item"
-            type="com.hzc.coolCatMusic.entity.LookEntity" />
+            type="com.hzc.coolcatmusic.entity.LookEntity" />
     </data>
 
     <LinearLayout
@@ -31,7 +31,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_40">
-                <com.hzc.coolCatMusic.ui.costom.NiceImageView
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
                     url="@{item.authorImage}"
                     binding:placeholderRes="@{R.mipmap.ic_launcher}"
                     app:is_circle="true"
