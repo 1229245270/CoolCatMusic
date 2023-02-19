@@ -16,10 +16,8 @@ import com.hzc.coolcatmusic.BR;
 import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.app.AppViewModelFactory;
 import com.hzc.coolcatmusic.databinding.FragmentHome1Binding;
+import com.hzc.coolcatmusic.entity.ExpandedTabEntity;
 import com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity;
-import com.hzc.coolcatmusic.entity.ListenerEntity;
-import com.hzc.coolcatmusic.entity.LocalSongEntity;
-import com.hzc.coolcatmusic.utils.LocalUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
@@ -70,22 +68,22 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         itemEntityList.add(entity);
         viewModel.itemEntityList.addAll(itemEntityList);
 
-        ListenerEntity<Object> listenerEntity = new ListenerEntity<>();
-        listenerEntity.setTitle("本地歌曲");
-        listenerEntity.setTip("本地歌曲");
-        viewModel.listenerEntityList.add(listenerEntity);
-        listenerEntity = new ListenerEntity<>();
-        listenerEntity.setTitle("每日推荐");
-        listenerEntity.setTip("每日推荐");
-        viewModel.listenerEntityList.add(listenerEntity);
-        listenerEntity = new ListenerEntity<>();
-        listenerEntity.setTitle("排行版");
-        listenerEntity.setTip("排行版");
-        viewModel.listenerEntityList.add(listenerEntity);
-        listenerEntity = new ListenerEntity<>();
-        listenerEntity.setTitle("新歌版");
-        listenerEntity.setTip("新歌版");
-        viewModel.listenerEntityList.add(listenerEntity);
+        ExpandedTabEntity<Object> expandedTabEntity = new ExpandedTabEntity<>();
+        expandedTabEntity.setTitle("本地歌曲");
+        expandedTabEntity.setTip("本地歌曲");
+        viewModel.expandedTabEntityList.add(expandedTabEntity);
+        expandedTabEntity = new ExpandedTabEntity<>();
+        expandedTabEntity.setTitle("每日推荐");
+        expandedTabEntity.setTip("每日推荐");
+        viewModel.expandedTabEntityList.add(expandedTabEntity);
+        expandedTabEntity = new ExpandedTabEntity<>();
+        expandedTabEntity.setTitle("排行版");
+        expandedTabEntity.setTip("排行版");
+        viewModel.expandedTabEntityList.add(expandedTabEntity);
+        expandedTabEntity = new ExpandedTabEntity<>();
+        expandedTabEntity.setTitle("新歌版");
+        expandedTabEntity.setTip("新歌版");
+        viewModel.expandedTabEntityList.add(expandedTabEntity);
         initLocalSong();
         viewModel.loadSong();
     }
@@ -96,10 +94,7 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
-                        List<LocalSongEntity> localSongEntities = LocalUtils.getAllMediaList(getActivity(), 60, 0, 3);
-                        List<Object> objectList = new ArrayList<>(localSongEntities);
-                        viewModel.listenerEntityList.get(0).setList(objectList);
-                        viewModel.listenerAdapter.notifyItemChanged(0);
+                        viewModel.loadLocalSongTop3();
                     }
                 });
     }

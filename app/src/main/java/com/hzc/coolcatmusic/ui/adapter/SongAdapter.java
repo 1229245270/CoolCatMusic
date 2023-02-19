@@ -1,6 +1,7 @@
 package com.hzc.coolcatmusic.ui.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +24,16 @@ import java.util.List;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
 public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
+
+    private boolean showImage = true;
+
+    public SongAdapter(){
+    }
+
+    public SongAdapter(boolean showImage){
+        this.showImage = showImage;
+    }
+
     @NonNull
     @Override
     public ViewDataBinding onCreateBinding(@NonNull LayoutInflater inflater, int layoutId, @NonNull ViewGroup viewGroup) {
@@ -48,9 +59,14 @@ public abstract class SongAdapter<T> extends BindingRecyclerViewAdapter<T> {
             }else{
                 image = R.drawable.ceshi;
             }
-            Glide.with(binding.getRoot().getContext())
-                    .load(image)
-                    .into(imageView);
+            if(showImage){
+                imageView.setVisibility(View.VISIBLE);
+                Glide.with(binding.getRoot().getContext())
+                        .load(image)
+                        .into(imageView);
+            }else{
+                imageView.setVisibility(View.GONE);
+            }
             TextView songName = binding.getRoot().findViewById(R.id.songName);
             TextView singer = binding.getRoot().findViewById(R.id.singer);
             LinearLayout songItem = binding.getRoot().findViewById(R.id.songItem);

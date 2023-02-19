@@ -2,7 +2,7 @@ package com.hzc.coolcatmusic.entity;
 
 import java.util.List;
 
-public class ListenerEntity<T> {
+public class ExpandedTabEntity<T> {
     private String title;
     private String tip;
     private List<T> list;

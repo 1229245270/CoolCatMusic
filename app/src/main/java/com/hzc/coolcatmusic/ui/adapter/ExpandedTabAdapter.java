@@ -1,6 +1,7 @@
 package com.hzc.coolcatmusic.ui.adapter;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hzc.coolcatmusic.R;
-import com.hzc.coolcatmusic.entity.ListenerEntity;
+import com.hzc.coolcatmusic.entity.ExpandedTabEntity;
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 import com.hzc.coolcatmusic.entity.NetworkSongEntity;
 import com.hzc.coolcatmusic.entity.PlayingMusicEntity;
@@ -38,7 +39,7 @@ import java.util.Map;
 
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
-public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<ListenerEntity<Object>> {
+public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<ExpandedTabEntity<Object>> {
     @NonNull
     @Override
     public ViewDataBinding onCreateBinding(@NonNull LayoutInflater inflater, int layoutId, @NonNull ViewGroup viewGroup) {
@@ -64,7 +65,7 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
     }
 
     @Override
-    public void onBindBinding(@NonNull ViewDataBinding binding, int variableId, int layoutRes, int position, ListenerEntity<Object> item) {
+    public void onBindBinding(@NonNull ViewDataBinding binding, int variableId, int layoutRes, int position, ExpandedTabEntity<Object> item) {
         super.onBindBinding(binding, variableId, layoutRes, position, item);
 
         RecyclerView recyclerView = binding.getRoot().findViewById(R.id.recycleView);
@@ -72,6 +73,7 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
         LinearLayout llMenu = binding.getRoot().findViewById(R.id.llMenu);
         LinearLayout llMore = binding.getRoot().findViewById(R.id.llMore);
         List<Object> list = item.getList();
+        String tip = item.getTip() == null ? "" : item.getTip();
         if(list == null){
             list = new ArrayList<>();
         }
@@ -151,8 +153,8 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
             }
         });
 
-        BaseRecycleAdapter<Object> adapter;
-        switch (item.getTip()){
+        BaseRecycleAdapter<Object> adapter = null;
+        switch (tip){
             case "本地歌曲":
                 adapter = new BaseRecycleAdapter<Object>(binding.getRoot().getContext(), list,R.layout.item_song) {
                     @Override
@@ -317,8 +319,12 @@ public abstract class ListenerAdapter extends BindingRecyclerViewAdapter<Listene
                 break;
             case "新歌版":
                 break;
+            default:
+                initChildRecycleView(binding.getRoot().getContext(),recyclerView,list);
         }
     }
+
+    public abstract void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list);
 
 }
 

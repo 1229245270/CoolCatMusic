@@ -21,11 +21,16 @@ import me.goldze.mvvmhabit.utils.KLog;
  */
 public class FileUtil {
 
+    public static final String KG_MUSIC = "/kgmusic/download/kgmusic";
+    public static final String WYY_MUSIC = "/netease/cloudmusic/Music";
 
-    public static List<File> getAllFiles(){
+    public static List<File> getMusicFiles(String... paths){
         List<File> files = new ArrayList<>();
-        files.addAll(getFiles("/kgmusic/download/kgmusic"));
-        files.addAll(getFiles("/netease/cloudmusic/Music"));
+        if(paths != null){
+            for (String path : paths){
+                files.addAll(getFiles(path));
+            }
+        }
         return files;
     }
 

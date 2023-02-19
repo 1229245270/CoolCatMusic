@@ -129,4 +129,6 @@ public class ToolbarViewModel<M extends BaseModel> extends HomeViewModel<M> {
      */
     protected void rightIconOnClick() {
     }
+
+
 }

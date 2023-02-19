@@ -7,12 +7,18 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
+
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.utils.KLog;
 
 /**
@@ -20,16 +26,7 @@ import me.goldze.mvvmhabit.utils.KLog;
  */
 public class LocalUtils {
 
-
-    /**
-     * 获取本地歌曲
-     * @param context 上下文
-     * @param minDuration 时长限制
-     * @param minSize 大小限制
-     * @param searchSize 歌曲数
-     * @return 本地歌曲
-     */
-    public static List<LocalSongEntity> getAllMediaList(Context context, int minDuration, double minSize, int... searchSize) {
+    private static List<LocalSongEntity> getAllMediaList(Context context, int minDuration, double minSize, int... searchSize) {
         Cursor cursor = null;
         List<LocalSongEntity> mediaList = new ArrayList<LocalSongEntity>();
         try {
@@ -136,4 +133,21 @@ public class LocalUtils {
         return mediaList;
     }
 
+    /**
+     * 获取本地歌曲
+     * @param context 上下文
+     * @param minDuration 时长限制
+     * @param minSize 大小限制
+     * @param searchSize 歌曲数
+     * @return 本地歌曲
+     */
+    public static Observable<List<LocalSongEntity>> getLocalMusicObservable(Context context,int minDuration, double minSize, int... searchSize){
+        return Observable.create(new ObservableOnSubscribe<List<LocalSongEntity>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LocalSongEntity>> emitter) throws Exception {
+                List<LocalSongEntity> list = new ArrayList<>(getAllMediaList(context, minDuration, minSize,searchSize));
+                emitter.onNext(list);
+            }
+        }).map((Function<List<LocalSongEntity>, List<LocalSongEntity>>) objects -> objects);
+    }
 }

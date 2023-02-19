@@ -16,6 +16,8 @@ import io.reactivex.subjects.Subject;
 public class RxBus {
     private static volatile RxBus mDefaultInstance;
     private final Subject<Object> mBus;
+    public static final String ON_RESTART = "ON_RESTART";
+
 
     private final Map<Class<?>, Object> mStickyEventMap;
 

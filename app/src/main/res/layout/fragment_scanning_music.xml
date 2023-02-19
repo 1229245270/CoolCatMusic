@@ -158,6 +158,17 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleView"
+                app:itemBinding="@{viewModel.itemBind}"
+                items="@{viewModel.list}"
+                adapter="@{viewModel.adapter}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
             <LinearLayout
                 android:layout_marginBottom="@dimen/dp_20"
                 android:orientation="horizontal"

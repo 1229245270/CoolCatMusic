@@ -33,8 +33,8 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     app:itemBinding="@{viewModel.listenerEntityOnItemBind}"
-                    adapter="@{viewModel.listenerAdapter}"
-                    items="@{viewModel.listenerEntityList}"
+                    adapter="@{viewModel.expandedTabAdapter}"
+                    items="@{viewModel.expandedTabEntityList}"
                     app:layoutManager="@{LayoutManagers.linear()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

@@ -30,6 +30,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
+import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.R;
 import me.goldze.mvvmhabit.base.BaseViewModel.ParameterField;
 import me.goldze.mvvmhabit.bus.Messenger;
@@ -94,6 +95,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         //注册RxBus
         viewModel.registerRxBus();
     }
+
 
     /**
      * 注入绑定
@@ -314,5 +316,11 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
      */
     public <T extends ViewModel> T createViewModel(Fragment fragment, Class<T> cls) {
         return ViewModelProviders.of(fragment).get(cls);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        viewModel.isHidden = hidden;
+        super.onHiddenChanged(hidden);
     }
 }

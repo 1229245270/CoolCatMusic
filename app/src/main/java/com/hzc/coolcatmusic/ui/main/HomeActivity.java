@@ -234,11 +234,6 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        RxBus.getDefault().post("onRestart");
-    }
 
     private long exitTime = 0;
 

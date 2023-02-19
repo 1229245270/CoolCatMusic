@@ -33,6 +33,8 @@ public interface IBaseViewModel extends LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     void onPause();
 
+    void onRestart();
+
     /**
      * 注册RxBus
      */

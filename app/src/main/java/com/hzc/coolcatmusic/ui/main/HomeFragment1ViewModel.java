@@ -1,23 +1,30 @@
 package com.hzc.coolcatmusic.ui.main;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableList;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.BR;
 import com.hzc.coolcatmusic.data.DemoRepository;
+import com.hzc.coolcatmusic.entity.ExpandedTabEntity;
 import com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity;
-import com.hzc.coolcatmusic.entity.ListenerEntity;
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 import com.hzc.coolcatmusic.entity.PlayingMusicEntity;
-import com.hzc.coolcatmusic.ui.adapter.ListenerAdapter;
+import com.hzc.coolcatmusic.ui.adapter.ExpandedTabAdapter;
 import com.hzc.coolcatmusic.ui.homefragment1.LocalMusicFragment;
 import com.hzc.coolcatmusic.ui.listener.OnItemClickListener;
+import com.hzc.coolcatmusic.utils.LocalUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -64,15 +71,15 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
                         }
                         nowPlay = playingMusicEntity;
                         if(oldPosition == -1){
-                            oldPosition = listenerAdapter.getOldPosition();
+                            oldPosition = expandedTabAdapter.getOldPosition();
                         }
                         if(oldPosition != -1){
-                            listenerAdapter.getAdapter(0).notifyItemChanged(oldPosition);
+                            expandedTabAdapter.getAdapter(0).notifyItemChanged(oldPosition);
                         }
-                        for(int i = 0;i < listenerEntityList.get(0).getList().size();i++){
-                            LocalSongEntity entity = (LocalSongEntity) listenerEntityList.get(0).getList().get(i);
+                        for(int i = 0; i < expandedTabEntityList.get(0).getList().size(); i++){
+                            LocalSongEntity entity = (LocalSongEntity) expandedTabEntityList.get(0).getList().get(i);
                             if(playingMusicEntity.getSrc().equals(entity.getPath())){
-                                listenerAdapter.getAdapter(0).notifyItemChanged(i);
+                                expandedTabAdapter.getAdapter(0).notifyItemChanged(i);
                                 oldPosition = i;
                                 return;
                             }
@@ -113,19 +120,53 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
         }
     };
 
-    public ObservableList<ListenerEntity<Object>> listenerEntityList = new ObservableArrayList<>();
+    public ObservableList<ExpandedTabEntity<Object>> expandedTabEntityList = new ObservableArrayList<>();
 
-    public OnItemBind<ListenerEntity<Object>> listenerEntityOnItemBind = new OnItemBind<ListenerEntity<Object>>() {
+    public OnItemBind<ExpandedTabEntity<Object>> listenerEntityOnItemBind = new OnItemBind<ExpandedTabEntity<Object>>() {
         @Override
-        public void onItemBind(@NonNull ItemBinding itemBinding, int position, ListenerEntity<Object> item) {
+        public void onItemBind(@NonNull ItemBinding itemBinding, int position, ExpandedTabEntity<Object> item) {
             itemBinding.set(BR.item,R.layout.item_listener)
                     .bindExtra(BR.position,position)
                     .bindExtra(BR.onItemClickListener,onItemClickListener);
         }
     };
 
-    public ListenerAdapter listenerAdapter = new ListenerAdapter(){};
+    public ExpandedTabAdapter expandedTabAdapter = new ExpandedTabAdapter(){
+        @Override
+        public void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list) {
 
+        }
+    };
+
+    public void loadLocalSongTop3(){
+        model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
+            @Override
+            public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
+                return LocalUtils.getLocalMusicObservable(getApplication(), 60, 0,3);
+            }
+        }, new Observer<List<LocalSongEntity>>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                //showDialog();
+            }
+
+            @Override
+            public void onNext(@NonNull List<LocalSongEntity> list) {
+                List<Object> objectList = new ArrayList<>(list);
+                expandedTabEntityList.get(0).setList(objectList);
+                expandedTabAdapter.notifyItemChanged(0);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+    }
 
     public void loadSong(){
 

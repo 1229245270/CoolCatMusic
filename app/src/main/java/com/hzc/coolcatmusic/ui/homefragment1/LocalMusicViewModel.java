@@ -57,23 +57,22 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         });
     }
 
-    private Disposable mSubscription;
     private Disposable musicSubscription;
 
     private PlayingMusicEntity nowPlay;
     private int oldPosition = -1;
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        KLog.d("onRestart");
+        isRequestRead.setValue(true);
+    }
+
     @Override
     public void registerRxBus() {
         super.registerRxBus();
-        mSubscription = RxBus.getDefault().toObservable(String.class)
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        if(s.equals("onRestart")){
-                            isRequestRead.setValue(true);
-                        }
-                    }
-                });
+
         musicSubscription = RxBus.getDefault().toObservable(PlayingMusicEntity.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PlayingMusicEntity>() {
@@ -99,14 +98,13 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                         }
                     }
                 });
-        RxSubscriptions.add(mSubscription);
         RxSubscriptions.add(musicSubscription);
     }
+
 
     @Override
     public void removeRxBus() {
         super.removeRxBus();
-        RxSubscriptions.remove(mSubscription);
         RxSubscriptions.remove(musicSubscription);
     }
 
@@ -185,33 +183,20 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     }
 
     public void loadLocalSong(Activity activity){
-        Observable<List<Object>> observable = Observable.create(new ObservableOnSubscribe<List<Object>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<List<Object>> emitter) throws Exception {
-                List<Object> list = new ArrayList<>(LocalUtils.getAllMediaList(activity, 60, 0));
-                list.add("共" + list.size() + "首");
-                emitter.onNext(list);
-            }
-        }).map(new Function<List<Object>, List<Object>>() {
-            @Override
-            public List<Object> apply(@NonNull List<Object> objects) throws Exception {
-                return objects;
-            }
-        });
 
-        model.requestApi(new Function<Integer, ObservableSource<List<Object>>>() {
+        model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
             @Override
-            public ObservableSource<List<Object>> apply(@NonNull Integer integer) throws Exception {
-                return observable;
+            public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
+                return LocalUtils.getLocalMusicObservable(activity, 60, 0);
             }
-        }, new Observer<List<Object>>() {
+        }, new Observer<List<LocalSongEntity>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                showDialog();
+                //showDialog();
             }
 
             @Override
-            public void onNext(@NonNull List<Object> list) {
+            public void onNext(@NonNull List<LocalSongEntity> list) {
                 //还原当前正在播放的歌曲
                 LocalSongEntity localSongEntity = null;
                 for(int i = 0;i < localSongList.size();i++){
@@ -222,7 +207,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                 }
                 if(localSongEntity != null){
                     for(int i = 0;i < list.size();i++){
-                        if(list.get(i) instanceof LocalSongEntity && ((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
+                        if(((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
                             list.set(i,localSongEntity);
                             break;
                         }
@@ -230,7 +215,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                 }
                 localSongList.clear();
                 localSongList.addAll(list);
-
+                localSongList.add("共" + list.size() + "首");
             }
 
             @Override

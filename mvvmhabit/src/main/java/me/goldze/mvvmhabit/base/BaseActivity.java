@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProviders;
 import me.goldze.mvvmhabit.R;
 import me.goldze.mvvmhabit.base.BaseViewModel.ParameterField;
 import me.goldze.mvvmhabit.bus.Messenger;
+import me.goldze.mvvmhabit.bus.RxBus;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.MaterialDialogUtils;
 
@@ -353,5 +354,11 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
      */
     public <T extends ViewModel> T createViewModel(FragmentActivity activity, Class<T> cls) {
         return ViewModelProviders.of(activity).get(cls);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        RxBus.getDefault().post(RxBus.ON_RESTART);
     }
 }

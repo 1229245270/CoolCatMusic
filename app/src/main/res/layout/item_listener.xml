@@ -6,7 +6,7 @@
         <import type="com.hzc.coolcatmusic.R"/>
         <variable
             name="item"
-            type="com.hzc.coolcatmusic.entity.ListenerEntity" />
+            type="com.hzc.coolcatmusic.entity.ExpandedTabEntity" />
         <variable
             name="viewModel"
             type="com.hzc.coolcatmusic.ui.main.HomeFragment1ViewModel" />

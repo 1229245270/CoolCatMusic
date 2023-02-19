@@ -19,7 +19,10 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.R;
+import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.bus.RxSubscriptions;
 import me.goldze.mvvmhabit.bus.event.SingleLiveEvent;
+import me.goldze.mvvmhabit.utils.KLog;
 
 /**
  * Created by goldze on 2017/6/15.
@@ -31,6 +34,9 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
     private WeakReference<LifecycleProvider> lifecycle;
     //管理RxJava，主要针对RxJava异步操作造成的内存泄漏
     private CompositeDisposable mCompositeDisposable;
+
+    boolean isHidden;
+    private Disposable mSubscriptionOnRestart;
 
     public BaseViewModel(@NonNull Application application) {
         this(application, null);
@@ -173,11 +179,29 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void registerRxBus() {
+        mSubscriptionOnRestart = RxBus.getDefault().toObservable(String.class)
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        if(s.equals(RxBus.ON_RESTART)){
+                            if(!isHidden){
+                                onRestart();
+                            }
+                        }
+                    }
+                });
+        RxSubscriptions.add(mSubscriptionOnRestart);
     }
 
     @Override
     public void removeRxBus() {
+        RxSubscriptions.remove(mSubscriptionOnRestart);
     }
 
     @Override

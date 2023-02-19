@@ -17,15 +17,14 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.hzc.coolcatmusic.BR;
 import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.app.AppViewModelFactory;
-import com.hzc.coolcatmusic.databinding.FragmentLocalmusicBinding;
-import com.hzc.coolcatmusic.databinding.FragmentScanningmusicBinding;
+import com.hzc.coolcatmusic.databinding.FragmentScanningMusicBinding;
 
 import me.goldze.mvvmhabit.base.BaseFragment;
 
-public class ScanningMusicFragment extends BaseFragment<FragmentScanningmusicBinding,ScanningMusicViewModel> {
+public class ScanningMusicFragment extends BaseFragment<FragmentScanningMusicBinding,ScanningMusicViewModel> {
     @Override
     public int initContentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return R.layout.fragment_scanningmusic;
+        return R.layout.fragment_scanning_music;
     }
 
     @Override
@@ -61,12 +60,13 @@ public class ScanningMusicFragment extends BaseFragment<FragmentScanningmusicBin
 
     @SuppressLint("CheckResult")
     private void request(){
-        // android 11  且 不是已经被拒绝
+        // android 11  且 不是已经被拒绝，请求全局文件权限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // 先判断有没有权限
             if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));
+
                 startActivityForResult(intent, PERMISSION_CODE);
             }else{
                 lottie.playAnimation();
