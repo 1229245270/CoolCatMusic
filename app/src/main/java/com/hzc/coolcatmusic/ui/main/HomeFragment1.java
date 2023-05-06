@@ -2,6 +2,7 @@ package com.hzc.coolcatmusic.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import com.hzc.coolcatmusic.app.AppViewModelFactory;
 import com.hzc.coolcatmusic.databinding.FragmentHome1Binding;
 import com.hzc.coolcatmusic.entity.ExpandedTabEntity;
 import com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.hzc.coolcatmusic.ui.generallibrary.MultiLevelActivity;
+import com.hzc.coolcatmusic.ui.generallibrary.PhotoActivity;
+import com.tbruyelle.rxpermissions3.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +107,11 @@ public class HomeFragment1 extends BaseFragment<FragmentHome1Binding,HomeFragmen
         super.initViewObservable();
         viewModel.isRequestRead.observe(this,aBoolean -> {
             initLocalSong();
+        });
+        viewModel.openCeShiActivity.observe(this,aBoolean -> {
+            Intent intent = new Intent(getContext(), MultiLevelActivity.class);
+            Intent intent1 = new Intent(getContext(), PhotoActivity.class);
+            startActivity(intent1);
         });
     }
 

@@ -2,6 +2,7 @@ package com.hzc.coolcatmusic.ui.main;
 
 import android.app.Application;
 import android.content.Context;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
@@ -16,7 +17,6 @@ import com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 import com.hzc.coolcatmusic.entity.PlayingMusicEntity;
 import com.hzc.coolcatmusic.ui.adapter.ExpandedTabAdapter;
-import com.hzc.coolcatmusic.ui.homefragment1.LocalMusicFragment;
 import com.hzc.coolcatmusic.ui.listener.OnItemClickListener;
 import com.hzc.coolcatmusic.utils.LocalUtils;
 
@@ -100,11 +100,14 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
 
     SingleLiveEvent<Boolean> isRequestRead = new SingleLiveEvent<>();
 
+    SingleLiveEvent<Boolean> openCeShiActivity = new SingleLiveEvent<>();
+
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position,Object entity) {
             if(entity instanceof HomeFragment1ItemEntity){
-                startFragment(new LocalMusicFragment(),null);
+                openCeShiActivity.setValue(true);
+                //startFragment(new LocalMusicFragment(),null);
             }
         }
     };
@@ -125,7 +128,7 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
     public OnItemBind<ExpandedTabEntity<Object>> listenerEntityOnItemBind = new OnItemBind<ExpandedTabEntity<Object>>() {
         @Override
         public void onItemBind(@NonNull ItemBinding itemBinding, int position, ExpandedTabEntity<Object> item) {
-            itemBinding.set(BR.item,R.layout.item_listener)
+            itemBinding.set(BR.item,R.layout.item_expanded_tab)
                     .bindExtra(BR.position,position)
                     .bindExtra(BR.onItemClickListener,onItemClickListener);
         }
@@ -133,7 +136,12 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
 
     public ExpandedTabAdapter expandedTabAdapter = new ExpandedTabAdapter(){
         @Override
-        public void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list) {
+        public void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list,int position) {
+
+        }
+
+        @Override
+        public void initRecycleView(View view, int position, ExpandedTabEntity<Object> item) {
 
         }
     };
@@ -142,7 +150,7 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
         model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
             @Override
             public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
-                return LocalUtils.getLocalMusicObservable(getApplication(), 60, 0,3);
+                return LocalUtils.getDefaultLocalMusicObservable(getApplication(),3);
             }
         }, new Observer<List<LocalSongEntity>>() {
             @Override

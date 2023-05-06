@@ -65,7 +65,12 @@ dependencies {
     api (rootProject.ext.dependencies.glide){
         exclude group: 'com.android.support'
     }
+    implementation project(':skin-androidx:skin-support')
     implementation project(path: ':skin-androidx:skin-support-appcompat')
+    implementation project(path: ':skin-androidx:skin-support-design')
+    implementation project(path: ':skin-androidx:skin-support-constraint-layout')
+    implementation project(path: ':skin-androidx:skin-support-cardview')
+    implementation project(':public-method')
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
     //recyclerview的databinding套装
     api(rootProject.ext.dependencies.bindingcollectionadapter) {

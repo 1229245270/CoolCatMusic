@@ -12,12 +12,12 @@
     <color name="progress_gray">#FFD8D8D8</color>
     <color name="progress_gray_dark">#FF383838</color>
     <color name="default_blue_light">#ff33b5e5</color>
-    <color name="default_orange">#ffffa000</color>
+    <color name="default_orange">@color/mainBg</color>
 
     <drawable name="selectColor">#999999</drawable>
     <drawable name="unselectColor">#000000</drawable>
 
-    <color name="ic_launcher_background">#FFEE5F</color>
+    <color name="ic_launcher_background">@color/mainBg</color>
     <color name="transparent">#01ffffff</color>
 
 
@@ -25,8 +25,8 @@
     <color name="recycleViewSelect">#eeeeee</color>
     <color name="recycleViewUnSelect">#ffffff</color>
 
-    <color name="item_songName_check">#ffffa000</color>
-    <color name="item_singer_check">#ffffa000</color>
+    <color name="item_songName_check">@color/mainBg</color>
+    <color name="item_singer_check">@color/mainBg</color>
 
     <color name="black_text">#000000</color>
     <color name="gray_text">#999999</color>

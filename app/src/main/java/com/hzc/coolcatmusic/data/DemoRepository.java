@@ -2,12 +2,16 @@ package com.hzc.coolcatmusic.data;
 
 import com.hzc.coolcatmusic.data.source.HttpDataSource;
 import com.hzc.coolcatmusic.data.source.LocalDataSource;
+import com.hzc.coolcatmusic.entity.ChatGPTRequest;
 import com.hzc.coolcatmusic.entity.DemoEntity;
+import com.hzc.public_method.RequestMethod;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -47,11 +51,7 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
     }
 
     public <T> void requestApi(Function<Integer, ObservableSource<T>> function, Observer<T> observer){
-        Observable<T> observable = Observable.just(1)
-                .subscribeOn(Schedulers.io())
-                .flatMap(function)
-                .observeOn(AndroidSchedulers.mainThread());
-        observable.subscribe(observer);
+        RequestMethod.requestApi(function,observer);
     }
 
 
@@ -89,6 +89,16 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
     @Override
     public Observable<BaseBean> songUnlockWindow64(File file, String username) {
         return mHttpDataSource.songUnlockWindow64(file, username);
+    }
+
+    @Override
+    public Observable<BaseBean> songUnlockWindow64Multiple(List<File> file, String username) {
+        return mHttpDataSource.songUnlockWindow64Multiple(file, username);
+    }
+
+    @Override
+    public Observable<BaseBean> chatGPTV1ChatCompletions(ChatGPTRequest request) {
+        return mHttpDataSource.chatGPTV1ChatCompletions(request);
     }
 
     @Override

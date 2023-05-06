@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">酷喵音乐</string>
+    <string name="chat_notification_host">android.coolcatmusic.hzc.com</string>
+    <string name="chat_notification_pathPattern">/chat/*</string>
 </resources>

@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.base.BaseBean;
+import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.ToastUtils;
 import retrofit2.HttpException;
 
@@ -25,10 +26,15 @@ public abstract class NetCallback<M> implements Observer<M> {
 
     @Override
     public void onNext(M m) {
-        if (((BaseBean)m).getStatus()){
-            onSuccess(m);
-        }else {
-            onFailureBefore(((BaseBean)m).getMsg());
+        try{
+            if (((BaseBean)m).getStatus()){
+                onSuccess(m);
+            }else {
+                onFailureBefore(((BaseBean)m).getMsg());
+            }
+        }catch (Exception e){
+            KLog.e(e.toString());
+            onFailureBefore("数据异常");
         }
     }
 

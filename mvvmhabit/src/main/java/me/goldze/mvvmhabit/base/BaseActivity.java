@@ -1,11 +1,14 @@
 package me.goldze.mvvmhabit.base;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -77,11 +80,12 @@ public abstract class BaseActivity<V extends ViewDataBinding, VM extends BaseVie
     }
 
     private void setImmersionBar(){
-        ImmersionBar.with(this).init();
-        /*ImmersionBar.with(this)
-                .transparentStatusBar()
+        //ImmersionBar.with(this).init();
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
                 .statusBarColor(R.color.mainBg)
-                .init();*/
+                .keyboardEnable(true)
+                .init();
     }
 
     public void setBackGesture(boolean backGesture) {

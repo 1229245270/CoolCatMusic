@@ -19,6 +19,7 @@ import com.hzc.coolcatmusic.service.MusicConnection;
 import com.hzc.coolcatmusic.service.MusicService;
 import com.hzc.coolcatmusic.ui.adapter.SongAdapter;
 import com.hzc.coolcatmusic.ui.listener.OnItemClickListener;
+import com.hzc.coolcatmusic.utils.DaoUtils.MusicUtils;
 import com.hzc.coolcatmusic.utils.LocalUtils;
 
 
@@ -45,7 +46,7 @@ import me.tatarka.bindingcollectionadapter2.OnItemBind;
 
 public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
 
-    public static final String TOKEN_LOCAL_MUSIC_SET_RESULT = "";
+    public static final String TOKEN_LOCAL_MUSIC_SET_RESULT = "TOKEN_LOCAL_MUSIC_SET_RESULT";
     public LocalMusicViewModel(@NonNull Application application, DemoRepository model) {
         super(application, model);
 
@@ -132,7 +133,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
     };
 
     private void savePlayingSongs(){
-        AppApplication.daoSession.getPlayingMusicEntityDao().deleteAll();
+        MusicUtils.deleteAllPlayingMusicEntity();
         for(int i = 0;i < localSongList.size();i++){
             if(localSongList.get(i) instanceof LocalSongEntity){
                 PlayingMusicEntity entity = new PlayingMusicEntity();
@@ -145,7 +146,7 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                 entity.setSongImage(null);
                 entity.setLyrics("");
                 entity.setYearIssue("");
-                AppApplication.daoSession.insert(entity);
+                MusicUtils.insertOrReplacePlayingMusicEntity(entity);
             }
         }
     }
@@ -182,12 +183,18 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
         startFragment(new ScanningMusicFragment(),null);
     }
 
+    @Override
+    protected void rightTextOnClick() {
+        super.rightTextOnClick();
+        startFragment(new ScanningMusicFragment(),null);
+    }
+
     public void loadLocalSong(Activity activity){
 
         model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
             @Override
             public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
-                return LocalUtils.getLocalMusicObservable(activity, 60, 0);
+                return LocalUtils.getDefaultLocalMusicObservable(activity);
             }
         }, new Observer<List<LocalSongEntity>>() {
             @Override

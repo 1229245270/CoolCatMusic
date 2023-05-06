@@ -1,12 +1,17 @@
 package com.hzc.coolcatmusic.data.source.http.service;
 
 import me.goldze.mvvmhabit.base.BaseBean;
+
+import com.hzc.coolcatmusic.entity.ChatGPTRequest;
 import com.hzc.coolcatmusic.entity.DemoEntity;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.http.BaseResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -32,4 +37,11 @@ public interface DemoApiService {
     @POST("song/unlock/window64")
     @Multipart
     Observable<BaseBean> songUnlockWindow64(@Part MultipartBody.Part path, @Part("username") RequestBody username);
+
+    @POST("song/unlock/window64/multiple")
+    @Multipart
+    Observable<BaseBean> songUnlockWindow64Multiple(@Part List<MultipartBody.Part> path, @Part("username") RequestBody username);
+
+    @POST("chatgpt/v1/chat/completions")
+    Observable<BaseBean> chatGPTV1ChatCompletions(@Body ChatGPTRequest body);
 }

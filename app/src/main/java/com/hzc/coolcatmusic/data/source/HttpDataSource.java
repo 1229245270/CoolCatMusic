@@ -1,9 +1,13 @@
 package com.hzc.coolcatmusic.data.source;
 
 import me.goldze.mvvmhabit.base.BaseBean;
+
+import com.hzc.coolcatmusic.entity.ChatGPTRequest;
 import com.hzc.coolcatmusic.entity.DemoEntity;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import me.goldze.mvvmhabit.http.BaseResponse;
@@ -25,4 +29,8 @@ public interface HttpDataSource {
     Observable<BaseBean> settingFont();
 
     Observable<BaseBean> songUnlockWindow64(File file, String username);
+
+    Observable<BaseBean> songUnlockWindow64Multiple(List<File> file, String username);
+
+    Observable<BaseBean> chatGPTV1ChatCompletions(ChatGPTRequest request);
 }

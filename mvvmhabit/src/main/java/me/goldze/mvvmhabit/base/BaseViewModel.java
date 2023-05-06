@@ -1,7 +1,10 @@
 package me.goldze.mvvmhabit.base;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -271,4 +274,5 @@ public class BaseViewModel<M extends BaseModel> extends AndroidViewModel impleme
         public static String CANONICAL_NAME = "CANONICAL_NAME";
         public static String BUNDLE = "BUNDLE";
     }
+
 }

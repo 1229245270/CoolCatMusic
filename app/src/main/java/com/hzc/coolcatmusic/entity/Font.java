@@ -7,7 +7,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Font {
 
-    @Id
+
     private Long id;
     private String name;
     private String path;

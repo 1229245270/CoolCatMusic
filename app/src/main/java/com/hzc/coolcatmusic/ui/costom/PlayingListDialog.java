@@ -111,10 +111,7 @@ public class PlayingListDialog extends Dialog {
     }
 
     private void initPlayingList(){
-        playingMusicEntityList = AppApplication.daoSession
-                .getPlayingMusicEntityDao()
-                .queryBuilder()
-                .list();
+        playingMusicEntityList = MusicUtils.getPlayingMusicEntityList();
         adapter = new BaseRecycleAdapter<PlayingMusicEntity>(getContext(),playingMusicEntityList,R.layout.item_playing_song){
 
             @Override
@@ -183,9 +180,9 @@ public class PlayingListDialog extends Dialog {
                 for(int i = 0;i < playingMusicEntityList.size();i++){
                     if(nowPlay.getSrc().equals(playingMusicEntityList.get(i).getSrc())){
                         SPUtils.getInstance().put(SPUtilsConfig.PLAYING_NUM,i);
-                        AppApplication.daoSession.getPlayingMusicEntityDao().deleteAll();
+                        MusicUtils.deleteAllPlayingMusicEntity();
                         for(PlayingMusicEntity entity : playingMusicEntityList){
-                            AppApplication.daoSession.getPlayingMusicEntityDao().insert(entity);
+                            MusicUtils.insertOrReplacePlayingMusicEntity(entity);
                         }
                     }
                 }

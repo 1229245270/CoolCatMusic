@@ -1,5 +1,7 @@
 package me.goldze.mvvmhabit.utils;
 
+import java.util.List;
+
 /**
  * Created by goldze on 2017/5/14.
  * 字符串相关工具类
@@ -8,6 +10,13 @@ public final class StringUtils {
 
     private StringUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    public static boolean isContain(List<?> list,String contain){
+        if(list == null || contain == null){
+            return false;
+        }
+        return list.contains(contain);
     }
 
     /**

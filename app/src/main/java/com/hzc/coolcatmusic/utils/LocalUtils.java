@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
+import com.hzc.coolcatmusic.app.AppApplication;
+import com.hzc.coolcatmusic.app.SPUtilsConfig;
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Function;
 import me.goldze.mvvmhabit.utils.KLog;
+import me.goldze.mvvmhabit.utils.SPUtils;
 
 /**
  * @author hzc
@@ -47,7 +50,7 @@ public class LocalUtils {
                     long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
                     String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                     String display_name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-                    if(artist.equals("<unknown>") || duration <= minDuration * 1000 || size <= minSize * 1024L * 1024L) {
+                    if(artist.equals("<unknown>") || duration <= minDuration * 1000 || size <= minSize * 1024L) {
                         continue;
                     }
                     mediaEntity = new LocalSongEntity();
@@ -77,7 +80,7 @@ public class LocalUtils {
                 }
             }
             //获取应用缓存音乐数据
-            String destFileDir = context.getCacheDir().getPath();
+            String destFileDir = AppApplication.PATH_CACHE_SONG;
             File destFile = new File(destFileDir);
             File[] files = destFile.listFiles();
             if(files != null && files.length > 0){
@@ -105,7 +108,7 @@ public class LocalUtils {
                                 album = fileName.substring(fileName.indexOf(" - ") + 3,fileName.lastIndexOf(".mp3"));
                                 artist = fileName.substring(0,fileName.indexOf(" - "));
                             }catch (Exception e){
-                                KLog.e(e.toString());
+                                //KLog.e(e.toString());
                             }
                         }
                         mediaEntity.setArtist(artist);
@@ -124,7 +127,7 @@ public class LocalUtils {
                 }
             }
         } catch (Exception e) {
-            KLog.e(e.toString());
+            //KLog.e(e.toString());
         } finally {
             if(cursor != null) {
                 cursor.close();
@@ -145,6 +148,25 @@ public class LocalUtils {
         return Observable.create(new ObservableOnSubscribe<List<LocalSongEntity>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<LocalSongEntity>> emitter) throws Exception {
+                List<LocalSongEntity> list = new ArrayList<>(getAllMediaList(context, minDuration, minSize,searchSize));
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        }).map((Function<List<LocalSongEntity>, List<LocalSongEntity>>) objects -> objects);
+    }
+
+    /**
+     * 根据本地设置获取本地歌曲
+     * @param context 上下文
+     * @param searchSize 歌曲数
+     * @return 本地歌曲
+     */
+    public static Observable<List<LocalSongEntity>> getDefaultLocalMusicObservable(Context context, int... searchSize){
+        return Observable.create(new ObservableOnSubscribe<List<LocalSongEntity>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LocalSongEntity>> emitter) throws Exception {
+                int minDuration = SPUtils.getInstance().getInt(SPUtilsConfig.SCAN_MIN_DURATION,60);
+                float minSize = SPUtils.getInstance().getFloat(SPUtilsConfig.SCAN_MIN_SIZE,0f);
                 List<LocalSongEntity> list = new ArrayList<>(getAllMediaList(context, minDuration, minSize,searchSize));
                 emitter.onNext(list);
             }

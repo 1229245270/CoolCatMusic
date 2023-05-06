@@ -13,7 +13,11 @@ import com.hzc.coolcatmusic.entity.LookEntity;
 import com.hzc.coolcatmusic.ui.adapter.LookAdapter;
 import com.hzc.coolcatmusic.ui.listener.OnItemClickListener;
 
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.base.BaseViewModel;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.ItemBinding;
 import me.tatarka.bindingcollectionadapter2.OnItemBind;
@@ -43,5 +47,28 @@ public class HomeFragment2ViewModel extends BaseViewModel<DemoRepository> {
         }
     };
 
+    public void requestVideoData(){
+        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+            @Override
+            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
+                return model.settingFont();
+            }
+        },new NetCallback<BaseBean>(){
+            @Override
+            public void onSuccess(BaseBean result) {
+
+            }
+
+            @Override
+            public void onFailure(String msg) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+    }
 
 }

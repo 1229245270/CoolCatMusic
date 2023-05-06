@@ -1,9 +1,12 @@
 package com.hzc.coolcatmusic.app;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Environment;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.entity.DaoMaster;
@@ -11,6 +14,8 @@ import com.hzc.coolcatmusic.entity.DaoSession;
 import com.hzc.coolcatmusic.service.MusicConnection;
 import com.hzc.coolcatmusic.service.MusicService;
 import com.hzc.coolcatmusic.ui.main.HomeActivity;
+import com.hzc.coolcatmusic.utils.NotificationUtils;
+import com.liulishuo.okdownload.core.Util;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
@@ -18,8 +23,11 @@ import org.greenrobot.greendao.database.Database;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
+import cn.jpush.android.api.JPushInterface;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -61,11 +69,26 @@ public class AppApplication extends BaseApplication {
      */
     public static String PATH_CACHE_SONG_IMAGE;
 
+    /**
+     * 缓存歌曲地址
+     */
+    public static String PATH_CACHE_SONG;
+
+    public static NotificationManager notificationManager;
+
+    /**
+     * 记录chatGPT是否可聊天
+     */
+    public static Map<Long,Boolean> chatGPTRead;
+
+    public static boolean hasNetWork = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
         //是否开启打印日志
         KLog.init(GlobalData.isDebug);
+        initPushMessage();
         initData();
         initCrash();
         initDataBase();
@@ -77,8 +100,16 @@ public class AppApplication extends BaseApplication {
 
     private void initData(){
         PATH_CACHE_SONG_IMAGE = getCacheDir().getPath() + "/songImage/";
+        PATH_CACHE_SONG = getCacheDir().getPath() + "/song/";
         PATH_SD_DIR = findSDCardRoot(this.getExternalFilesDir(null)).getPath();
+        chatGPTRead = new HashMap<>();
+        //Util.enableConsoleLog();
+        //Util.setLogger();
+    }
 
+    private void initPushMessage(){
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     private File findSDCardRoot(File externalFilesDir) {
@@ -93,10 +124,10 @@ public class AppApplication extends BaseApplication {
 
     private void initFont(){
         try {
-            if(SPUtils.getInstance().getLong(SPUtilsConfig.Theme_TEXT_FONT_ID) == -2L){
+            if(SPUtils.getInstance().getLong(SPUtilsConfig.THEME_TEXT_FONT_ID) == -2L){
                 return;
             }
-            Typeface typeface = Typeface.createFromFile(SPUtils.getInstance().getString(SPUtilsConfig.Theme_TEXT_FONT_PATH));
+            Typeface typeface = Typeface.createFromFile(SPUtils.getInstance().getString(SPUtilsConfig.THEME_TEXT_FONT_PATH));
             //Field field = Typeface.class.getDeclaredField("SERIF");
             Field field = Typeface.class.getDeclaredField("MONOSPACE");
             field.setAccessible(true);
@@ -130,8 +161,8 @@ public class AppApplication extends BaseApplication {
                 .minTimeBetweenCrashesMs(2000) //崩溃的间隔时间(毫秒)
                 .errorDrawable(R.mipmap.ic_launcher) //错误图标
                 .restartActivity(HomeActivity.class) //重新启动后的activity
-//                .errorActivity(YourCustomErrorActivity.class) //崩溃后的错误activity
-//                .eventListener(new YourCustomEventListener()) //崩溃后的错误监听
+                .errorActivity(HomeActivity.class) //崩溃后的错误activity
+                //.eventListener(new YourCustomEventListener()) //崩溃后的错误监听
                 .apply();
     }
 
@@ -147,12 +178,14 @@ public class AppApplication extends BaseApplication {
     }
 
     private void initService(){
-        Intent MusicServiceIntent = new Intent(this, MusicService.class);
-        startService(MusicServiceIntent);
-        MusicConnection musicConnection = new MusicConnection();
-        bindService(MusicServiceIntent,musicConnection, Context.BIND_AUTO_CREATE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //NotificationUtils.createForeNotification(this,"0","name");
+        NotificationUtils.initMusicNotificationChannel();
+        Intent musicServiceIntent = new Intent(this, MusicService.class);
+        startService(musicServiceIntent);
+        MusicConnection musicConnection = new MusicConnection();
+        bindService(musicServiceIntent,musicConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     //视频内核

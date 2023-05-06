@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.goldze.mvvmhabit.utils.KLog;
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter;
 
 public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<ExpandedTabEntity<Object>> {
@@ -52,9 +55,16 @@ public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<Expa
 
     }
 
+    /**
+     * 列表高度
+     */
     private final Map<Integer,Integer> showHeightMap = new HashMap<>();
+    /**
+     * 列表展开状态
+     */
     private final Map<Integer,Boolean> IsOpenMap = new HashMap<>();
     private final Map<Integer,BaseRecycleAdapter<Object>> adapterMap = new HashMap<>();
+    private final int animationDuration = 300;
 
     public BaseRecycleAdapter<Object> getAdapter(int position){
         return adapterMap.get(position);
@@ -63,6 +73,16 @@ public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<Expa
     public int getOldPosition(){
         return oldPosition;
     }
+    private boolean isAnimation = false;
+    private boolean isShow = true;
+
+    public ExpandedTabAdapter(){
+
+    }
+
+    public ExpandedTabAdapter(boolean isShow){
+        this.isShow = isShow;
+    }
 
     @Override
     public void onBindBinding(@NonNull ViewDataBinding binding, int variableId, int layoutRes, int position, ExpandedTabEntity<Object> item) {
@@ -70,8 +90,9 @@ public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<Expa
 
         RecyclerView recyclerView = binding.getRoot().findViewById(R.id.recycleView);
         LinearLayout llShow = binding.getRoot().findViewById(R.id.llShow);
-        LinearLayout llMenu = binding.getRoot().findViewById(R.id.llMenu);
-        LinearLayout llMore = binding.getRoot().findViewById(R.id.llMore);
+        ImageView ivMore = binding.getRoot().findViewById(R.id.ivMore);
+        initRecycleView(binding.getRoot(),position,item);
+
         List<Object> list = item.getList();
         String tip = item.getTip() == null ? "" : item.getTip();
         if(list == null){
@@ -79,77 +100,95 @@ public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<Expa
         }
 
         LinearLayout llShowView = binding.getRoot().findViewById(R.id.llShowView);
+        if(isShow){
+            IsOpenMap.putIfAbsent(position, true);
+        }else{
+            IsOpenMap.putIfAbsent(position, false);
+        }
+        if(Boolean.TRUE.equals(IsOpenMap.get(position))){
+            llShowView.setVisibility(View.VISIBLE);
+        }else{
+            llShowView.setVisibility(View.GONE);
+        }
+
         llShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showHeightMap.putIfAbsent(position,llShowView.getMeasuredHeight());
-                //修复bug:布局高度为0时不执行动画
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llShowView.getLayoutParams();
-                if(params.height == 0){
-                    params.height = 1;
-                    llShowView.setLayoutParams(params);
+                if(isAnimation){
+                    return;
                 }
-                Animation animation;
+                isAnimation = true;
+                //实现动画效果
+                llShowView.setVisibility(View.VISIBLE);
+                //修复bug:需要构建完后获取高度
+                llShowView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(llShowView.getMeasuredHeight() != 0){
+                            showHeightMap.putIfAbsent(position,llShowView.getMeasuredHeight());
+                        }
+                        //修复bug:布局高度为0时不执行动画
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llShowView.getLayoutParams();
+                        if(params.height == 0){
+                            params.height = 1;
+                            llShowView.setLayoutParams(params);
+                        }
+                        Animation animation;
+                        Boolean isOpen = IsOpenMap.get(position);
+                        if(isOpen != null){
+                            if(isOpen){
+                                animation = new Animation() {
+                                    @Override
+                                    public boolean willChangeBounds() {
+                                        return super.willChangeBounds();
+                                    }
 
-                IsOpenMap.putIfAbsent(position, true);
-                Boolean isOpen = IsOpenMap.get(position);
-                if(isOpen != null){
-                    if(isOpen){
-                        animation = new Animation() {
-                            @Override
-                            public boolean willChangeBounds() {
-                                return super.willChangeBounds();
+                                    @Override
+                                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                        super.applyTransformation(interpolatedTime, t);
+                                        final Integer value = showHeightMap.get(position);
+                                        float rotation = 90;
+                                        if(value != null){
+                                            params.height = (int) (value * (1 - interpolatedTime));
+                                            llShowView.setLayoutParams(params);
+                                            ivMore.setRotation(rotation * (1 - interpolatedTime));
+                                        }
+                                    }
+                                };
+
+                            }else{
+                                animation = new Animation() {
+                                    @Override
+                                    public boolean willChangeBounds() {
+                                        return super.willChangeBounds();
+                                    }
+
+                                    @Override
+                                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                        super.applyTransformation(interpolatedTime, t);
+                                        Integer value = showHeightMap.get(position);
+                                        float rotation = 90;
+                                        if(value != null){
+                                            params.height = (int) (value * interpolatedTime);
+                                            llShowView.setLayoutParams(params);
+                                            ivMore.setRotation(rotation * interpolatedTime);
+                                        }
+                                    }
+                                };
                             }
-
-                            @Override
-                            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                                super.applyTransformation(interpolatedTime, t);
-                                Integer value = showHeightMap.get(position);
-                                if(value != null){
-                                    params.height = (int) (value * (1 - interpolatedTime));
-                                    llShowView.setLayoutParams(params);
+                            animation.setDuration(animationDuration);
+                            llShowView.startAnimation(animation);
+                            //修复bug:使用postDelayed方法，不使用setAnimationListener，onAnimationEnd方法无法保证一定执行
+                            llShowView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    IsOpenMap.put(position, !isOpen);
+                                    isAnimation = false;
                                 }
-                            }
-                        };
-                    }else{
-                        animation = new Animation() {
-                            @Override
-                            public boolean willChangeBounds() {
-                                return super.willChangeBounds();
-                            }
-
-                            @Override
-                            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                                super.applyTransformation(interpolatedTime, t);
-                                Integer value = showHeightMap.get(position);
-                                if(value != null){
-                                    params.height = (int) (value * interpolatedTime);
-                                    llShowView.setLayoutParams(params);
-                                }
-                            }
-                        };
+                            },animationDuration);
+                        }
                     }
-                    animation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            //禁止点击
-                            llShow.setEnabled(false);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            IsOpenMap.put(position, !isOpen);
-                            llShow.setEnabled(true);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    animation.setDuration(300);
-                    llShowView.startAnimation(animation);
-                }
+                });
             }
         });
 
@@ -320,11 +359,13 @@ public abstract class ExpandedTabAdapter extends BindingRecyclerViewAdapter<Expa
             case "新歌版":
                 break;
             default:
-                initChildRecycleView(binding.getRoot().getContext(),recyclerView,list);
+                initChildRecycleView(binding.getRoot().getContext(),recyclerView,list,position);
         }
     }
 
-    public abstract void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list);
+    public abstract void initChildRecycleView(Context context,RecyclerView recyclerView, List<Object> list,int position);
+
+    public abstract void initRecycleView(View view,int position, ExpandedTabEntity<Object> item);
 
 }
 

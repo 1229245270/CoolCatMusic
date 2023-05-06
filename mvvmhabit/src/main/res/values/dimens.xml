@@ -6,6 +6,7 @@
 
     <dimen name="customactivityoncrash_error_activity_error_details_text_size">12sp</dimen>
 
+    <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_5">5dp</dimen>
     <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_15">15dp</dimen>

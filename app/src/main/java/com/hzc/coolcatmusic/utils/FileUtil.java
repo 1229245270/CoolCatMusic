@@ -84,7 +84,7 @@ public class FileUtil {
 
     //保存方法
     public static String getDownloadFile(Bitmap bm, String path) throws IOException {
-        String newPath = AppApplication.PATH_CACHE_SONG_IMAGE + path.substring(0,path.lastIndexOf(".")) + ".png";
+        String newPath = AppApplication.PATH_CACHE_SONG_IMAGE + path.substring(path.lastIndexOf("/") + 1,path.lastIndexOf(".")) + ".png";
         String dirs = newPath.substring(0,newPath.lastIndexOf("/"));
         String name = newPath.substring(newPath.lastIndexOf("/") + 1);
         File fileDirs = new File(dirs);

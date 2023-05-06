@@ -60,6 +60,8 @@ public class HomeViewModel<M extends BaseModel> extends BaseViewModel<M> {
         RxBus.getDefault().post(event);
     }
 
+
+
     /*public BindingCommand<Boolean> openDetailActivity = new BindingCommand<Boolean>(() -> {
         startActivity(DetailActivity.class);
     });*/

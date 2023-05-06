@@ -45,6 +45,8 @@ import com.hzc.coolcatmusic.ui.costom.PlayingListDialog;
 import com.hzc.coolcatmusic.ui.costom.SeekArc;
 import com.hzc.coolcatmusic.ui.detail.DetailActivity;
 import com.hzc.coolcatmusic.service.MusicConnection;
+import com.hzc.coolcatmusic.utils.NotificationUtils;
+import com.hzc.public_method.PageMethod;
 
 import java.lang.reflect.Field;
 
@@ -87,12 +89,17 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
     //当前事件是否被消耗,0未消耗，1横向，2竖向
     private int eventEat;
     private int moveY = 0;
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //点击音乐条,禁止侧滑
         if(isOpenProgress){
             return super.dispatchTouchEvent(ev);
         }
+        HomeFragment homeFragment = HomeFragment.getInstance();
+        FragmentManager manager = getSupportFragmentManager();
+        int currentItem = homeFragment.mainViewPager.getCurrentItem();
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
                 eventEat = 0;
@@ -107,6 +114,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 if(count >= 2){
                     showView = mainFrameLayout.getChildAt(count - 1);
                     hideView = mainFrameLayout.getChildAt(count - 2);
+
                 }else{
                     showView = null;
                     hideView = null;
@@ -116,24 +124,28 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 //来到新的坐标
                 float endX = ev.getX();
                 float endY = ev.getY();
-                //计算偏移量
+                //计算与点击时坐标的偏移量
                 float distanceX = endX - startX;
                 float distanceY = endY - startY;
+                //竖直方向持续偏移量
                 moveY += Math.abs(distanceY);
-                //判断滑动方向
-                HomeFragment homeFragment = HomeFragment.getInstance();
-                FragmentManager manager = getSupportFragmentManager();
-                int currentItem = homeFragment.mainViewPager.getCurrentItem();
                 //主页
+                //当前界面，先拦截activity事件，再拦截fragment事件
                 if(manager.getBackStackEntryCount() == 0){
                     if(currentItem == 0){
+                        //大于为右滑
                         if(distanceX > 0){
-                            //左滑时，取消viewpager触摸，防止抢夺drawerLayout事件,当竖直方向累计偏移量大于100时，只允许竖直滑动
+                            //右滑时，取消viewpager触摸，防止抢夺drawerLayout事件,当竖直方向累计偏移量大于100时，只允许竖直滑动
+                            /*KLog.d("moveY " + moveY);
                             if(moveY > 100){
+                                //设置父容器activity不会拦截事件，事件停留拦截到fragment,
                                 homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                             }else{
+                                //设置父容器activity会拦截事件，事件停留拦截到fragment,执行滑动drawerLayout
                                 homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-                            }
+                            }*/
+                            //当前fragment不需要该触发view事件
+                            //homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
                         }else if(distanceX < 0){
                             //添加viewpager触摸
                             homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
@@ -141,9 +153,11 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                     }else{
                         homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                     }
+                }
                 //子页
-                }else{
-                    if(eventEat == 0){
+                else{
+                    //return true;
+                    /*if(eventEat == 0){
                         if(Math.abs(distanceX) > 100){
                             eventEat = 1;
                         }else if(Math.abs(distanceY) > 100){
@@ -152,7 +166,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                     }
                     //水平方向滑动
                     if(eventEat == 1){
-                        //左滑
+                        //右滑
                         if(distanceX > 0){
                             if(showView != null && hideView != null){
                                 showView.setTranslationX(distanceX);
@@ -175,22 +189,22 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                         }
                     //竖直方向滑动
                     }else if(eventEat == 2){
-                    }
+                    }*/
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if(isBack){
+                /*if(isBack){
                     onBackPressed();
                 }else{
                     if(showView != null && hideView != null){
                         showView.setTranslationX(0);
                     }
                 }
-                break;
+                break;*/
             default:
                 break;
         }
-        FragmentManager manager = getSupportFragmentManager();
+        /*FragmentManager manager = getSupportFragmentManager();
         //拦截水平方向事件
         if((eventEat == 1) && manager.getBackStackEntryCount() > 0){
             //移除链表路径,使触摸事件只执行到外层
@@ -198,11 +212,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 ev.setAction(MotionEvent.ACTION_CANCEL);
                 showView.dispatchTouchEvent(ev);
             }
-        }
+        }*/
 
+        //KLog.d("dispatchTouchEvent " + super.dispatchTouchEvent(ev));
         return super.dispatchTouchEvent(ev);
-
     }
+
+
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -232,8 +248,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         startFrameLayout(HomeFragment.getInstance(),null);
         initBackStackListener();
 
+        NotificationUtils.requestNotification(this);
     }
-
 
     private long exitTime = 0;
 
@@ -251,31 +267,18 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                 showView = null;
                 hideView = null;
             }
-            if(showView != null){
-                TranslateAnimation translateAnimation = new TranslateAnimation (
-                        0,showView.getMeasuredWidth() - showView.getTranslationX(),0,0);
-                translateAnimation.setDuration(300);
-                showView.startAnimation(translateAnimation);
-                translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+            if(PageMethod.isTouch){
+                super.onBackPressed();
+                PageMethod.isTouch = false;
+            }else{
+                PageMethod.onBackPressed(showView, this, new PageMethod.BackCallback() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
-                        //禁止全局触摸
-                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
+                    public void onBack() {
                         HomeActivity.super.onBackPressed();
-                        //开启全局触摸
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
                     }
                 });
             }
+
         }
     }
 

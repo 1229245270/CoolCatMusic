@@ -1,21 +1,17 @@
 package me.goldze.mvvmhabit.base;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.hzc.public_method.PageMethod;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -30,12 +26,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
-import io.reactivex.disposables.Disposable;
 import me.goldze.mvvmhabit.R;
 import me.goldze.mvvmhabit.base.BaseViewModel.ParameterField;
 import me.goldze.mvvmhabit.bus.Messenger;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.MaterialDialogUtils;
+import me.goldze.mvvmhabit.widget.TouchLinearLayout;
 
 /**
  * Created by goldze on 2017/6/15.
@@ -52,20 +48,135 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         initParam();
     }
 
+    private float startX;
+    private float startY;
+    boolean isBack;
+    private long beforeTime;
+    //每毫秒初始宽度
+    private float comeWidth;
+    //private View showView;
+    //当前事件是否被消耗,0未消耗，1横向，2竖向
+    private int eventEat;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, initContentView(inflater, container, savedInstanceState), container, false);
         View view = binding.getRoot();
+
+        startX = 0;
+        startY = 0;
+        isBack = false;
+        comeWidth = 0;
+
         view.setBackgroundColor(binding.getRoot().getContext().getColor(R.color.windowBackground));
+        TouchLinearLayout touchLinearLayout = new TouchLinearLayout(getContext());
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        view.setLayoutParams(layoutParams);
+        //ViewGroup.addView导致宽高失效问题,https://www.jianshu.com/p/8c2072232607
+        touchLinearLayout.addView(view);
+        //防止事件穿透,设置手势侧滑
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        if(manager.getBackStackEntryCount() > 0){
+            onTouchClose(touchLinearLayout);
+        }
+
+        return touchLinearLayout;
+    }
+
+
+    public void onTouchClose(View view){
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(View view, MotionEvent ev) {
+                if(startX == 0 && startY == 0){
+                    eventEat = 0;
+                    startX = ev.getRawX();
+                    startY = ev.getRawY();
+                    isBack = false;
+                    beforeTime = System.currentTimeMillis();
+                    comeWidth = 0;
+                }
+                switch (ev.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+                        //来到新的坐标
+                        float endX = ev.getRawX();
+                        float endY = ev.getRawY();
+                        //计算与点击时坐标的偏移量
+                        float distanceX = endX - startX;
+                        float distanceY = endY - startY;
+                        if(eventEat == 0){
+                            if(Math.abs(distanceX) > 100){
+                                eventEat = 1;
+                            }else if(Math.abs(distanceY) > 100){
+                                eventEat = 2;
+                            }
+                        }
+                        //水平方向滑动
+                        if(eventEat == 1){
+                            //右滑
+                            if(distanceX > 0){
+                                if(view != null){
+                                    view.setTranslationX(distanceX);
+                                    long lastTime = System.currentTimeMillis();
+                                    if(lastTime - beforeTime > 100){
+                                        beforeTime = lastTime;
+                                        //每毫秒变化宽度
+                                        float moveWidth = distanceX - comeWidth;
+                                        comeWidth = distanceX;
+                                        if(moveWidth > 100){
+                                            isBack = true;
+                                        }else{
+                                            isBack = false;
+                                        }
+                                    }
+                                    if(distanceX > view.getMeasuredWidth() * 1.0 / 2){
+                                        isBack = true;
+                                    }
+                                }
+                            }
+                        //竖直方向滑动
+                        }else if(eventEat == 2){
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if(isBack){
+                            PageMethod.onBackPressed(view, requireActivity(), new PageMethod.BackCallback() {
+                                @Override
+                                public void onBack() {
+                                    PageMethod.isTouch = true;
+                                    requireActivity().onBackPressed();
+                                }
+                            });
+                        }else{
+                            if(view != null){
+                                view.setTranslationX(0);
+                            }
+                        }
+                        startX = 0;
+                        startY = 0;
+
+                        if(view != null){
+                            view.performClick();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                //拦截水平方向事件
+                /*if((eventEat == 1)){
+                    //移除链表路径,使触摸事件只执行到外层
+                    if(view != null){
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        view.onTouchEvent(ev);
+                    }
+                }*/
                 return true;
             }
         });
-        return view;
     }
 
     @Override
@@ -171,7 +282,6 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                 }else{
                     getActivity().finish();
                 }
-                KLog.e("fragment getFinishEvent");
                 try {
                     final Class homeActivity = Class.forName("com.hzc.coolcatmusic.ui.main.HomeActivity");
                     Method method = homeActivity.getMethod("setMEdgeSize",boolean.class);
@@ -320,7 +430,11 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        viewModel.isHidden = hidden;
-        super.onHiddenChanged(hidden);
+        try{
+            viewModel.isHidden = hidden;
+            super.onHiddenChanged(hidden);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -20,6 +20,7 @@ import com.hzc.coolcatmusic.databinding.FragmentHomeBinding;
 import com.hzc.coolcatmusic.BR;
 import com.hzc.coolcatmusic.app.AppViewModelFactory;
 import com.hzc.coolcatmusic.ui.adapter.HomeCollectionAdapter;
+import com.hzc.coolcatmusic.ui.costom.MyTabLayoutMediator;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomMenuButton;
@@ -144,7 +145,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,HomeFragmentV
         mainTab = binding.mainTab;
         HomeCollectionAdapter adapter = new HomeCollectionAdapter(this);
         mainViewPager.setAdapter(adapter);
-        new TabLayoutMediator(mainTab,mainViewPager,
+        new MyTabLayoutMediator(mainTab,mainViewPager,
                 (tab,position) -> {
                     switch (position){
                         case 0:

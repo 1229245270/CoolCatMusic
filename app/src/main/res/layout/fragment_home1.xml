@@ -15,14 +15,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <com.hzc.coolcatmusic.ui.costom.ReboundNestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
                     android:layout_margin="@dimen/dp_10"
                     android:id="@+id/rvSongItem"
                     app:itemBinding="@{viewModel.itemEntityOnItemBind}"
@@ -32,6 +34,9 @@
                     android:layout_height="wrap_content"/>
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
                     app:itemBinding="@{viewModel.listenerEntityOnItemBind}"
                     adapter="@{viewModel.expandedTabAdapter}"
                     items="@{viewModel.expandedTabEntityList}"
@@ -42,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1000dp"/>
             </LinearLayout>
-        </ScrollView>
+        </com.hzc.coolcatmusic.ui.costom.ReboundNestedScrollView>
 
 
     </LinearLayout>

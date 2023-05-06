@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="com.hzc.coolcatmusic.ui.chatgpt.ChatGPTActivityViewModel"/>
+        <variable
+            name="viewModel"
+            type="com.hzc.coolcatmusic.ui.chatgpt.ChatGPTActivityViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="#eeeeee"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include
+            layout="@layout/layout_toolbar"
+            app:toolbarViewModel="@{viewModel.toolbarViewModel}"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.hzc.coolcatmusic.ui.costom.ReboundRecycleView
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                items="@{viewModel.chatGPTEntitiesList}"
+                adapter="@{viewModel.adapter}"
+                app:itemBinding="@{viewModel.onItemBind}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:id="@+id/rvChat"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <LinearLayout
+                android:background="#66ffffff"
+                android:padding="@dimen/dp_10"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etChat"
+                    android:text="@={viewModel.content}"
+                    android:minHeight="@dimen/dp_30"
+                    android:maxHeight="@dimen/dp_200"
+                    android:padding="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/chatgpt_send_edittext"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_chat"
+                    android:text="发送"
+                    android:textColor="@color/white"
+                    android:background="@drawable/chatgpt_send_button"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

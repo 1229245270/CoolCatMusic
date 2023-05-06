@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
-            android:paddingTop="@dimen/status_bar_height"
             android:background="@color/mainBg"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:visibility="gone"
                 onClickCommand="@{viewModel.logoClick}"
                 url="@{viewModel.mainLogo}"
                 binding:placeholderRes="@{viewModel.mainPlaceholderRes}"

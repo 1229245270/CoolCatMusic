@@ -132,7 +132,7 @@ public class NavigationThemeViewModel extends BaseViewModel<DemoRepository> {
                 Font font = new Font(-2L,"默认","","","");
                 fontObservableList.add(font);
                 fontObservableList.addAll(fonts);
-                long l = SPUtils.getInstance().getLong(SPUtilsConfig.Theme_TEXT_FONT_ID);
+                long l = SPUtils.getInstance().getLong(SPUtilsConfig.THEME_TEXT_FONT_ID);
                 if(l == -1L){
                     if(fonts.size() >= 1){
                         changeFont(fonts.get(0),0,oldSelectPosition);

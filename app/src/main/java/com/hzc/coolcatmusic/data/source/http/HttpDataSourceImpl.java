@@ -1,19 +1,27 @@
 package com.hzc.coolcatmusic.data.source.http;
 
 import me.goldze.mvvmhabit.base.BaseBean;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hzc.coolcatmusic.data.source.HttpDataSource;
 import com.hzc.coolcatmusic.data.source.http.service.DemoApiService;
+import com.hzc.coolcatmusic.entity.ChatGPTRequest;
 import com.hzc.coolcatmusic.entity.DemoEntity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.goldze.mvvmhabit.http.BaseResponse;
+import me.goldze.mvvmhabit.utils.KLog;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
@@ -23,6 +31,7 @@ import okhttp3.RequestBody;
 public class HttpDataSourceImpl implements HttpDataSource {
     private DemoApiService apiService;
     private volatile static HttpDataSourceImpl INSTANCE = null;
+    private Gson gson;
 
     public static HttpDataSourceImpl getInstance(DemoApiService apiService) {
         if (INSTANCE == null) {
@@ -41,6 +50,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
 
     private HttpDataSourceImpl(DemoApiService apiService) {
         this.apiService = apiService;
+        gson = new GsonBuilder().disableHtmlEscaping().create();
     }
 
     @Override
@@ -91,5 +101,21 @@ public class HttpDataSourceImpl implements HttpDataSource {
         return apiService.songUnlockWindow64(part,user);
     }
 
+    @Override
+    public Observable<BaseBean> songUnlockWindow64Multiple(List<File> file, String username) {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for(File f : file){
+            RequestBody fileRQ = RequestBody.create(null, f);
+            MultipartBody.Part part = MultipartBody.Part.createFormData("path", f.getName(), fileRQ);
+            parts.add(part);
+        }
+        RequestBody user = RequestBody.create(null,username);
+        return apiService.songUnlockWindow64Multiple(parts,user);
+    }
+
+    @Override
+    public Observable<BaseBean> chatGPTV1ChatCompletions(ChatGPTRequest request) {
+        return apiService.chatGPTV1ChatCompletions(request);
+    }
 
 }

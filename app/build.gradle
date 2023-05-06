@@ -1,7 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.huawei.agconnect'
+
 
 android {
+
 
     signingConfigs {
         release {
@@ -38,6 +42,22 @@ android {
                 universalApk true
             }
         }
+
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : rootProject.ext.android.applicationId,
+                JPUSH_APPKEY : "cacc28cc70b8beeeee32fbdb", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                MEIZU_APPKEY : "MZ-魅族的APPKEY",
+                MEIZU_APPID : "MZ-魅族的APPID",
+                XIAOMI_APPID : "MI-小米的APPID",
+                XIAOMI_APPKEY : "MI-小米的APPKEY",
+                OPPO_APPKEY : "OP-oppo的APPKEY",
+                OPPO_APPID : "OP-oppo的APPID",
+                OPPO_APPSECRET : "OP-oppo的APPSECRET",
+                VIVO_APPKEY : "vivo的APPKEY",
+                VIVO_APPID : "vivo的APPID"
+        ]
     }
     buildTypes {
         release {
@@ -53,8 +73,8 @@ android {
         enabled true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
 
@@ -69,7 +89,13 @@ android {
             res.srcDirs = ['src/main/res', 'src/main/res-night']
         }
     }
+
+    greendao{
+        schemaVersion 2
+    }
+
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -83,17 +109,18 @@ dependencies {
     }
     //MVVMHabit
     implementation project(':mvvmhabit')
+    implementation project(':generallibrary')
+    implementation project(':public-method')
     implementation project(':skin-androidx:skin-support')
-
-    implementation 'androidx.wear:wear:1.1.0'
     implementation project(path: ':skin-androidx:skin-support-appcompat')
     implementation project(path: ':skin-androidx:skin-support-design')
     implementation project(path: ':skin-androidx:skin-support-constraint-layout')
     implementation project(path: ':skin-androidx:skin-support-cardview')
 //    implementation rootProject.ext.dependencies.MVVMHabit
+
+    implementation 'androidx.wear:wear:1.1.0'
     //内存泄漏测试
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
-    /*debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:2.9.1'*/
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
     //图片轮播
     implementation 'io.github.youth5201314:banner:2.2.2'
     //弹出菜单
@@ -114,4 +141,30 @@ dependencies {
     implementation 'com.airbnb.android:lottie:5.0.3'
     //图片
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
+    //过渡滚动
+    implementation 'io.github.everythingme:overscroll-decor-android:1.1.1'
+    //下载器
+    implementation "com.liulishuo.okdownload:okdownload:1.0.7"
+    //权限判断
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+
+    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
+    implementation 'cn.jiguang.sdk:jpush:4.0.0'  // 此处以JPush 4.0.0 版本为例
+    // 接入华为厂商
+    implementation 'com.huawei.hms:push:5.0.2.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:4.0.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    // 接入 FCM 厂商
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'cn.jiguang.sdk.plugin:fcm:4.0.0'
+    // 接入魅族厂商
+    implementation 'cn.jiguang.sdk.plugin:meizu:4.0.0'
+    // 接入 VIVO 厂商
+    implementation 'cn.jiguang.sdk.plugin:vivo:4.0.0'
+    // 接入 OPPO 厂商
+    implementation 'cn.jiguang.sdk.plugin:oppo:4.0.0'
+    // 接入小米厂商
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'
+
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
 }

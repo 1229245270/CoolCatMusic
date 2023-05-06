@@ -2,8 +2,10 @@ package com.hzc.coolcatmusic.service;
 
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,25 +13,60 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
+
+import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.app.AppApplication;
 import com.hzc.coolcatmusic.app.SPUtilsConfig;
+import com.hzc.coolcatmusic.data.DemoRepository;
+import com.hzc.coolcatmusic.data.source.http.service.DemoApiService;
+import com.hzc.coolcatmusic.entity.ChatGPTEntity;
+import com.hzc.coolcatmusic.entity.ChatGPTRequest;
+import com.hzc.coolcatmusic.entity.ChatGPTResponse;
 import com.hzc.coolcatmusic.entity.PlayingMusicEntity;
 import com.hzc.coolcatmusic.entity.TimingEntity;
+import com.hzc.coolcatmusic.ui.chatgpt.ChatFloating;
+import com.hzc.coolcatmusic.utils.DaoUtils.ChatGPTUtils;
 import com.hzc.coolcatmusic.utils.DaoUtils.MusicUtils;
+import com.hzc.coolcatmusic.utils.LongTimeRetrofitClient;
 import com.hzc.coolcatmusic.utils.NotificationUtils;
+import com.hzc.coolcatmusic.utils.RetrofitClient;
+import com.hzc.public_method.RequestMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import cn.jpush.android.service.JCommonService;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import me.goldze.mvvmhabit.base.BaseBean;
 import me.goldze.mvvmhabit.bus.RxBus;
+import me.goldze.mvvmhabit.http.NetCallback;
 import me.goldze.mvvmhabit.utils.KLog;
 import me.goldze.mvvmhabit.utils.SPUtils;
 import me.goldze.mvvmhabit.utils.ToastUtils;
@@ -39,15 +76,16 @@ public class MusicService extends Service {
     private AudioManager audioManager;
     private ConnectivityManager connectivityManager;
     private Timer timer;
+    //private ScheduledExecutorService scheduledExecutorService;
 
     private ScreenListener screenListener;
 
     private TimingEntity timingEntity;
+    private DemoApiService demoApiService;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        KLog.d("onCreate");
         mediaPlayer = new MediaPlayer();
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
@@ -58,12 +96,12 @@ public class MusicService extends Service {
             AppApplication.isPlayComplete = true;
         });
 
+        demoApiService = LongTimeRetrofitClient.getInstance().create(DemoApiService.class);
+
         initScreenListener();
         initSensorListener();
         initNetworkListener();
-
-        startForeground(1,NotificationUtils.musicNotification(getApplicationContext(),null,null,null));
-
+        startForeground(Integer.parseInt(NotificationUtils.MUSIC_CHANNEL_ID),NotificationUtils.musicNotification(null,null,null));
     }
 
     /**
@@ -74,24 +112,19 @@ public class MusicService extends Service {
         screenListener.begin(new ScreenListener.ScreenStateListener() {
             @Override
             public void onScreenOn() {
-                //NotificationUtils.createForeNotification(getApplicationContext(),"0","name");
                 KLog.d("屏幕打开了");
                 ToastUtils.showShort("屏幕打开了");
-                //Toast.makeText(getApplicationContext(),"屏幕打开了",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onScreenOff() {
-                //NotificationUtils.createForeNotification(getApplicationContext(),"0","name");
                 KLog.d("屏幕关闭了");
             }
 
             @Override
             public void onUserPresent() {
                 KLog.d("屏幕解锁了");
-
                 ToastUtils.showShort("屏幕解锁了");
-                //Toast.makeText(getApplicationContext(),"屏幕解锁了",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -151,32 +184,31 @@ public class MusicService extends Service {
         sensorManager.registerListener(sensorEventListener,sensor,SensorManager.SENSOR_DELAY_GAME);
     }
 
-    private int connectType;
     /**
      * 初始化网络监听
      * */
     private void initNetworkListener(){
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        connectType = connectivityManager.getActiveNetworkInfo().getType();
-        connectivityManager.addDefaultNetworkActiveListener(new ConnectivityManager.OnNetworkActiveListener() {
+        connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback(){
             @Override
-            public void onNetworkActive() {
-                NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-                int type = network.getType();
-                KLog.d("网络状态：" + type);
-                if(connectType != type){
-                    connectType = type;
-                    if(type == ConnectivityManager.TYPE_WIFI){
-                        KLog.d("当前为WIFI");
-                        ToastUtils.showShort("当前为WIFI");
-                    }else if(type == ConnectivityManager.TYPE_MOBILE){
-                        KLog.d("当前为数据");
-                        ToastUtils.showShort("当前为数据");
-                    }else{
-                        KLog.d("未知网络");
-                        ToastUtils.showShort("未知网络");
-                    }
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                boolean isCellular = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+                boolean isWifi = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+                if(isWifi){
+                    //ToastUtils.showShort("当前正在使用Wifi");
+                }else if(isCellular){
+                    ToastUtils.showShort("当前正在使用流量");
                 }
+                AppApplication.hasNetWork = true;
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                super.onLost(network);
+                ToastUtils.showShort("当前无网络连接");
+                AppApplication.hasNetWork = false;
             }
         });
     }
@@ -200,6 +232,7 @@ public class MusicService extends Service {
         audioManager.abandonAudioFocus(audioFocusChangeListener);//释放焦点
 
         screenListener.unregisterListener();
+        connectivityManager.unregisterNetworkCallback(new ConnectivityManager.NetworkCallback());
     }
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -286,6 +319,11 @@ public class MusicService extends Service {
         @Override
         public int getDuration() {
             return MusicService.this.getDuration();
+        }
+
+        @Override
+        public void sendChatGPTEntity(ChatGPTEntity chatGPTEntity) {
+            MusicService.this.sendChatGPTEntity(chatGPTEntity);
         }
 
     }
@@ -451,7 +489,7 @@ public class MusicService extends Service {
                     //通知变化
                     if(AppApplication.isOldPlaying != isPlay){
                         AppApplication.isOldPlaying = isPlay;
-                        NotificationUtils.sendMusicNotification(getApplicationContext(),null,null,null);
+                        NotificationUtils.sendMusicNotification(null,null,null);
                     }
                 }
             }//开始计时任务后的200毫秒后第一次执行run方法，以后每500毫秒执行一次
@@ -491,7 +529,7 @@ public class MusicService extends Service {
             entity.setSongImage(songImage);
             entity.setLyrics(lyrics);
             entity.setYearIssue(yearIssue);
-            AppApplication.daoSession.insert(entity);
+            MusicUtils.insertOrReplacePlayingMusicEntity(entity);
             List<PlayingMusicEntity> list = MusicUtils.getPlayingMusicEntityList();
             SPUtils.getInstance().put(SPUtilsConfig.PLAYING_NUM,list.size() - 1);
         }else{
@@ -503,7 +541,7 @@ public class MusicService extends Service {
         entity.setIsPlay(isPlaying());
         RxBus.getDefault().post(entity);
 
-        NotificationUtils.sendMusicNotification(getApplicationContext(),songName,singer,null);
+        NotificationUtils.sendMusicNotification(songName,singer,null);
     }
 
     //获取播放状态
@@ -545,12 +583,75 @@ public class MusicService extends Service {
         String s;
         int intS = time % 60;
         int intM = time / 60;
-        if(intM >= 10 && intM < 60)
+        if(intM >= 10 && intM < 60) {
             m = String.valueOf(intM);
-        else m = "0" + intM;
-        if(intS <10) s = "0" + intS;
-        else s = String.valueOf(intS);
+        } else {
+            m = "0" + intM;
+        }
+        if(intS <10) {
+            s = "0" + intS;
+        } else {
+            s = String.valueOf(intS);
+        }
         return m + ":" + s;
+    }
+
+    /**
+     * 发送chatgpt聊天
+     * @param chatGPTEntity
+     */
+    public void sendChatGPTEntity(ChatGPTEntity chatGPTEntity){
+        List<ChatGPTRequest.Messages> messagesList = new ArrayList<>();
+        List<ChatGPTEntity> historyList = ChatGPTUtils.getChatGPTEntityForChatForm(chatGPTEntity.getChatForm());
+        //添加发送数据,空窗口时新增窗口id
+        historyList.add(chatGPTEntity);
+        long chatForm = ChatGPTUtils.addChatGPTEntity(chatGPTEntity);
+        AppApplication.chatGPTRead.put(chatForm,false);
+
+        for(int i = 0;i < historyList.size();i++){
+            ChatGPTEntity gptEntity = historyList.get(i);
+            ChatGPTRequest.Messages messages = new ChatGPTRequest.Messages();
+            messages.setContent(gptEntity.getContent());
+            messages.setRole(gptEntity.getRole());
+            if(!"error".contains(messages.getRole())){
+                messagesList.add(messages);
+            }
+        }
+
+        RequestMethod.requestApi(integer -> {
+            ChatGPTRequest request = new ChatGPTRequest();
+            request.setModel("gpt-3.5-turbo");
+            request.setMessages(messagesList);
+            return demoApiService.chatGPTV1ChatCompletions(request);
+        },new NetCallback<BaseBean>(){
+            @Override
+            public void onSuccess(BaseBean result) {
+                ChatGPTResponse chatGPTResponse = result.getResultBean(ChatGPTResponse.class);
+                String content = chatGPTResponse.getChoices().get(0).getMessage().getContent();
+                if(content.length() > 2 && "\n\n".equals(content.substring(0,2))){
+                    content = content.substring(2);
+                }
+                ChatGPTEntity entity = new ChatGPTEntity();
+                entity.setContent(content);
+                entity.setRole(chatGPTResponse.getChoices().get(0).getMessage().getRole());
+                entity.setChatForm(chatForm);
+                ChatGPTUtils.addChatGPTEntity(entity);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                ChatGPTEntity entity = new ChatGPTEntity();
+                entity.setContent(msg);
+                entity.setRole("error");
+                entity.setChatForm(chatForm);
+                ChatGPTUtils.addChatGPTEntity(entity);
+            }
+
+            @Override
+            public void onFinish() {
+                AppApplication.chatGPTRead.put(chatForm,true);
+            }
+        });
     }
 
     public interface MusicInterface{
@@ -563,5 +664,8 @@ public class MusicService extends Service {
         boolean isPlaying();
         int getCurrentPosition();
         int getDuration();
+
+        void sendChatGPTEntity(ChatGPTEntity chatGPTEntity);
     }
+
 }

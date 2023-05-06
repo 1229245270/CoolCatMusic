@@ -84,11 +84,11 @@ public class NavigationThemeFragment extends BaseFragment<FragmentNavigationThem
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if(daoFont != null){
-                            SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT_PATH,daoFont.getLocalFile());
-                            SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT_ID,daoFont.getId());
+                            SPUtils.getInstance().put(SPUtilsConfig.THEME_TEXT_FONT_PATH,daoFont.getLocalFile());
+                            SPUtils.getInstance().put(SPUtilsConfig.THEME_TEXT_FONT_ID,daoFont.getId());
                         }else if(font.getId().equals(-2L)){
-                            SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT_PATH,"");
-                            SPUtils.getInstance().put(SPUtilsConfig.Theme_TEXT_FONT_ID,-2L);
+                            SPUtils.getInstance().put(SPUtilsConfig.THEME_TEXT_FONT_PATH,"");
+                            SPUtils.getInstance().put(SPUtilsConfig.THEME_TEXT_FONT_ID,-2L);
                         }
 
                         new Handler().postDelayed(new Runnable() {

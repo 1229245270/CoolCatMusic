@@ -8,225 +8,190 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include
             layout="@layout/layout_toolbar"
             app:toolbarViewModel="@{viewModel.toolbarViewModel}"/>
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie"
-            app:lottie_rawRes="@raw/scan"
-            app:lottie_loop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_200"/>
-        <LinearLayout
-            isVisible="@{!viewModel.isScan}"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:textSize="16sp"
-                android:layout_marginBottom="@dimen/dp_40"
-                android:textColor="@color/black_text"
-                android:text="一键扫描(破解)手机内的歌曲文件"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                onClickCommand="@{viewModel.startScan}"
-                android:textSize="16sp"
-                android:textColor="@color/white"
-                android:background="@drawable/scanning_button_select"
-                android:text="开始扫描"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/dp_20"
-                android:paddingLeft="@dimen/dp_40"
-                android:paddingRight="@dimen/dp_40"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_30"/>
-            <TextView
-                android:textSize="12sp"
-                android:textColor="@color/mainBg"
-                android:text="本地存在加密歌曲？试试在线破解功能"
-                android:layout_marginBottom="@dimen/dp_40"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
             <LinearLayout
-                android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie"
+                    app:lottie_rawRes="@raw/scan"
+                    app:lottie_loop="true"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_140"/>
                 <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/ll_search"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ll_search_configure"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:textSize="16sp"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:textColor="@color/black_text"
+                            android:text="一键扫描手机内的歌曲文件"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            onClickCommand="@{viewModel.startScan}"
+                            android:textSize="16sp"
+                            android:textColor="@color/white"
+                            android:background="@drawable/scanning_button_select"
+                            android:text="开始扫描"
+                            android:gravity="center"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:paddingLeft="@dimen/dp_40"
+                            android:paddingRight="@dimen/dp_40"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_30"/>
+                        <TextView
+                            android:textSize="12sp"
+                            android:textColor="@color/mainBg"
+                            android:text="本地存在加密歌曲？试试在线破解功能"
+                            android:layout_marginBottom="@dimen/dp_40"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_min_duration"
+                                android:gravity="center"
+                                android:textColor="@color/black_text"
+                                android:text="@{viewModel.minDurationText}"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                            <SeekBar
+                                android:id="@+id/seekBarDuration"
+                                android:max="10"
+                                android:progress="@{viewModel.minDuration / 10}"
+                                style="@style/BaseSeekbarStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dp_60"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_min_size"
+                                android:gravity="center"
+                                android:textColor="@color/black_text"
+                                android:text="@{viewModel.minSizeText}"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                            <SeekBar
+                                android:id="@+id/seekBarSize"
+                                android:max="10"
+                                android:progress="@{viewModel.minSize / 100}"
+                                style="@style/BaseSeekbarStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dp_60"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_scanning"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
                     <TextView
-                        android:text="开启加密破解"
                         android:textSize="16sp"
+                        android:layout_marginBottom="@dimen/dp_20"
                         android:textColor="@color/black_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_30"/>
-                    <TextView
-                        android:textSize="12sp"
-                        android:textColor="@color/gray_text"
-                        android:text="寻找本地加密歌曲进行在线破解，过程中将消耗流量"
+                        android:text="扫描中"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
-                <androidx.appcompat.widget.SwitchCompat
-                    android:checked="@{viewModel.unlockSwitch}"
-                    android:theme="@style/ScanningSwitchStyle"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <LinearLayout
+                    android:id="@+id/ll_download"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dp_20"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:textColor="@color/black_text"
-                        android:text="不扫描60秒以下的音频文件"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_30"/>
-                    <TextView
-                        android:textSize="12sp"
-                        android:textColor="@color/gray_text"
-                        android:text="可以过滤掉音频时长小于60秒的音频文件"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="@dimen/dp_20"
+                        android:text="@{viewModel.scanResultText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-                </LinearLayout>
-                <androidx.appcompat.widget.SwitchCompat
-                    android:checked="@{viewModel.timeSwitch}"
-                    android:theme="@style/ScanningSwitchStyle"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:textColor="@color/black_text"
-                        android:text="不扫描100K以下的音频文件"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_30"/>
-                    <TextView
-                        android:textSize="12sp"
-                        android:textColor="@color/gray_text"
-                        android:text="可以过滤掉音频大小小于100KM的音频文件"
+                    <com.hzc.coolcatmusic.ui.costom.DownloadSeekBar
+                        android:id="@+id/downloadSeekBar"
+                        android:layout_marginBottom="@dimen/dp_20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycle_view"
+                        app:itemBinding="@{viewModel.itemBind}"
+                        items="@{viewModel.list}"
+                        adapter="@{viewModel.adapter}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
                 </LinearLayout>
-                <androidx.appcompat.widget.SwitchCompat
-                    android:checked="@{viewModel.sizeSwitch}"
-                    android:theme="@style/ScanningSwitchStyle"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_downloaded"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dp_20"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="@dimen/dp_20"
+                        android:text="@{viewModel.scanResultText}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        onClickCommand="@{viewModel.finish}"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/scanning_button_select"
+                        android:text="确定"
+                        android:gravity="center"
+                        android:layout_marginBottom="@dimen/dp_20"
+                        android:paddingLeft="@dimen/dp_40"
+                        android:paddingRight="@dimen/dp_40"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_30"/>
+
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            isVisible="@{viewModel.isScan}"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycleView"
-                app:itemBinding="@{viewModel.itemBind}"
-                items="@{viewModel.list}"
-                adapter="@{viewModel.adapter}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="0dp"/>
-
-            <LinearLayout
-                android:layout_marginBottom="@dimen/dp_20"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/black_text"
-                    android:text="扫描到"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/mainBg"
-                    android:text="@{viewModel.scanText}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/black_text"
-                    android:text="首歌曲"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:text="@{viewModel.unlockText}"
-                    android:textColor="@color/mainBg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/black_text"
-                    android:text="首加密歌曲，"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:text="@{viewModel.unlockSuccessText}"
-                    android:textColor="@color/mainBg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/black_text"
-                    android:text="首解密成功，"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:text="@{viewModel.unlockFailText}"
-                    android:textColor="@color/red"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/black_text"
-                    android:text="首解密失败"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </LinearLayout>
-
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </layout>

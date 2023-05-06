@@ -8,10 +8,11 @@
             type="com.hzc.coolcatmusic.base.viewmodel.ToolbarViewModel" />
     </data>
 
+    <!--android:paddingTop="@dimen/status_bar_height"-->
     <LinearLayout
         android:id="@+id/ll_main"
         android:background="@{toolbarViewModel.mainColor}"
-        android:paddingTop="@dimen/status_bar_height"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

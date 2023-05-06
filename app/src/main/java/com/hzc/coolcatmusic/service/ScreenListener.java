@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.PowerManager;
 
+/**
+ * @author 12292
+ * 屏幕监听
+ */
 public class ScreenListener {
 
     private Context mContext;
@@ -21,11 +25,10 @@ public class ScreenListener {
      * screen状态广播接收者
      */
     private class ScreenBroadcastReceiver extends BroadcastReceiver {
-        private String action = null;
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            action = intent.getAction();
+            String action = intent.getAction();
             if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
                 mScreenStateListener.onScreenOn();
             } else if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
