@@ -191,19 +191,14 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
 
     public void loadLocalSong(Activity activity){
 
-        model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
+        model.requestApi(LocalUtils.getDefaultLocalMusicObservable(activity), new DemoRepository.RequestCallback<List<LocalSongEntity>>() {
             @Override
-            public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
-                return LocalUtils.getDefaultLocalMusicObservable(activity);
-            }
-        }, new Observer<List<LocalSongEntity>>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                //showDialog();
+            public void onBefore() {
+
             }
 
             @Override
-            public void onNext(@NonNull List<LocalSongEntity> list) {
+            public void onSuccess(List<LocalSongEntity> localSongEntities) {
                 //还原当前正在播放的歌曲
                 LocalSongEntity localSongEntity = null;
                 for(int i = 0;i < localSongList.size();i++){
@@ -212,27 +207,30 @@ public class LocalMusicViewModel extends ToolbarViewModel<DemoRepository> {
                         break;
                     }
                 }
+
                 if(localSongEntity != null){
-                    for(int i = 0;i < list.size();i++){
-                        if(((LocalSongEntity) list.get(i)).getPath().equals(localSongEntity.getPath())){
-                            list.set(i,localSongEntity);
+                    for(int i = 0;i < localSongEntities.size();i++){
+                        if((localSongEntities.get(i)).getPath().equals(localSongEntity.getPath())){
+                            localSongEntities.set(i,localSongEntity);
                             break;
                         }
                     }
                 }
                 localSongList.clear();
-                localSongList.addAll(list);
-                localSongList.add("共" + list.size() + "首");
+                localSongList.addAll(localSongEntities);
+                localSongList.add("共" + localSongEntities.size() + "首");
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
             @Override
             public void onComplete() {
+
             }
         });
+
     }
 }

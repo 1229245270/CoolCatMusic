@@ -57,7 +57,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import cn.jpush.android.service.JCommonService;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -271,7 +270,7 @@ public class MusicService extends Service {
                     break;
             }
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
     }
 
     class MyMusicBinder extends Binder implements MusicInterface{

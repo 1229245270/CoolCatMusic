@@ -42,30 +42,30 @@ public class HomeFragment2ViewModel extends BaseViewModel<DemoRepository> {
     public OnItemBind<LookEntity> lookBind = new OnItemBind<LookEntity>() {
         @Override
         public void onItemBind(@NonNull ItemBinding itemBinding, int position, LookEntity item) {
-            itemBinding.set(BR.item, R.layout.item_look);
+            itemBinding.set(BR.item, R.layout.item_look_video);
 
         }
     };
 
     public void requestVideoData(){
-        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+        model.requestApi(model.settingFont(), new DemoRepository.RequestCallback<BaseBean>() {
             @Override
-            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
-                return model.settingFont();
-            }
-        },new NetCallback<BaseBean>(){
-            @Override
-            public void onSuccess(BaseBean result) {
+            public void onBefore() {
 
             }
 
             @Override
-            public void onFailure(String msg) {
+            public void onSuccess(BaseBean baseBean) {
 
             }
 
             @Override
-            public void onFinish() {
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });

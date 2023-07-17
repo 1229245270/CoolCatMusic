@@ -61,7 +61,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
+            //shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -126,16 +127,21 @@ dependencies {
     //弹出菜单
     implementation 'com.nightonke:boommenu:2.1.1'
     //ViewPager2
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     //悬浮窗
     implementation 'com.github.princekin-f:EasyFloat:2.0.4'
     //数据库
     implementation 'org.greenrobot:greendao:3.3.0'
     //播放器
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.3-release-jitpack'
+
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.3.3-release-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:v8.3.3-release-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv5:v8.3.3-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:v8.3.3-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:v8.3.3-release-jitpack'
+    //是否需要ExoPlayer模式
+    //implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.3-release-jitpack'
     //implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.1.6-jitpack'
     //动画
     implementation 'com.airbnb.android:lottie:5.0.3'
@@ -148,7 +154,7 @@ dependencies {
     //权限判断
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
 
-    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
+    /*implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
     implementation 'cn.jiguang.sdk:jpush:4.0.0'  // 此处以JPush 4.0.0 版本为例
     // 接入华为厂商
     implementation 'com.huawei.hms:push:5.0.2.300'
@@ -163,7 +169,7 @@ dependencies {
     // 接入 OPPO 厂商
     implementation 'cn.jiguang.sdk.plugin:oppo:4.0.0'
     // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'*/
 
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation 'io.reactivex.rxjava3:rxjava:3.1.5'

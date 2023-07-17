@@ -119,16 +119,15 @@ public class NavigationThemeViewModel extends BaseViewModel<DemoRepository> {
     }
 
     public void settingFont(){
-        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+        model.requestApi(model.settingFont(), new DemoRepository.RequestCallback<BaseBean>() {
             @Override
-            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
-                return model.settingFont();
+            public void onBefore() {
+
             }
-        },new NetCallback<BaseBean>(){
 
             @Override
-            public void onSuccess(BaseBean result) {
-                List<Font> fonts = result.getResultList(new TypeToken<List<Font>>(){});
+            public void onSuccess(BaseBean baseBean) {
+                List<Font> fonts = baseBean.getResultList(new TypeToken<List<Font>>(){});
                 Font font = new Font(-2L,"默认","","","");
                 fontObservableList.add(font);
                 fontObservableList.addAll(fonts);
@@ -145,16 +144,15 @@ public class NavigationThemeViewModel extends BaseViewModel<DemoRepository> {
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
 
             }
 
             @Override
-            public void onFailure(String msg) {
-
-            }
-
-            @Override
-            public void onFinish() {
+            public void onComplete() {
 
             }
         });

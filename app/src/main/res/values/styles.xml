@@ -1,22 +1,28 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--将ActionBar隐藏,这里使用ToolBar-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <!--<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        &lt;!&ndash;将ActionBar隐藏,这里使用ToolBar&ndash;&gt;
         <item name="windowActionBar">false</item>
-        <!-- 使用 API Level 22以上编译的话，要拿掉前綴字 -->
+        &lt;!&ndash; 使用 API Level 22以上编译的话，要拿掉前綴字 &ndash;&gt;
         <item name="windowNoTitle">true</item>
-        <!--colorPrimary 对应ToolBar的颜色-->
+        &lt;!&ndash;colorPrimary 对应ToolBar的颜色&ndash;&gt;
         <item name="colorPrimary">@color/colorPrimary</item>
-        <!--colorPrimaryDark对应状态栏的颜色-->
+        &lt;!&ndash;colorPrimaryDark对应状态栏的颜色&ndash;&gt;
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!--colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色。-->
+        &lt;!&ndash;colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色。&ndash;&gt;
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:typeface">monospace</item>
-        <!-- enable window content transitions -->
-        <!--<item name="android:windowActivityTransitions">true</item>-->
+        &lt;!&ndash; enable window content transitions &ndash;&gt;
+        &lt;!&ndash;<item name="android:windowActivityTransitions">true</item>&ndash;&gt;
+    </style>-->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
+
+
+
 
     <style name="ViewLineStyle">
         <item name="android:layout_width">match_parent</item>
@@ -61,5 +67,14 @@
         <item name="android:colorForeground">@color/mainBg</item>
     </style>
 
+    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
 
 </resources>

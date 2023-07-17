@@ -307,18 +307,14 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
 
     public void startScan(){
         viewStatus.setValue(ViewStatus.SEARCHING);
-        model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
+        model.requestApi(LocalUtils.getLocalMusicObservable(getApplication(), minDuration, minSize), new DemoRepository.RequestCallback<List<LocalSongEntity>>() {
             @Override
-            public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
-                return LocalUtils.getLocalMusicObservable(getApplication(), minDuration, minSize);
-            }
-        }, new Observer<List<LocalSongEntity>>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
+            public void onBefore() {
+
             }
 
             @Override
-            public void onNext(@NonNull List<LocalSongEntity> localSongEntities) {
+            public void onSuccess(List<LocalSongEntity> localSongEntities) {
                 int lockSize = 0;
                 int totalSize = 0;
                 List<ExpandedTabEntity<Object>> expandedTabEntities;
@@ -368,7 +364,7 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
@@ -391,29 +387,29 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
             File file = new File(unlockSong);
             files.add(file);
         }
-        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+        model.requestApi(model.songUnlockWindow64Multiple(files, "zhangsan"), new DemoRepository.RequestCallback<BaseBean>() {
             @Override
-            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
-                return model.songUnlockWindow64Multiple(files,"zhangsan");
+            public void onBefore() {
+
             }
-        },new NetCallback<BaseBean>(){
 
             @Override
-            public void onSuccess(BaseBean result) {
-                List<String> list = result.getResultList(new TypeToken<List<String>>(){});
+            public void onSuccess(BaseBean baseBean) {
+                List<String> list = baseBean.getResultList(new TypeToken<List<String>>(){});
                 downloadFileEvent.setValue(list);
                 downloadStatus.setValue(DownloadStatus.UNLOCK_SUCCESS);
             }
 
             @Override
-            public void onFailure(String msg) {
-                ToastUtils.showShort(msg);
+            public void onError(Throwable e) {
+                ToastUtils.showShort(e.getMessage());
                 downloadStatus.setValue(DownloadStatus.UNLOCK_FAIL);
                 viewStatus.setValue(ViewStatus.DOWNLOAD_FAIL);
             }
 
             @Override
-            public void onFinish() {
+            public void onComplete() {
+
             }
         });
     }

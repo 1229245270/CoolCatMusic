@@ -4,6 +4,8 @@ import com.hzc.coolcatmusic.data.source.HttpDataSource;
 import com.hzc.coolcatmusic.data.source.LocalDataSource;
 import com.hzc.coolcatmusic.entity.ChatGPTRequest;
 import com.hzc.coolcatmusic.entity.DemoEntity;
+import com.hzc.coolcatmusic.entity.LocalSongEntity;
+import com.hzc.coolcatmusic.utils.LocalUtils;
 import com.hzc.public_method.RequestMethod;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import me.goldze.mvvmhabit.base.BaseBean;
@@ -50,10 +53,60 @@ public class DemoRepository extends BaseModel implements HttpDataSource, LocalDa
         return INSTANCE;
     }
 
-    public <T> void requestApi(Function<Integer, ObservableSource<T>> function, Observer<T> observer){
+    public <T> void requestApi(Observable<T> observable, RequestCallback<T> requestCallback){
+        Function<Integer, ObservableSource<T>> function = new Function<Integer, ObservableSource<T>>() {
+            @Override
+            public ObservableSource<T> apply(@NonNull Integer integer) throws Exception {
+                return observable;
+            }
+        };
+        Observer<T> observer = new Observer<T>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                requestCallback.onBefore();
+            }
+
+            @Override
+            public void onNext(T t) {
+                requestCallback.onSuccess(t);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                requestCallback.onError(e);
+            }
+
+            @Override
+            public void onComplete() {
+                requestCallback.onComplete();
+            }
+        };
         RequestMethod.requestApi(function,observer);
     }
 
+    public interface RequestCallback<T>{
+        /**
+         * 请求之前
+         */
+        void onBefore();
+
+        /**
+         * 请求成功
+         * @param t 返回值
+         */
+        void onSuccess(T t);
+
+        /**
+         * 请求失败
+         * @param e 错误值
+         */
+        void onError(Throwable e);
+
+        /**
+         * 请求完成
+         */
+        void onComplete();
+    }
 
     @VisibleForTesting
     public static void destroyInstance() {

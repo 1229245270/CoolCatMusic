@@ -49,12 +49,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:exported="true" android:name="com.hzc.coolcatmusic.ui.login.LoginActivity"/>
-        <activity android:exported="true" android:name="com.hzc.coolcatmusic.ui.detail.DetailActivity"/>
-        <activity android:exported="true" android:name=".ui.generallibrary.MultiLevelActivity"/>
-        <activity android:name=".ui.generallibrary.PhotoActivity"/>
+        <activity android:exported="false" android:name="com.hzc.coolcatmusic.ui.login.LoginActivity"/>
+        <activity android:exported="false" android:name="com.hzc.coolcatmusic.ui.detail.DetailActivity"/>
+        <activity android:exported="false" android:name=".ui.generallibrary.MultiLevelActivity"/>
+        <activity android:exported="false" android:name=".ui.generallibrary.PhotoActivity"/>
         <activity
-            android:exported="true"
+            android:exported="false"
             android:name=".ui.chatgpt.ChatGPTActivity"/>
             <!--android:allowEmbedded="true"
             android:resizeableActivity="true"
@@ -68,21 +68,14 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>-->
-        <activity android:exported="true" android:name=".ui.chatgpt.ChatGPTFormActivity" />
+        <activity android:exported="false" android:name=".ui.chatgpt.ChatGPTFormActivity" />
+
+        <activity android:exported="false" android:name=".ui.main.look.LookVideoActivity"/>
 
         <!-- Since JCore2.0.0 Required SDK核心功能-->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
-        <service android:exported="true"  android:name=".service.MusicService"/>
-        <!--<service
-            android:name="com.hzc.coolcatmusic.service.PushMessageService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":pushcore">
-            <intent-filter>
-                <action android:name="cn.jiguang.user.service.action"/>
-            </intent-filter>
-        </service>-->
+        <service android:exported="false"  android:name=".service.MusicService"/>
 
 
         <!-- Required since 3.0.7 -->

@@ -93,6 +93,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+
         //点击音乐条,禁止侧滑
         if(isOpenProgress){
             return super.dispatchTouchEvent(ev);
@@ -104,21 +105,13 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             case MotionEvent.ACTION_DOWN:
                 eventEat = 0;
                 moveY = 0;
-                HomeFragment.getInstance().mainViewPager.requestDisallowInterceptTouchEvent(true);
+                //HomeFragment.getInstance().mainViewPager.requestDisallowInterceptTouchEvent(true);
                 startX = ev.getX();
                 startY = ev.getY();
                 isBack = false;
                 beforeTime = System.currentTimeMillis();
                 comeWidth = 0;
-                int count = mainFrameLayout.getChildCount();
-                if(count >= 2){
-                    showView = mainFrameLayout.getChildAt(count - 1);
-                    hideView = mainFrameLayout.getChildAt(count - 2);
-
-                }else{
-                    showView = null;
-                    hideView = null;
-                }
+                homeFragment.mainViewPager.requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 //来到新的坐标
@@ -135,90 +128,22 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
                     if(currentItem == 0){
                         //大于为右滑
                         if(distanceX > 0){
-                            //右滑时，取消viewpager触摸，防止抢夺drawerLayout事件,当竖直方向累计偏移量大于100时，只允许竖直滑动
-                            /*KLog.d("moveY " + moveY);
-                            if(moveY > 100){
-                                //设置父容器activity不会拦截事件，事件停留拦截到fragment,
-                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                            }else{
-                                //设置父容器activity会拦截事件，事件停留拦截到fragment,执行滑动drawerLayout
-                                homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-                            }*/
-                            //当前fragment不需要该触发view事件
-                            //homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+
                         }else if(distanceX < 0){
-                            //添加viewpager触摸
+                            //根据业务逻辑判断是否需要禁止父 ViewGroup 拦截事件,禁止了drawerLayout侧滑事件
                             homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                         }
                     }else{
                         homeFragment.mainViewPager.getParent().requestDisallowInterceptTouchEvent(true);
                     }
                 }
-                //子页
-                else{
-                    //return true;
-                    /*if(eventEat == 0){
-                        if(Math.abs(distanceX) > 100){
-                            eventEat = 1;
-                        }else if(Math.abs(distanceY) > 100){
-                            eventEat = 2;
-                        }
-                    }
-                    //水平方向滑动
-                    if(eventEat == 1){
-                        //右滑
-                        if(distanceX > 0){
-                            if(showView != null && hideView != null){
-                                showView.setTranslationX(distanceX);
-                                long lastTime = System.currentTimeMillis();
-                                if(lastTime - beforeTime > 100){
-                                    beforeTime = lastTime;
-                                    //每毫秒变化宽度
-                                    float moveWidth = distanceX - comeWidth;
-                                    comeWidth = distanceX;
-                                    if(moveWidth > 100){
-                                        isBack = true;
-                                    }else{
-                                        isBack = false;
-                                    }
-                                }
-                                if(distanceX > showView.getMeasuredWidth() * 1.0 / 2){
-                                    isBack = true;
-                                }
-                            }
-                        }
-                    //竖直方向滑动
-                    }else if(eventEat == 2){
-                    }*/
-                }
                 break;
             case MotionEvent.ACTION_UP:
-                /*if(isBack){
-                    onBackPressed();
-                }else{
-                    if(showView != null && hideView != null){
-                        showView.setTranslationX(0);
-                    }
-                }
-                break;*/
             default:
                 break;
         }
-        /*FragmentManager manager = getSupportFragmentManager();
-        //拦截水平方向事件
-        if((eventEat == 1) && manager.getBackStackEntryCount() > 0){
-            //移除链表路径,使触摸事件只执行到外层
-            if(showView != null){
-                ev.setAction(MotionEvent.ACTION_CANCEL);
-                showView.dispatchTouchEvent(ev);
-            }
-        }*/
-
-        //KLog.d("dispatchTouchEvent " + super.dispatchTouchEvent(ev));
         return super.dispatchTouchEvent(ev);
     }
-
-
 
     @Override
     public int initContentView(Bundle savedInstanceState) {
@@ -255,7 +180,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
 
     @Override
     public void onBackPressed() {
-        if(!HomeFragment.getInstance().isHidden() && System.currentTimeMillis() - exitTime > 2000){
+        FragmentManager manager = getSupportFragmentManager();
+        if(manager.getBackStackEntryCount() <= 0 && System.currentTimeMillis() - exitTime > 2000){
             Toast.makeText(this,"再按一次返回",Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         }else{
@@ -290,7 +216,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         showFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         //动画需要设置在最前面
-        //fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0,R.anim.fragment_pop_enter,R.anim.fragment_pop_exit);
+        //fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0,R.anim.fragment_pop_enter,0);
         fragmentTransaction.setCustomAnimations(R.anim.fragment_enter,0);
 
         if(!showFragment.isAdded()){
@@ -298,7 +224,7 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
         }
         for(Fragment fragment : manager.getFragments()){
             if(!fragment.isHidden()){
-                fragmentTransaction.hide(fragment);
+                //fragmentTransaction.hide(fragment);
             }
         }
 
@@ -409,8 +335,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getRealSize(point);
             //End 获取手机屏幕
-
-            //KLog.d("point: "+point.x);//依然可以打印一下看看值是多少
+            //isOpen:true,point: 1080,edgeSize:55
+            KLog.d("isOpen:" + isOpen + ",point: " + point.x + ",edgeSize:" + edgeSize);//依然可以打印一下看看值是多少
             edgeSizeField.setInt(vdh, Math.max(isOpen ? edgeSize : 0,isOpen ? point.x : 0));//这里设置mEdgeSize的值！！！，Math.max函数取得是最大值，也可以自己指定想要触发的范围值，如: 500,注意单位是px
             //写到这里已经实现了，但是你会发现，如果长按触发范围，侧边栏也会弹出来，而且速度不太同步，稳定
 
@@ -430,9 +356,8 @@ public class HomeActivity extends BaseActivity<ActivityHomeBinding,HomeViewModel
             };
             peekRunnableField.set(vdhCallback, nullRunnable);//给mPeekRunnable字段置空
             //End 解决长按触发侧边栏
-
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            KLog.e(e);
         }
     }
 

@@ -17,6 +17,7 @@ import com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity;
 import com.hzc.coolcatmusic.entity.LocalSongEntity;
 import com.hzc.coolcatmusic.entity.PlayingMusicEntity;
 import com.hzc.coolcatmusic.ui.adapter.ExpandedTabAdapter;
+import com.hzc.coolcatmusic.ui.homefragment1.LocalMusicFragment;
 import com.hzc.coolcatmusic.ui.listener.OnItemClickListener;
 import com.hzc.coolcatmusic.utils.LocalUtils;
 
@@ -105,10 +106,14 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
     public OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position,Object entity) {
-            if(entity instanceof HomeFragment1ItemEntity){
-                openCeShiActivity.setValue(true);
-                //startFragment(new LocalMusicFragment(),null);
+            if(position == 0){
+                startFragment(new LocalMusicFragment(),null);
+            }else if(position == 2){
+                startFragment(new LocalMusicFragment(),null);
             }
+            /*if(entity instanceof HomeFragment1ItemEntity){
+                startFragment(new LocalMusicFragment(),null);
+            }*/
         }
     };
 
@@ -147,55 +152,50 @@ public class HomeFragment1ViewModel extends HomeViewModel<DemoRepository> {
     };
 
     public void loadLocalSongTop3(){
-        model.requestApi(new Function<Integer, ObservableSource<List<LocalSongEntity>>>() {
+        model.requestApi(LocalUtils.getDefaultLocalMusicObservable(getApplication(), 3), new DemoRepository.RequestCallback<List<LocalSongEntity>>() {
             @Override
-            public ObservableSource<List<LocalSongEntity>> apply(@NonNull Integer integer) throws Exception {
-                return LocalUtils.getDefaultLocalMusicObservable(getApplication(),3);
-            }
-        }, new Observer<List<LocalSongEntity>>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                //showDialog();
+            public void onBefore() {
+
             }
 
             @Override
-            public void onNext(@NonNull List<LocalSongEntity> list) {
-                List<Object> objectList = new ArrayList<>(list);
+            public void onSuccess(List<LocalSongEntity> localSongEntities) {
+                List<Object> objectList = new ArrayList<>(localSongEntities);
                 expandedTabEntityList.get(0).setList(objectList);
                 expandedTabAdapter.notifyItemChanged(0);
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
             @Override
             public void onComplete() {
+
             }
         });
     }
 
     public void loadSong(){
-
-        model.requestApi(new Function<Integer, ObservableSource<BaseBean>>() {
+        model.requestApi(model.settingFont(), new DemoRepository.RequestCallback<BaseBean>() {
             @Override
-            public ObservableSource<BaseBean> apply(@NonNull Integer integer) throws Exception {
-                return model.settingFont();
-            }
-        },new NetCallback<BaseBean>(){
-            @Override
-            public void onSuccess(BaseBean result) {
+            public void onBefore() {
 
             }
 
             @Override
-            public void onFailure(String msg) {
+            public void onSuccess(BaseBean baseBean) {
 
             }
 
             @Override
-            public void onFinish() {
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });

@@ -1,17 +1,24 @@
 package com.hzc.coolcatmusic.ui.main;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hzc.coolcatmusic.R;
 import com.hzc.coolcatmusic.databinding.FragmentHome2Binding;
 import com.hzc.coolcatmusic.BR;
 import com.hzc.coolcatmusic.app.AppViewModelFactory;
 import com.hzc.coolcatmusic.entity.LookEntity;
+import com.hzc.coolcatmusic.ui.main.look.LookVideoActivity;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import me.goldze.mvvmhabit.base.BaseFragment;
 
@@ -44,13 +51,47 @@ public class HomeFragment2 extends BaseFragment<FragmentHome2Binding,HomeFragmen
 
         for (int i = 0; i < 19; i++) {
             LookEntity lookEntity = new LookEntity();
-            lookEntity.setTitleImage("https://fanyi-cdn.cdn.bcebos.com/static/translation/img/header/logo_e835568.png");
+            lookEntity.setTitleImage("");
             lookEntity.setTitleText("title");
-            lookEntity.setAuthorImage("https://profile.csdnimg.cn/6/E/0/0_weixin_44360546");
+            lookEntity.setAuthorImage("");
             lookEntity.setAuthorName("authorName");
             lookEntity.setLookTimes("1");
             viewModel.lookEntities.add(lookEntity);
         }
+
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recycleView.getLayoutManager();
+
+        binding.recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            int firstVisibleItem,lastVisibleItem;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(layoutManager == null){
+                    return;
+                }
+                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                if(GSYVideoManager.instance().getPlayPosition() >= 0){
+                    //当前播放的位置
+                    int position = GSYVideoManager.instance().getPlayPosition();
+                    //对应的播放列表TAG
+                    if(position < firstVisibleItem || position > lastVisibleItem){
+                        /*if(!GSYVideoManager.isFullState(LookVideoActivity.this)){
+
+                        }*/
+                        GSYVideoManager.releaseAllVideos();
+                        viewModel.lookAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 
     private void setVideo(){

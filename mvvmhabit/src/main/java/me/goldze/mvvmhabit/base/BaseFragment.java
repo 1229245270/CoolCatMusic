@@ -87,6 +87,7 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
         return touchLinearLayout;
     }
 
+    private final int variationValue = 300;
 
     public void onTouchClose(View view){
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -109,9 +110,9 @@ public abstract class BaseFragment<V extends ViewDataBinding, VM extends BaseVie
                         float distanceX = endX - startX;
                         float distanceY = endY - startY;
                         if(eventEat == 0){
-                            if(Math.abs(distanceX) > 100){
+                            if(Math.abs(distanceX) > variationValue){
                                 eventEat = 1;
-                            }else if(Math.abs(distanceY) > 100){
+                            }else if(Math.abs(distanceY) > variationValue){
                                 eventEat = 2;
                             }
                         }

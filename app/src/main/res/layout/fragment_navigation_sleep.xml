@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="com.hzc.coolcatmusic.ui.main.NavigationSleepViewModel"/>
         <variable
@@ -33,5 +34,59 @@
                 android:layout_height="wrap_content"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleButton"
+                    android:gravity="center"
+                    app:singleSelection="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.button.MaterialButton
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/btScreenOff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="息屏睡眠" />
+                    <com.google.android.material.button.MaterialButton
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/btTiming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="定时睡眠" />
+                    <com.google.android.material.button.MaterialButton
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/btOneTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="一次睡眠" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/slScreenOff"
+                        android:valueFrom="0"
+                        android:stepSize="1"
+                        android:valueTo="10"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </layout>

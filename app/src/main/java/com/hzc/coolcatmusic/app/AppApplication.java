@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.jpush.android.api.JPushInterface;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -108,8 +107,8 @@ public class AppApplication extends BaseApplication {
     }
 
     private void initPushMessage(){
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+        //JPushInterface.setDebugMode(true);
+        //JPushInterface.init(this);
     }
 
     private File findSDCardRoot(File externalFilesDir) {

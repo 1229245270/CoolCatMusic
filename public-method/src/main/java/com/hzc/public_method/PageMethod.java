@@ -44,6 +44,8 @@ public class PageMethod {
 
                 }
             });
+        }else {
+            backCallback.onBack();
         }
     }
 

@@ -9,6 +9,7 @@ import com.hzc.coolcatmusic.ui.chatgpt.ChatGPTFormActivityViewModel;
 import com.hzc.coolcatmusic.ui.detail.DetailViewModel;
 import com.hzc.coolcatmusic.ui.generallibrary.PhotoViewModel;
 import com.hzc.coolcatmusic.ui.homefragment1.LocalMusicViewModel;
+import com.hzc.coolcatmusic.ui.homefragment1.RankingViewModel;
 import com.hzc.coolcatmusic.ui.homefragment1.ScanningMusicViewModel;
 import com.hzc.coolcatmusic.ui.login.LoginViewModel;
 import com.hzc.coolcatmusic.ui.chatgpt.ChatGPTActivityViewModel;
@@ -91,6 +92,8 @@ public class AppViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new ChatFloatingViewModel(mApplication,mRepository);
         }else if(modelClass.isAssignableFrom(PhotoViewModel.class)){
             return (T) new PhotoViewModel(mApplication,mRepository);
+        }else if(modelClass.isAssignableFrom(RankingViewModel.class)){
+            return (T) new RankingViewModel(mApplication,mRepository);
         }
 
 
