@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#808080</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="orange">#FFA500</color>
+    <color name="red">#FF0000</color>
+
+    <!--<color name="mainBg">#FFCC55</color>-->
+    <color name="mainBg">#00AC97</color>
+    <color name="mainBg_50">#8000AC97</color>
+
+    <array name="in_colors_light">
+        <item>#4B03A9F4</item>
+        <item>#3303A9F4</item>
+        <item>#1903A9F4</item>
+    </array>
+
+    <color name="windowBackground">#FAFAFA</color>
+    <!--<color name="windowBackground">#FFFFFF</color>-->
+
+    <color name="gray404444_90">#E6404444</color>
+    <color name="gray404444">#404444</color>
+</resources>

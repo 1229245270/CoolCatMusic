@@ -1,0 +1,82 @@
+apply plugin: 'com.android.library'
+android {
+
+    namespace "me.goldze.mvvmhabit" // 替换为你的应用程序包名
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+    }
+    dataBinding {
+        enabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main{
+            res.srcDirs = ['src/main/res', 'src/main/res-night']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    //support
+    api "${rootProject.ext.support["support-v4"]}"
+    api "${rootProject.ext.support["support-v4"]}"
+    api "${rootProject.ext.support["appcompat-v7"]}"
+    api "${rootProject.ext.support["recyclerview-v7"]}"
+    //rxjava
+    api "${rootProject.ext.dependencies.rxjava}"
+    api "${rootProject.ext.dependencies.rxandroid}"
+    //rx管理View的生命周期
+    api("${rootProject.ext.dependencies.rxlifecycle}")
+    api("${rootProject.ext.dependencies["rxlifecycle-components"]}")
+    //rxbinding
+    api("${rootProject.ext.dependencies.rxbinding}")
+    //rx权限请求
+    api("${rootProject.ext.dependencies.rxpermissions}")
+    //network
+    api "${rootProject.ext.dependencies.okhttp}"
+    api "${rootProject.ext.dependencies.retrofit}"
+    api "${rootProject.ext.dependencies["converter-gson"]}"
+    api "${rootProject.ext.dependencies["adapter-rxjava"]}"
+    //json解析
+    api "${rootProject.ext.dependencies.gson}"
+    //material-dialogs
+    api("${rootProject.ext.dependencies["material-dialogs-core"]}")
+    api("${rootProject.ext.dependencies["material-dialogs-commons"]}")
+    //glide图片加载库
+    api ("${rootProject.ext.dependencies.glide}")
+    /*implementation project(':skin-androidx:skin-support')
+    implementation project(path: ':skin-androidx:skin-support-appcompat')
+    implementation project(path: ':skin-androidx:skin-support-design')
+    implementation project(path: ':skin-androidx:skin-support-constraint-layout')
+    implementation project(path: ':skin-androidx:skin-support-cardview')*/
+    implementation 'skin.support:skin-support:4.0.5'                   // skin-support
+    implementation 'skin.support:skin-support-appcompat:4.0.5'         // skin-support 基础控件支持
+    implementation 'skin.support:skin-support-design:4.0.5'            // skin-support-design material design 控件支持[可选]
+    implementation 'skin.support:skin-support-cardview:4.0.5'          // skin-support-cardview CardView 控件支持[可选]
+    implementation 'skin.support:skin-support-constraint-layout:4.0.5' // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+
+    implementation project(':public-method')
+    annotationProcessor "${rootProject.ext.dependencies["glide-compiler"]}"
+    //recyclerview的databinding套装
+    api("${rootProject.ext.dependencies.bindingcollectionadapter}")
+    api("${rootProject.ext.dependencies["bindingcollectionadapter-recyclerview"]}")
+    api("${rootProject.ext.dependencies["bindingcollectionadapter-viewpager2"]}")
+    //Google LiveData和ViewModel组件
+    api "${rootProject.ext.dependencies["lifecycle-extensions"]}"
+    annotationProcessor "${rootProject.ext.dependencies["lifecycle-compiler"]}"
+
+    //沉浸式状态栏
+    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+}

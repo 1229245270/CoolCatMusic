@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="item"
+            type="Boolean" />
+        <variable
+            name="onItemClickListener"
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="授予本地音乐读取权限"
+            android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"/>
+    </LinearLayout>
+</layout>

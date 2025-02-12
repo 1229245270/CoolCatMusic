@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="item"
+            type="com.hzc.coolcatmusic.entity.Font" />
+        <variable
+            name="position"
+            type="Integer" />
+        <variable
+            name="id"
+            type="Long" />
+        <variable
+            name="onItemClickListener"
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/fontBackground"
+            android:background="@{item.id == id ? @drawable/navigation_font_check : null}"
+            android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
+            android:padding="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@drawable/selector_text_color"
+                android:padding="@dimen/dp_10"
+                android:background="@drawable/navigation_font_background"
+                android:text="@{item.name}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

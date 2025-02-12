@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="progress_gray_night_mode">#000000</color>
+    <color name="progress_gray_dark_night_mode">#000000</color>
+    <color name="default_blue_light_night_mode">#000000</color>
+    <color name="default_orange_night_mode">#000000</color>
+
+    <drawable name="selectColor_night_mode">#000000</drawable>
+    <drawable name="unselectColor_night_mode">#000000</drawable>
+
+    <color name="ic_launcher_background_night_mode">#000000</color>
+    <color name="transparent_night_mode">#000000</color>
+
+</resources>

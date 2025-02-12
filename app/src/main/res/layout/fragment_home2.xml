@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
+        <import type="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeFragment2ViewModel"/>
+        <variable
+            name="viewModel"
+            type="com.hzc.coolcatmusic.ui.main.HomeFragment2ViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--<androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>-->
+<!--        app:layoutManager="@{LayoutManagers.staggeredGrid(2,LinearLayoutManager.VERTICAL)}"-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleView"
+            app:itemBinding="@{viewModel.lookBind}"
+            items="@{viewModel.lookEntities}"
+            adapter="@{viewModel.lookAdapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</layout>

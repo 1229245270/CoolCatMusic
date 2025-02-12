@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <stroke android:width="@dimen/switch_stroke" android:color="#999999"/>
+    <solid android:color="@color/white"/>
+    <size android:width="@dimen/switch_height" android:height="@dimen/switch_height"/>
+</shape>

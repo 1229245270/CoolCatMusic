@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.hzc.coolcatmusic.R"/>
+        <variable
+            name="item"
+            type="com.hzc.coolcatmusic.entity.LookEntity" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                url="@{item.titleImage}"
+                binding:placeholderRes="@{R.mipmap.ic_launcher}"
+                android:id="@+id/iv_image"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_alignBottom="@+id/iv_image"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40">
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
+                    url="@{item.authorImage}"
+                    binding:placeholderRes="@{R.mipmap.ic_launcher}"
+                    app:is_circle="true"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:text="@{item.authorName}"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:drawableLeft="@mipmap/ic_launcher"
+                    android:text="@{item.lookTimes}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/songItem"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60">
+            <ImageView
+                url="@{item.recommendSong.musicUrl}"
+                binding:placeholderRes="@{R.mipmap.ic_launcher}"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_marginLeft="@dimen/dp_10"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="@{item.recommendSong.songName}"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+
+                <TextView
+                    android:text="@{item.recommendSong.singer}"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:text="@{item.titleText}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="textColor">#202020</color>
+    <color name="textColorHint">#A0A0A0</color>
+    <color name="textColorVice">#6C6C6C</color>
+    <color name="viewLineColor">#F0F0F0</color>
+
+
+    <color name="progress_gray">#FFD8D8D8</color>
+    <color name="progress_gray_dark">#FF383838</color>
+    <color name="default_blue_light">#ff33b5e5</color>
+    <color name="default_orange">@color/mainBg</color>
+
+    <drawable name="selectColor">#999999</drawable>
+    <drawable name="unselectColor">#000000</drawable>
+
+    <color name="ic_launcher_background">@color/mainBg</color>
+    <color name="transparent">#01ffffff</color>
+
+
+    <color name="recycleViewRipple">#aaaaaa</color>
+    <color name="recycleViewSelect">#eeeeee</color>
+    <color name="recycleViewUnSelect">#ffffff</color>
+
+    <color name="item_songName_check">@color/mainBg</color>
+    <color name="item_singer_check">@color/mainBg</color>
+
+    <color name="black_text">#000000</color>
+    <color name="gray_text">#999999</color>
+
+</resources>

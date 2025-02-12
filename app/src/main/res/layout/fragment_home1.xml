@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="me.goldze.mvvmhabit.binding.viewadapter.recyclerview.LayoutManagers"/>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeFragment1ViewModel"/>
+        <variable
+            name="viewModel"
+            type="com.hzc.coolcatmusic.ui.main.HomeFragment1ViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hzc.coolcatmusic.ui.costom.ReboundNestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
+                    android:layout_margin="@dimen/dp_10"
+                    android:id="@+id/rvSongItem"
+                    app:itemBinding="@{viewModel.itemEntityOnItemBind}"
+                    items="@{viewModel.itemEntityList}"
+                    app:layoutManager="@{LayoutManagers.grid(4)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    app:itemBinding="@{viewModel.listenerEntityOnItemBind}"
+                    adapter="@{viewModel.expandedTabAdapter}"
+                    items="@{viewModel.expandedTabEntityList}"
+                    app:layoutManager="@{LayoutManagers.linear()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1000dp"/>
+            </LinearLayout>
+        </com.hzc.coolcatmusic.ui.costom.ReboundNestedScrollView>
+
+
+    </LinearLayout>
+
+</layout>

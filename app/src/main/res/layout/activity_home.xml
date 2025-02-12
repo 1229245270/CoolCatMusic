@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.hzc.coolcatmusic.ui.main.HomeViewModel"/>
+        <variable
+            name="viewModel"
+            type="com.hzc.coolcatmusic.ui.main.HomeViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/mainDrawerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/mainRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--<include layout="@layout/status_bar_view"/>-->
+
+                <FrameLayout
+                    android:id="@+id/mainFrameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
+                    android:id="@+id/mainDetail"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_alignTop="@+id/mainProgress"
+                    android:layout_alignBottom="@+id/mainProgress"
+                    android:layout_marginRight="@dimen/dp_50"
+                    android:layout_toLeftOf="@+id/mainProgress"
+                    android:src="@drawable/ceshi"
+                    app:is_circle="true" />
+
+                <include
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mainProgress"
+                    layout="@layout/circle_image_progress"/>
+
+                <com.hzc.coolcatmusic.ui.costom.NiceImageView
+                    android:id="@+id/mainPlayingList"
+                    android:layout_width="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_alignTop="@+id/mainProgress"
+                    android:layout_alignBottom="@+id/mainProgress"
+                    android:layout_marginLeft="@dimen/dp_50"
+                    android:layout_toRightOf="@+id/mainProgress"
+                    android:src="@drawable/ceshi"
+                    app:is_circle="true" />
+
+            </RelativeLayout>
+
+            <com.google.android.material.navigation.NavigationView
+                app:insetForeground="@color/transparent"
+                android:id="@+id/mainNavigationView"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <include
+                    android:id="@+id/mainNavigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/navigation_view"/>
+            </com.google.android.material.navigation.NavigationView>
+
+        </androidx.drawerlayout.widget.DrawerLayout>
+    </LinearLayout>
+</layout>

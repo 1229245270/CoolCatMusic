@@ -1,0 +1,9 @@
+include ':app'
+include ':mvvmhabit'
+/*include ':skin-androidx:skin-support'
+include ':skin-androidx:skin-support-appcompat'
+include ':skin-androidx:skin-support-design'
+include ':skin-androidx:skin-support-cardview'
+include ':skin-androidx:skin-support-constraint-layout'*/
+include ':public-method'
+include ':generallibrary'

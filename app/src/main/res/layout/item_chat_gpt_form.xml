@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.hzc.coolcatmusic.entity.ChatGPTFormEntity" />
+        <variable
+            name="position"
+            type="Integer" />
+        <variable
+            name="onItemClickListener"
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
+    </data>
+
+    <LinearLayout
+        android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
+        android:id="@+id/ll_item"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:padding="@dimen/dp_10"
+            android:orientation="horizontal"
+            android:layout_height="@dimen/dp_80"
+            android:layout_width="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_marginRight="@dimen/dp_10"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="title"
+                    android:id="@+id/tv_title"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="left|center"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:text="text"
+                    android:id="@+id/tv_text"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="left|center"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:text="10:10"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"/>
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:background="@drawable/chatgpt_number_text"
+                    android:text="999"
+                    android:maxLines="1"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"/>
+    </LinearLayout>
+
+</layout>

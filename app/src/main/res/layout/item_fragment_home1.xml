@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="item"
+            type="com.hzc.coolcatmusic.entity.HomeFragment1ItemEntity" />
+        <variable
+            name="onItemClickListener"
+            type="com.hzc.coolcatmusic.ui.listener.OnItemClickListener" />
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:padding="@dimen/dp_10"
+        android:gravity="center"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:onClick="@{() -> onItemClickListener.onItemClick(position,item)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@{item.localImage}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="@{item.name}"
+            android:textColor="@drawable/selector_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</layout>

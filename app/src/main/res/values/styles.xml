@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <!--<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        &lt;!&ndash;将ActionBar隐藏,这里使用ToolBar&ndash;&gt;
+        <item name="windowActionBar">false</item>
+        &lt;!&ndash; 使用 API Level 22以上编译的话，要拿掉前綴字 &ndash;&gt;
+        <item name="windowNoTitle">true</item>
+        &lt;!&ndash;colorPrimary 对应ToolBar的颜色&ndash;&gt;
+        <item name="colorPrimary">@color/colorPrimary</item>
+        &lt;!&ndash;colorPrimaryDark对应状态栏的颜色&ndash;&gt;
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        &lt;!&ndash;colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色。&ndash;&gt;
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:typeface">monospace</item>
+        &lt;!&ndash; enable window content transitions &ndash;&gt;
+        &lt;!&ndash;<item name="android:windowActivityTransitions">true</item>&ndash;&gt;
+    </style>-->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+
+
+
+
+    <style name="ViewLineStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/viewLineColor</item>
+    </style>
+
+    <style name="play_button_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/play_button_enter</item>
+        <item name="android:windowExitAnimation">@anim/play_button_exit</item>
+    </style>
+
+    <style name="DownloadSeekbarStyle" >
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:thumbOffset">0dp</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:maxHeight">@dimen/dp_30</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@color/colorAccent</item>
+        <item name="android:progressDrawable">@drawable/download_seekbar</item>
+        <item name="android:thumb">@null</item>
+    </style>
+
+    <style name="BaseSeekbarStyle" >
+        <item name="android:thumbOffset">0dp</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:maxHeight">2dp</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@color/colorAccent</item>
+        <item name="android:progressDrawable">@drawable/base_seekbar</item>
+        <item name="android:minHeight">2dp</item>
+        <item name="android:thumb">@drawable/progress_ic_launcher</item>
+    </style>
+
+    <style name="ScanningSwitchStyle" parent="Theme.AppCompat.Light">
+        <!--开启时的颜色-->
+        <item name="colorControlActivated">@color/mainBg</item>
+        <!--关闭时的颜色-->
+        <item name="colorSwitchThumbNormal">#ffffff</item>
+        <!--关闭时的轨迹颜色-->
+        <item name="android:colorForeground">@color/mainBg</item>
+    </style>
+
+    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+</resources>

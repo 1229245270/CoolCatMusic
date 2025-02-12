@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/progress_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="@dimen/seekArc_item"
+        android:layout_height="@dimen/seekArc_item">
+        <com.hzc.coolcatmusic.ui.costom.CircleImage
+            android:id="@+id/progress_image"
+            android:src="@drawable/ceshi"
+            android:layout_width="@dimen/seekArc_circleImage"
+            android:layout_height="@dimen/seekArc_circleImage"/>
+    </LinearLayout>
+
+    <com.hzc.coolcatmusic.ui.costom.SeekArc
+        android:id="@+id/progress_seekArc"
+        app:touchInside="false"
+        app:arcWidth="@dimen/seekArc_width"
+        app:arcColor="@color/mainBg"
+        app:progressColor="@color/Orange"
+        android:padding="@dimen/seekArc_padding"
+        android:layout_width="@dimen/seekArc_item"
+        android:layout_height="@dimen/seekArc_item"/>
+
+</FrameLayout>
