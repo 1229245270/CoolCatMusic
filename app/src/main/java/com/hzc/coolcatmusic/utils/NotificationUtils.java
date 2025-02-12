@@ -167,7 +167,7 @@ public class NotificationUtils {
         }
 
         NotificationCompat.BubbleMetadata.Builder bubbleMetadataBuilder = new NotificationCompat.BubbleMetadata.Builder(bubbleIntent,iconCompat)
-                .setDesiredHeight(AppApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.dp_400));
+                .setDesiredHeight(AppApplication.getInstance().getResources().getDimensionPixelSize(me.goldze.mvvmhabit.R.dimen.dp_400));
         if(fromUser){
             bubbleMetadataBuilder.setAutoExpandBubble(true);
         }

@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
+
+    namespace "skin.support.appcompat" // 替换为你的应用程序包名
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     defaultConfig {
         minSdkVersion rootProject.ext.android.minSdkVersion
@@ -16,6 +18,10 @@ android {
         main {
             res.srcDirs = ['src/main/res', 'src/main/res-alertdialog']
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 

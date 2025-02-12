@@ -63,8 +63,8 @@ public class ScanningMusicViewModel extends ToolbarViewModel<DemoRepository> {
         super(application, model);
     }
 
-    String mainBg = "#" + Integer.toHexString(ContextCompat.getColor(getApplication(), R.color.mainBg) & 0x00ffffff);
-    String redBg = "#" + Integer.toHexString(ContextCompat.getColor(getApplication(), R.color.red) & 0x00ffffff);
+    String mainBg = "#" + Integer.toHexString(ContextCompat.getColor(getApplication(), me.goldze.mvvmhabit.R.color.mainBg) & 0x00ffffff);
+    String redBg = "#" + Integer.toHexString(ContextCompat.getColor(getApplication(), me.goldze.mvvmhabit.R.color.red) & 0x00ffffff);
 
     public ObservableField<CharSequence> scanResultText = new ObservableField<>("");
     public int minDuration = SPUtils.getInstance().getInt(SPUtilsConfig.SCAN_MIN_DURATION,60);

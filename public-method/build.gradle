@@ -3,11 +3,13 @@ plugins {
 }
 
 android {
-    compileSdk 32
+
+    namespace "com.hzc.public_method" // 替换为你的应用程序包名
+    compileSdk rootProject.ext.android.compileSdkVersion
 
     defaultConfig {
-        minSdk 26
-        targetSdk 32
+        minSdk rootProject.ext.android.minSdkVersion
+        targetSdk rootProject.ext.android.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,6 +34,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    api rootProject.ext.dependencies.rxjava
-    api rootProject.ext.dependencies.rxandroid
+    api "$rootProject.ext.dependencies.rxjava"
+    api "$rootProject.ext.dependencies.rxandroid"
 }

@@ -45,9 +45,9 @@ public final class DefaultErrorActivity extends AppCompatActivity {
 
         //This is needed to avoid a crash if the developer has not specified
         //an app-level theme that extends Theme.AppCompat
-        TypedArray a = obtainStyledAttributes(R.styleable.AppCompatTheme);
-        if (!a.hasValue(R.styleable.AppCompatTheme_windowActionBar)) {
-            setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
+        TypedArray a = obtainStyledAttributes(skin.support.design.R.styleable.AppCompatTheme);
+        if (!a.hasValue(skin.support.design.R.styleable.AppCompatTheme_windowActionBar)) {
+            setTheme(skin.support.design.R.style.Theme_AppCompat_Light_DarkActionBar);
         }
         a.recycle();
 

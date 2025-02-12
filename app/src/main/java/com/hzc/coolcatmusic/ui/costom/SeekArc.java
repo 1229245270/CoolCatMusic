@@ -328,7 +328,7 @@ public class SeekArc extends SkinCompatView {
 					onLongClick.actionDown();
 					double downR = Math.sqrt(Math.pow((radiu - x),2) + Math.pow((radiu - y),2));
 					//进度条控制
-					if((radiu - downR) <= getResources().getDimension(R.dimen.seekArc_width) + getResources().getDimension(R.dimen.seekArc_padding)){
+					if((radiu - downR) <= getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_width) + getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_padding)){
 						onStartTrackingTouch();
 						updateOnTouch(event);
 						isProgress = true;
@@ -500,15 +500,15 @@ public class SeekArc extends SkinCompatView {
 		CircleImage playButton = popupWindow.getContentView().findViewById(R.id.playButton);
 		CircleImage playNext = popupWindow.getContentView().findViewById(R.id.playNext);
 
-		float buttonWidth = getResources().getDimension(R.dimen.seekArc_popup_item);
-		float buttonHeight = getResources().getDimension(R.dimen.seekArc_popup_item);
-		float marginBottom = getResources().getDimension(R.dimen.seekArc_popup_marginBottom);
-		float marginLeft = getResources().getDimension(R.dimen.seekArc_popup_marginLeft);
-		float marginRight = getResources().getDimension(R.dimen.seekArc_popup_marginRight);
+		float buttonWidth = getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_item);
+		float buttonHeight = getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_item);
+		float marginBottom = getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginBottom);
+		float marginLeft = getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginLeft);
+		float marginRight = getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginRight);
 		boolean autoCenterY = y < 0 && y > - buttonHeight;
 		boolean autoY = y < marginBottom && y > - buttonHeight + marginBottom;
-		int width = 3 * (int)(getResources().getDimension(R.dimen.seekArc_popup_item)) + (int)marginLeft + (int)marginRight;
-		int xOff = (width - (int)(getResources().getDimension(R.dimen.seekArc_item))) / 2;
+		int width = 3 * (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_item)) + (int)marginLeft + (int)marginRight;
+		int xOff = (width - (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_item))) / 2;
 		actionListener.onPlayBefore(playBefore,x > - xOff && x < - xOff + buttonWidth && autoY);
 		actionListener.onPlayButton(playButton,x > - xOff + marginLeft + buttonWidth  && x < - xOff + marginLeft + 2 * buttonWidth && autoCenterY);
 		actionListener.onPlayNext(playNext,x > - xOff + marginLeft + marginRight + 2 * buttonWidth && x  < - xOff + marginLeft + marginRight + 3 * buttonWidth && autoY);
@@ -517,10 +517,10 @@ public class SeekArc extends SkinCompatView {
 	//弹窗
 	private PopupWindow popupWindow;
 	private void showPlayButton(){
-		int marginLeft = (int) getResources().getDimension(R.dimen.seekArc_popup_marginLeft);
-		int marginRight = (int) getResources().getDimension(R.dimen.seekArc_popup_marginRight);
-		int width = 3 * (int)(getResources().getDimension(R.dimen.seekArc_popup_item)) + marginLeft + marginRight;
-		int height = (int)(getResources().getDimension(R.dimen.seekArc_popup_item)) + (int)(getResources().getDimension(R.dimen.seekArc_popup_marginBottom));
+		int marginLeft = (int) getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginLeft);
+		int marginRight = (int) getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginRight);
+		int width = 3 * (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_item)) + marginLeft + marginRight;
+		int height = (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_item)) + (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginBottom));
 		if(popupWindow == null){
 			View view = View.inflate(getContext(),R.layout.play_button_popupwindow,null);
 			popupWindow = new PopupWindow(view,width,height);//参数为1.View 2.宽度 3.高度
@@ -538,8 +538,8 @@ public class SeekArc extends SkinCompatView {
 			playNext.setImageResource(R.drawable.home_music_nextsong_uncheck);
 		}
 		if(!popupWindow.isShowing()){
-			int xOff = ((int)(getResources().getDimension(R.dimen.seekArc_item)) - width) / 2;
-			int yOff = (int)(getResources().getDimension(R.dimen.seekArc_popup_marginBottom));
+			int xOff = ((int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_item)) - width) / 2;
+			int yOff = (int)(getResources().getDimension(me.goldze.mvvmhabit.R.dimen.seekArc_popup_marginBottom));
 			initCheck();
 			popupWindow.showAsDropDown(this,xOff,yOff);
 		}

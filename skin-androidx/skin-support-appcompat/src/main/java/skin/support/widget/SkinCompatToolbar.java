@@ -28,7 +28,8 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
     }
 
     public SkinCompatToolbar(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.toolbarStyle);
+        this(context, attrs, androidx.appcompat.R.attr.toolbarStyle);
+
     }
 
     public SkinCompatToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -40,6 +41,7 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         mNavigationIconResId = a.getResourceId(R.styleable.Toolbar_navigationIcon, INVALID_ID);
 
         int titleAp = a.getResourceId(R.styleable.Toolbar_titleTextAppearance, INVALID_ID);
+
         int subtitleAp = a.getResourceId(R.styleable.Toolbar_subtitleTextAppearance, INVALID_ID);
         a.recycle();
         if (titleAp != INVALID_ID) {

@@ -30,7 +30,7 @@ public class SkinCompatMultiAutoCompleteTextView extends AppCompatMultiAutoCompl
     }
 
     public SkinCompatMultiAutoCompleteTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.editTextStyle);
+        this(context, attrs, androidx.appcompat.R.attr.editTextStyle);
     }
 
     public SkinCompatMultiAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {

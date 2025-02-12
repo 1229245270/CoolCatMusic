@@ -3,7 +3,6 @@ package com.hzc.coolcatmusic.utils;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.hzc.coolcatmusic.BuildConfig;
 import com.hzc.coolcatmusic.app.GlobalData;
 
 import java.io.File;
@@ -86,7 +85,7 @@ public class LongTimeRetrofitClient {
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .addInterceptor(new LoggingInterceptor
                         .Builder()//构建者模式
-                        .loggable(BuildConfig.DEBUG) //是否开启日志打印
+                        .loggable(GlobalData.isDebug) //是否开启日志打印
                         .setLevel(Level.BASIC) //打印的等级
                         .log(Platform.INFO) // 打印类型
                         .request("Request") // request的Tag

@@ -21,7 +21,7 @@ public class SkinCompatCheckBox extends AppCompatCheckBox implements SkinCompatS
     }
 
     public SkinCompatCheckBox(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.checkboxStyle);
+        this(context, attrs, androidx.appcompat.R.attr.checkboxStyle);
     }
 
     public SkinCompatCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {

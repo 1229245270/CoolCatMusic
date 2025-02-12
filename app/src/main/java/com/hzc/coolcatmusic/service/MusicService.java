@@ -1,10 +1,12 @@
 package com.hzc.coolcatmusic.service;
 
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -100,7 +102,16 @@ public class MusicService extends Service {
         initScreenListener();
         initSensorListener();
         initNetworkListener();
-        startForeground(Integer.parseInt(NotificationUtils.MUSIC_CHANNEL_ID),NotificationUtils.musicNotification(null,null,null));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                    Integer.parseInt(NotificationUtils.MUSIC_CHANNEL_ID),
+                    NotificationUtils.musicNotification(null,null,null),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        }else{
+            startForeground(
+                    Integer.parseInt(NotificationUtils.MUSIC_CHANNEL_ID),
+                    NotificationUtils.musicNotification(null,null,null));
+        }
     }
 
     /**

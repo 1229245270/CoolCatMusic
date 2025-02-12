@@ -30,7 +30,7 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
     }
 
     public SkinCompatCheckedTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.checkedTextViewStyle);
+        this(context, attrs, androidx.appcompat.R.attr.checkedTextViewStyle);
     }
 
     public SkinCompatCheckedTextView(Context context, AttributeSet attrs, int defStyleAttr) {

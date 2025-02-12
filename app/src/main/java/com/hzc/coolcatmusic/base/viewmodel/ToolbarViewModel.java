@@ -37,7 +37,8 @@ public class ToolbarViewModel<M extends BaseModel> extends HomeViewModel<M> {
     //右边图标
     public Drawable rightIcon;
     //背景
-    public int mainColor = ContextCompat.getColor(getApplication(),R.color.mainBg);
+    public int mainColor = ContextCompat.getColor(getApplication(),me.goldze.mvvmhabit.R.color.mainBg);
+
 
     //兼容databinding，去泛型化
     public ToolbarViewModel toolbarViewModel;

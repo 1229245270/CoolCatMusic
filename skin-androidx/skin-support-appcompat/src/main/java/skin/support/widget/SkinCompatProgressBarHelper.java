@@ -43,7 +43,7 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
         TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.SkinCompatProgressBar, defStyleAttr, 0);
 
         mIndeterminateDrawableResId = a.getResourceId(R.styleable.SkinCompatProgressBar_android_indeterminateDrawable, INVALID_ID);
-        mProgressDrawableResId = a.getResourceId(R.styleable.SkinCompatProgressBar_android_progressDrawable, INVALID_ID);
+        mProgressDrawableResId = a.getResourceId(androidx.appcompat.R.styleable.SkinCompatProgressBar_android_progressDrawable, INVALID_ID);
 
         a.recycle();
         if (Build.VERSION.SDK_INT > 21) {

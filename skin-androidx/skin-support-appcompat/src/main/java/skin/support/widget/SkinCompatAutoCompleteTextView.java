@@ -29,7 +29,7 @@ public class SkinCompatAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     }
 
     public SkinCompatAutoCompleteTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.autoCompleteTextViewStyle);
+        this(context, attrs, androidx.appcompat.R.attr.autoCompleteTextViewStyle);
     }
 
     public SkinCompatAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {

@@ -22,16 +22,16 @@ public class SkinCompatCompoundButtonHelper extends SkinCompatHelper {
     }
 
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.CompoundButton,
+        TypedArray a = mView.getContext().obtainStyledAttributes(attrs, androidx.appcompat.R.styleable.CompoundButton,
                 defStyleAttr, INVALID_ID);
         try {
-            if (a.hasValue(R.styleable.CompoundButton_android_button)) {
+            if (a.hasValue(androidx.appcompat.R.styleable.CompoundButton_android_button)) {
                 mButtonResourceId = a.getResourceId(
-                        R.styleable.CompoundButton_android_button, INVALID_ID);
+                        androidx.appcompat.R.styleable.CompoundButton_android_button, INVALID_ID);
             }
 
-            if (a.hasValue(R.styleable.CompoundButton_buttonTint)) {
-                mButtonTintResId = a.getResourceId(R.styleable.CompoundButton_buttonTint, INVALID_ID);
+            if (a.hasValue(androidx.appcompat.R.styleable.CompoundButton_buttonTint)) {
+                mButtonTintResId = a.getResourceId(androidx.appcompat.R.styleable.CompoundButton_buttonTint, INVALID_ID);
             }
         } finally {
             a.recycle();
